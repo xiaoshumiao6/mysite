@@ -1,0 +1,576 @@
+.
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="zh-CN"><!--<![endif]-->
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+        <title>运维监控篇(2)_Zabbix简单的性能调优 | 小马</title>
+
+        <!-- Mobile Viewport Fix ( j.mp/mobileviewport & davidbcalhoun.com/2010/viewport-metatag ) -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+
+        <link rel="profile" href="http://gmpg.org/xfn/11" />
+
+		
+        <link rel="pingback" href="http://www.xiaomastack.com/xmlrpc.php" />
+
+		<title>运维监控篇(2)_Zabbix简单的性能调优 &#8211; 小马</title>
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="小马 &raquo; Feed" href="http://www.xiaomastack.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="小马 &raquo; 评论Feed" href="http://www.xiaomastack.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="小马 &raquo; 运维监控篇(2)_Zabbix简单的性能调优评论Feed" href="http://www.xiaomastack.com/2014/10/10/zabbix02/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/www.xiaomastack.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.1"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='math-captcha-frontend-css'  href='http://www.xiaomastack.com/wp-content/plugins/wp-math-captcha/css/frontend.css?ver=4.9.1' type='text/css' media='all' />
+<link rel='stylesheet' id='rtp-google-font-css'  href='https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700' type='text/css' media='all' />
+<link rel='stylesheet' id='rtp-icon-fonts-animation-css'  href='http://www.xiaomastack.com/wp-content/themes/rtpanel/assets/fontello/css/animation.css' type='text/css' media='all' />
+<link rel='stylesheet' id='rtp-icon-fonts-css'  href='http://www.xiaomastack.com/wp-content/themes/rtpanel/assets/fontello/css/rtpanel-fontello.css' type='text/css' media='all' />
+<link rel='stylesheet' id='rtpanel-style-css'  href='http://www.xiaomastack.com/wp-content/themes/rtpanel/style.css?ver=4.2' type='text/css' media='all' />
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+<link rel='https://api.w.org/' href='http://www.xiaomastack.com/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://www.xiaomastack.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://www.xiaomastack.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='运维监控篇(1)_Zabbix Agent安装' href='http://www.xiaomastack.com/2014/10/10/zabbix01/' />
+<link rel='next' title='运维监控篇(3)_Zabbix自定义脚本发送报警邮件' href='http://www.xiaomastack.com/2014/10/10/zabbix03/' />
+<meta name="generator" content="WordPress 4.9.1" />
+<link rel="canonical" href="http://www.xiaomastack.com/2014/10/10/zabbix02/" />
+<link rel='shortlink' href='http://www.xiaomastack.com/?p=903' />
+<link rel="alternate" type="application/json+oembed" href="http://www.xiaomastack.com/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.xiaomastack.com%2F2014%2F10%2F10%2Fzabbix02%2F" />
+<link rel="alternate" type="text/xml+oembed" href="http://www.xiaomastack.com/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fwww.xiaomastack.com%2F2014%2F10%2F10%2Fzabbix02%2F&#038;format=xml" />
+<style type="text/css" id="syntaxhighlighteranchor"></style>
+    </head>
+
+    <body class="post-template-default single single-post postid-903 single-format-standard unknown rtp-single-author masthead-fixed singular"><!-- ends in footer.php -->
+
+		
+        <div id="main-wrapper" class="rtp-main-wrapper"><!-- ends in footer.php -->
+
+			
+            <div id="header-wrapper" class="rtp-header-wrapper rtp-section-wrapper">
+
+				
+				<header id="header" class="row rtp-section-container" role="banner">
+
+										
+					<div class="rtp-header large-12 columns rtp-full-width-grid ">
+						<nav id="rtp-primary-menu" role="navigation" class="rtp-nav-wrapper rtp-mobile-nav"><ul id="rtp-nav-menu" class="menu rtp-nav-container clearfix"><li id="menu-item-1408" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1408"><a href="http://www.xiaomastack.com">Home</a></li>
+<li id="menu-item-1125" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-1125"><a href="http://www.xiaomastack.com/category/linux/">Linux OS</a>
+<ul class="sub-menu">
+	<li id="menu-item-1167" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1167"><a href="http://www.xiaomastack.com/category/middleware/">中间件</a></li>
+	<li id="menu-item-1160" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1160"><a href="http://www.xiaomastack.com/category/cobbler/">Cobbler</a></li>
+	<li id="menu-item-1133" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1133"><a href="http://www.xiaomastack.com/category/net/">Network</a></li>
+	<li id="menu-item-1166" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1166"><a href="http://www.xiaomastack.com/category/other/">OS Others</a></li>
+	<li id="menu-item-1140" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1140"><a href="http://www.xiaomastack.com/category/shell/">Shell and Bash</a></li>
+</ul>
+</li>
+<li id="menu-item-1131" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-1131"><a href="http://www.xiaomastack.com/category/log/">日志管理</a>
+<ul class="sub-menu">
+	<li id="menu-item-1128" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1128"><a href="http://www.xiaomastack.com/category/log-scribe/">Scribe</a></li>
+	<li id="menu-item-1126" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1126"><a href="http://www.xiaomastack.com/category/log-rsyslog/">Rsyslog</a></li>
+</ul>
+</li>
+<li id="menu-item-1132" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-has-children menu-item-1132"><a href="http://www.xiaomastack.com/category/monitoring/">监控管理</a>
+<ul class="sub-menu">
+	<li id="menu-item-1129" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-1129"><a href="http://www.xiaomastack.com/category/zabbix/">Zabbix</a></li>
+</ul>
+</li>
+<li id="menu-item-1135" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-1135"><a href="http://www.xiaomastack.com/category/config/">配置管理</a>
+<ul class="sub-menu">
+	<li id="menu-item-1127" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1127"><a href="http://www.xiaomastack.com/category/salt/">SaltStack</a></li>
+	<li id="menu-item-1653" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1653"><a href="http://www.xiaomastack.com/category/consul/">Consul</a></li>
+</ul>
+</li>
+<li id="menu-item-1134" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1134"><a href="http://www.xiaomastack.com/category/develop/">运维开发</a></li>
+<li id="menu-item-1130" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-1130"><a href="http://www.xiaomastack.com/category/data/">数据库</a>
+<ul class="sub-menu">
+	<li id="menu-item-1194" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1194"><a href="http://www.xiaomastack.com/category/sql/">SQL</a></li>
+	<li id="menu-item-1193" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1193"><a href="http://www.xiaomastack.com/category/nosql/">NoSQL</a></li>
+</ul>
+</li>
+<li id="menu-item-1640" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-has-children menu-item-1640"><a href="http://www.xiaomastack.com/category/cloud/">云计算</a>
+<ul class="sub-menu">
+	<li id="menu-item-1371" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1371"><a href="http://www.xiaomastack.com/category/docker/">Docker</a></li>
+	<li id="menu-item-1641" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-1641"><a href="http://www.xiaomastack.com/category/kubernetes/">Kubernetes</a></li>
+</ul>
+</li>
+</ul></nav>
+						<div class="rtp-logo-container clearfix">
+							
+														<h2 class="rtp-site-logo"><a role="link" href="http://www.xiaomastack.com/" title="小马">小马</a></h2>
+
+									<h3 class="tagline">意识和耐心</h3>						</div>
+
+						<hr />					</div>
+
+				</header><!-- #header -->
+
+				
+            </div><!-- #header-wrapper -->
+
+			
+			
+            <div id="content-wrapper" class="rtp-content-wrapper rtp-section-wrapper"><!-- ends in footer.php -->
+
+			
+                <div class="row rtp-section-container">
+
+			
+<section id="content" role="main" class=" rtp-content-section large-8 columns rtp-singular ">
+	
+	
+		<article id="post-903" class="clearfix rtp-post-box post-903 post type-post status-publish format-standard hentry category-zabbix category-monitoring tag-zabbix tag-60 tag-58">
+				
+			<header class="post-header ">
+				
+									<h1 class="post-title entry-title">运维监控篇(2)_Zabbix简单的性能调优</h1>
+				
+				
+			<div class="clearfix post-meta post-meta-top"><span class="rtp-post-author-prefix">By</span> <span class="vcard author"><a class="fn" href="http://www.xiaomastack.com/author/root_admin/" title="Posts by 小马">小马</a></span> <span class="rtp-meta-separator">&middot;</span> <time class="published date updated" datetime="2014-10-10T11:44:06+00:00">十月 10, 2014</time> <span class="rtp-meta-separator">&middot;</span> <a href="http://www.xiaomastack.com/category/zabbix/" rel="tag">Zabbix</a>, <a href="http://www.xiaomastack.com/category/monitoring/" rel="tag">监控管理</a>		<span class="rtp-meta-separator">&middot;</span> <span class="rtp-post-comment-count"><a href="http://www.xiaomastack.com/2014/10/10/zabbix02/#comments" class="rtp-post-comment rtp-common-link" ><span>4</span> Comments</a></span>
+			</div><!-- .post-meta -->			</header><!-- .post-title -->
+
+			<div class="post-content">
+				
+				
+				<p>Zabbix是一款高性能的分布式监控报警系统。比如现在常见的家用台式机配置处理器I5-3470、内存4GB1600MHz、硬盘7200rpm就能够监控1000台左右的HOST，是的没错Zabbix就是可以达到这样的高性能。Zabbix运行时间长了会出现小小的瓶颈，小小瓶颈中最大的瓶颈是数据库。怎样解决瓶颈，提供一些可能的方法。</p>
+<p>首先在zabbix-server上也装上zabbix-agent，并启用Template App Zabbix Server模板，监控zabbix-server服务内部的各项参数。启用模板后会新增加相应的监控项item、图形graph、触发器trigger。</p>
+<p>类似这样的监控项会增加不少<a href="http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02e.png"><img class="alignnone size-full wp-image-909" src="http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02e.png" alt="zabbix02e" width="550" height="221" srcset="http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02e.png 550w, http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02e-300x120.png 300w" sizes="(max-width: 550px) 100vw, 550px" /></a></p>
+<p>新增加的图形<a href="http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02a.png"><img class="alignnone size-full wp-image-905" src="http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02a.png" alt="zabbix02a" width="647" height="130" srcset="http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02a.png 647w, http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02a-300x60.png 300w" sizes="(max-width: 647px) 100vw, 647px" /></a></p>
+<p>类似这样的触发器也会增加很多<a href="http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02b.png"><img class="alignnone size-full wp-image-906" src="http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02b.png" alt="zabbix02b" width="682" height="215" srcset="http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02b.png 682w, http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02b-300x94.png 300w" sizes="(max-width: 682px) 100vw, 682px" /></a></p>
+<p>然后当Zabbix Server出现性能瓶颈的时候就会发出报警，根据触发器的报警项，来更改zabbix-server的配置参数来适应当前工作环境环境。</p>
+<p>下面分析可能出现的情景</p>
+<p>1、关于 Zabbix data gathering process busy 问题（server收集数据时zabbix-server各个进程的性能监控）<br />
+监控项如下：<a href="http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02c.png"><img class="alignnone size-full wp-image-907" src="http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02c.png" alt="zabbix02c" width="771" height="163" srcset="http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02c.png 771w, http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02c-300x63.png 300w" sizes="(max-width: 771px) 100vw, 771px" /></a></p>
+<p>比如discoverer监控项报警：“Zabbix discoverer processes 75% busy”其实这时候查看这项的监控图或监控值可能达到了100%。<br />
+解决方法。编辑配置文件/usr/local/zabbix/etc/zabbix-server.conf，将StartDiscoverers参数增大，默认为1,将该参数增大到合适的数值，比如5.然后重启zabbix-server就好了，如果开启discoverer服务进程的利用率还继续飙高则继续增大discoverer启动进程数。</p>
+<pre class="brush: bash; title: ; notranslate" title="">
+[root@Zabbix-Server ~]#vim /usr/local/zabbix/etc/zabbix-server.conf
+StartDiscoverers=5
+[root@Zabbix-Server ~]#/etc/init.d/zabbix_server restart
+</pre>
+<p>比如 ipmi pinger监控项报警：“Zabbix icmp pinger processes more than 75% busy”，同样更改server的配置文件，增大参数StartPingers，由默认的1改为合适的数值，比如5。然后重启zabbix-server就好了。</p>
+<pre class="brush: bash; title: ; notranslate" title="">
+[root@Zabbix-Server ~]#vim /usr/local/zabbix/etc/zabbix-server.conf
+StartPingers=5
+[root@Zabbix-Server ~]#/etc/init.d/zabbix_server restart
+</pre>
+<p>这个进程负载监控图各个监控项对应配置文件的参数和默认值如下，当某个进程负载过高时调整相应的值：</p>
+<pre class="brush: bash; title: ; notranslate" title="">
+Zabbix busy trapper processes, in %                   StartTrappers=5
+Zabbix busy poller processes, in %                      StartPollers=5
+Zabbix busy ipmi poller processes, in %               StartIPMIPollers=0
+Zabbix busy discoverer processes, in %                StartDiscoverers=1
+Zabbix busy icmp pinger processes, in %              StartPingers=1
+Zabbix busy http poller processes, in %                StartHTTPPollers=1
+Zabbix busy proxy poller processes, in %              StartProxyPollers=1
+Zabbix busy unreachable poller processes, in %    StartPollersUnreachable=1
+Zabbix busy java poller processes, in %                 StartJavaPollers=0
+Zabbix busy snmp trapper processes, in %            StartSNMPTrapper=0
+Zabbix busy vmware collector processes, in %       StartVMwareCollectors=0
+</pre>
+<p>2、关于 Zabbix cache usage 问题（server各种缓存数据空闲值的监控）<br />
+监控项如下：<a href="http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02d.png"><img class="alignnone size-full wp-image-908" src="http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02d.png" alt="zabbix02d" width="616" height="154" srcset="http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02d.png 616w, http://www.xiaomastack.com/wp-content/uploads/2014/10/zabbix02d-300x75.png 300w" sizes="(max-width: 616px) 100vw, 616px" /></a><br />
+这个缓存监控图各个监控项对应配置文件的参数和默认值如下，当某项buffer不够时增大容量到合适的值：</p>
+<pre class="brush: bash; title: ; notranslate" title="">
+Zabbix-server: Zabbix trend write cache, % free TrendCacheSize=4M
+Zabbix-server: Zabbix configuration cache, % free CacheSize=8M
+Zabbix-server: Zabbix text write cache, % free HistoryTextCacheSize=16M
+Zabbix-server: Zabbix history write cache, % free HistoryCacheSize=8M
+Zabbix-server: Zabbix value cache, % free ValueCacheSize=8M
+Zabbix-server: Zabbix vmware cache, % free VMwareCacheSize=8M
+</pre>
+<p>3、监控项Item得设置合适的数据采样间隔interval，一般不要小于1分钟，对于长时间不变的量如内存总大小、磁盘总大小等应该尽量间隔时间大点比如一天(1d)或一周(1w)。</p>
+<p>4、实在Host太多，还能怎样只能拆分架构，采用分布式架构减轻zabbix server 的压力，将这些压力分担到proxy上去。</p>
+<p>5、历史数据是数据库爆满的主要原因。减少历史数据的保存时间，默认是90天，可以调成7天或更少，放心zabbix还保存着趋势数据，宏观上历史数据不会丢。</p>
+<p>6、对history类型的(history、history_uint等)大表进行拆分操作，关闭housekeeper禁止自动定期清除历史记录数据，因为对于数据库特别是对于InnoDB引擎大数据删除貌似很蛋疼。</p>
+<p>转载请注明出处：<a title="运维监控篇(2)_Zabbix简单调优" href="http://www.xiaomastack.com/2014/10/10/zabbix02/" target="_blank">http://www.xiaomastack.com/2014/10/10/<span id="editable-post-name" title="临时固定链接，点击可更改这部分。">zabbix02</span>/ </a>谢谢！</p>
+
+					</div><!-- .post-content -->
+
+		
+		
+		</article><!-- .rtp-post-box -->		<div class="rtp-navigation clearfix">
+			<div class="left"><a href="http://www.xiaomastack.com/2014/10/10/zabbix01/" rel="prev">&larr; 运维监控篇(1)_Zabbix Agent安装</a></div>			<div class="right"><a href="http://www.xiaomastack.com/2014/10/10/zabbix03/" rel="next">运维监控篇(3)_Zabbix自定义脚本发送报警邮件 &rarr;</a></div>		</div><!-- .rtp-navigation -->	<div class="comments-container clearfix">
+			<div class="rtp-comment-count clearfix" id="comments">				<h4 class="rtp-comment-count-container"><span class="count">4</span> Comments</h4><small class="rtp-thoughts">&nbsp;Add <a role="link" href="#respond" title="Add your comment">your comment</a></small>			</div><!-- .rtp-comment-count -->
+
+			<ol class="commentlist">	<li class="comment byuser comment-author-marvin even thread-even depth-1 clearfix" id="li-comment-105">
+
+	<div id="comment-105" class="comment-body clearfix">		<div class="vcard">
+			<span class="fn"><img alt='' src='http://0.gravatar.com/avatar/6990e1e63de947e0724f86c7331545a9?s=48&#038;d=monsterid&#038;r=g' srcset='http://0.gravatar.com/avatar/6990e1e63de947e0724f86c7331545a9?s=96&#038;d=monsterid&#038;r=g 2x' class='avatar avatar-48 photo' height='48' width='48' /></span>
+		</div>
+		<div class="comment-author clearfix ">
+			<cite class="fn">marvin</cite>
+			<span class="comment-meta">
+				<a class="rtp-common-link rtp-comment-date" href="http://www.xiaomastack.com/2014/10/10/zabbix02/#comment-105" title="2015/06/08">
+					<time datetime="2015-06-08">2015/06/08 at 11:16</time>
+				</a>
+						</span>
+					</div>
+
+		<div class="comment-text">
+			<p>小马哥好，我的zabbix数据库经常挂掉，查看log时最后几段都是停留在executing housekeep阶段，我在General 里面将housekeeping的所有选项都disable掉了也仍然是这样，请问怎么关掉zabbix的housekeep,又会是什么原因引起这个问题的呢？</p>
+<p>PS:我的db版本是mariadb-server-5.5.40， zabbix版本是zabbix-server-2.2.8</p>
+		</div>
+		<div class="rtp-reply rtp-common-link"></div>
+
+	</div><!-- .comment-body --></li><!-- #comment-## -->
+	<li class="comment byuser comment-author-root_admin bypostauthor odd alt thread-odd thread-alt depth-1 clearfix" id="li-comment-106">
+
+	<div id="comment-106" class="comment-body clearfix">		<div class="vcard">
+			<span class="fn"><img alt='' src='http://1.gravatar.com/avatar/74635ce7bc45d436516556f4197db6bc?s=48&#038;d=monsterid&#038;r=g' srcset='http://1.gravatar.com/avatar/74635ce7bc45d436516556f4197db6bc?s=96&#038;d=monsterid&#038;r=g 2x' class='avatar avatar-48 photo' height='48' width='48' /></span>
+		</div>
+		<div class="comment-author clearfix ">
+			<cite class="fn">小马</cite>
+			<span class="comment-meta">
+				<a class="rtp-common-link rtp-comment-date" href="http://www.xiaomastack.com/2014/10/10/zabbix02/#comment-106" title="2015/06/08">
+					<time datetime="2015-06-08">2015/06/08 at 11:45</time>
+				</a>
+						</span>
+					</div>
+
+		<div class="comment-text">
+			<p>把zabbix_server配置文件参数DisableHousekeeping设置为1，然后重启zabbix_server可以关闭housekeep。这样一来需要手动清除历史、报警数据。mariadb这个分支没有接触过，你一方面可以调高相关项buffer参数，提高它的性能，一方面你可以增大items的取值间隔，减少history的存储时间(默认90天，可以调成7天或更少)，使数据库变的更小。如果这样都不行的话，可以考虑是不是数据库本身问题或机器的性能瓶颈。</p>
+		</div>
+		<div class="rtp-reply rtp-common-link"></div>
+
+	</div><!-- .comment-body --></li><!-- #comment-## -->
+	<li class="comment byuser comment-author-marvin even thread-even depth-1 clearfix" id="li-comment-107">
+
+	<div id="comment-107" class="comment-body clearfix">		<div class="vcard">
+			<span class="fn"><img alt='' src='http://0.gravatar.com/avatar/6990e1e63de947e0724f86c7331545a9?s=48&#038;d=monsterid&#038;r=g' srcset='http://0.gravatar.com/avatar/6990e1e63de947e0724f86c7331545a9?s=96&#038;d=monsterid&#038;r=g 2x' class='avatar avatar-48 photo' height='48' width='48' /></span>
+		</div>
+		<div class="comment-author clearfix ">
+			<cite class="fn">marvin</cite>
+			<span class="comment-meta">
+				<a class="rtp-common-link rtp-comment-date" href="http://www.xiaomastack.com/2014/10/10/zabbix02/#comment-107" title="2015/06/08">
+					<time datetime="2015-06-08">2015/06/08 at 14:04</time>
+				</a>
+						</span>
+					</div>
+
+		<div class="comment-text">
+			<p>有试过将DisableHousekeeping写入过zabbix-server，但service就启动不了了，我看了下文档，似乎从2.2开始就是在web gui的general里关掉housekeep</p>
+		</div>
+		<div class="rtp-reply rtp-common-link"></div>
+
+	</div><!-- .comment-body --></li><!-- #comment-## -->
+	<li class="comment byuser comment-author-root_admin bypostauthor odd alt thread-odd thread-alt depth-1 clearfix" id="li-comment-108">
+
+	<div id="comment-108" class="comment-body clearfix">		<div class="vcard">
+			<span class="fn"><img alt='' src='http://1.gravatar.com/avatar/74635ce7bc45d436516556f4197db6bc?s=48&#038;d=monsterid&#038;r=g' srcset='http://1.gravatar.com/avatar/74635ce7bc45d436516556f4197db6bc?s=96&#038;d=monsterid&#038;r=g 2x' class='avatar avatar-48 photo' height='48' width='48' /></span>
+		</div>
+		<div class="comment-author clearfix ">
+			<cite class="fn">小马</cite>
+			<span class="comment-meta">
+				<a class="rtp-common-link rtp-comment-date" href="http://www.xiaomastack.com/2014/10/10/zabbix02/#comment-108" title="2015/06/08">
+					<time datetime="2015-06-08">2015/06/08 at 18:30</time>
+				</a>
+						</span>
+					</div>
+
+		<div class="comment-text">
+			<p>我们用的版本没有这么高，对2.2的版本没有研究，嘿嘿！</p>
+		</div>
+		<div class="rtp-reply rtp-common-link"></div>
+
+	</div><!-- .comment-body --></li><!-- #comment-## -->
+			</ol><!-- .commentlist -->
+
+		
+			<!-- Comment Pagination -->
+				<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title"><span class="comment-title">发表评论:</span> <small><a rel="nofollow" id="cancel-comment-reply-link" href="/2014/10/10/zabbix02/#respond" style="display:none;">Cancel reply</a></small></h3><p class="must-log-in">要发表评论，您必须先<a href="http://www.xiaomastack.com/wp-login.php?redirect_to=http%3A%2F%2Fwww.xiaomastack.com%2F2014%2F10%2F10%2Fzabbix02%2F">登录</a>。</p>	</div><!-- #respond -->
+		</div>
+	</section><!-- #content -->
+
+
+    <!-- #sidebar -->
+    <aside id="sidebar" class="rtp-sidebar-section large-4 columns" role="complementary">
+        <div class="rtp-sidebar-inner-wrapper">
+            
+                <div id="search-2" class="widget sidebar-widget widget_search"><form role="search" method="get" class="searchform search-form" action="http://www.xiaomastack.com/">
+                <div class="rtp-search-form-wrapper">
+                    <label class="screen-reader-text hide">Search for:</label>
+                    <input type="search" required="required" placeholder="Search Here..." value="" name="s" class="search-text search-field rtp-search-input" title="Search Here..." />
+                    <input type="submit" class="searchsubmit search-submit rtp-search-button button tiny" value="Search" title="Search" />
+                </div>
+             </form></div>		<div id="recent-posts-2" class="widget sidebar-widget widget_recent_entries">		<h3 class="widgettitle">近期文章</h3>		<ul>
+											<li>
+					<a href="http://www.xiaomastack.com/2017/07/03/%e5%ae%8c%e6%88%90%e8%b7%a8%e6%9c%ba%e6%88%bf%e8%bf%90%e7%bb%b4%e5%b9%b3%e5%8f%b0%e9%87%8d%e6%9e%84/">完成跨机房运维平台重构</a>
+									</li>
+											<li>
+					<a href="http://www.xiaomastack.com/2017/03/31/%e4%bc%98%e5%8c%96django-rest-framework-%e7%9a%84token%e9%aa%8c%e8%af%81%e5%8a%9f%e8%83%bd/">优化Django Rest Framework 的Token验证功能</a>
+									</li>
+											<li>
+					<a href="http://www.xiaomastack.com/2017/03/31/%e6%96%b0%e7%9a%84%e8%bf%90%e7%bb%b4%e5%b9%b3%e5%8f%b0-%e8%ae%a1%e5%88%92/">新的运维平台-计划</a>
+									</li>
+											<li>
+					<a href="http://www.xiaomastack.com/2016/10/12/zabbix_proxy-wrong/">zabbix_proxy 启动报错 &#8230; wrong value of &#8220;ServerPort&#8221; in config &#8230;</a>
+									</li>
+											<li>
+					<a href="http://www.xiaomastack.com/2016/08/05/etcdfork8s/">etcd 集群部署</a>
+									</li>
+											<li>
+					<a href="http://www.xiaomastack.com/2016/08/03/k8s-registry/">在k8s中搭建registry私有仓库</a>
+									</li>
+											<li>
+					<a href="http://www.xiaomastack.com/2016/07/30/monitormysql02/">监控MySQL从数据采集到前端展示(2)－go并发流程设计</a>
+									</li>
+											<li>
+					<a href="http://www.xiaomastack.com/2016/07/30/monitormysql01/">监控MySQL从数据采集到前端展示(1)－呼声和响应</a>
+									</li>
+											<li>
+					<a href="http://www.xiaomastack.com/2016/07/27/gameserver03/">游戏自动开服篇(3)－全自动化流程</a>
+									</li>
+											<li>
+					<a href="http://www.xiaomastack.com/2016/07/27/gameserver02/">游戏自动开服篇(2)－半自动化流程</a>
+									</li>
+											<li>
+					<a href="http://www.xiaomastack.com/2016/07/27/gameserver01/">游戏自动开服篇(1)－动机和历程</a>
+									</li>
+											<li>
+					<a href="http://www.xiaomastack.com/2016/06/11/confd/">confd配置使用</a>
+									</li>
+					</ul>
+		</div><div id="categories-2" class="widget sidebar-widget widget_categories"><h3 class="widgettitle">分类目录</h3>		<ul>
+	<li class="cat-item cat-item-59"><a href="http://www.xiaomastack.com/category/cobbler/" title="属于Linux OS子项">Cobbler</a> (3)
+</li>
+	<li class="cat-item cat-item-104"><a href="http://www.xiaomastack.com/category/consul/" >Consul</a> (4)
+</li>
+	<li class="cat-item cat-item-94"><a href="http://www.xiaomastack.com/category/docker/" >Docker</a> (10)
+</li>
+	<li class="cat-item cat-item-103"><a href="http://www.xiaomastack.com/category/kubernetes/" >Kubernetes</a> (2)
+</li>
+	<li class="cat-item cat-item-81"><a href="http://www.xiaomastack.com/category/linux/" title="属于zBorder主题">Linux OS</a> (56)
+</li>
+	<li class="cat-item cat-item-79"><a href="http://www.xiaomastack.com/category/net/" title="属于zBorder主题">Network</a> (3)
+</li>
+	<li class="cat-item cat-item-39"><a href="http://www.xiaomastack.com/category/nosql/" title="属于数据库子项">NoSQL</a> (5)
+</li>
+	<li class="cat-item cat-item-87"><a href="http://www.xiaomastack.com/category/other/" title="Linux OS子项">OS Others</a> (20)
+</li>
+	<li class="cat-item cat-item-84"><a href="http://www.xiaomastack.com/category/log-rsyslog/" title="日志管理子项">Rsyslog</a> (3)
+</li>
+	<li class="cat-item cat-item-82"><a href="http://www.xiaomastack.com/category/salt/" title="配置管理的子项">SaltStack</a> (7)
+</li>
+	<li class="cat-item cat-item-83"><a href="http://www.xiaomastack.com/category/log-scribe/" title="日志管理子项">Scribe</a> (3)
+</li>
+	<li class="cat-item cat-item-85"><a href="http://www.xiaomastack.com/category/shell/" title="属于Linux OS子项">Shell and Bash</a> (13)
+</li>
+	<li class="cat-item cat-item-13"><a href="http://www.xiaomastack.com/category/sql/" title="属于数据库子项">SQL</a> (9)
+</li>
+	<li class="cat-item cat-item-30"><a href="http://www.xiaomastack.com/category/zabbix/" title="监控管理的子项">Zabbix</a> (17)
+</li>
+	<li class="cat-item cat-item-86"><a href="http://www.xiaomastack.com/category/middleware/" title="Linux OS子项">中间件</a> (11)
+</li>
+	<li class="cat-item cat-item-102"><a href="http://www.xiaomastack.com/category/cloud/" title="docker and kubernetes">云计算</a> (1)
+</li>
+	<li class="cat-item cat-item-80"><a href="http://www.xiaomastack.com/category/data/" title="属于zBorder主题">数据库</a> (14)
+</li>
+	<li class="cat-item cat-item-76"><a href="http://www.xiaomastack.com/category/log/" title="属于zBorder主题">日志管理</a> (8)
+</li>
+	<li class="cat-item cat-item-77"><a href="http://www.xiaomastack.com/category/monitoring/" title="属于zBorder主题">监控管理</a> (17)
+</li>
+	<li class="cat-item cat-item-78"><a href="http://www.xiaomastack.com/category/develop/" title="属于zBorder主题">运维开发</a> (42)
+</li>
+	<li class="cat-item cat-item-75"><a href="http://www.xiaomastack.com/category/config/" title="属于zBorder主题">配置管理</a> (11)
+</li>
+		</ul>
+</div><div id="tag_cloud-2" class="widget sidebar-widget widget_tag_cloud"><h3 class="widgettitle">标签</h3><div class="tagcloud"><a href="http://www.xiaomastack.com/tag/awk/" class="tag-cloud-link tag-link-88 tag-link-position-1" style="font-size: 8pt;" aria-label="awk (1个项目)">awk</a>
+<a href="http://www.xiaomastack.com/tag/bash/" class="tag-cloud-link tag-link-22 tag-link-position-2" style="font-size: 18.309090909091pt;" aria-label="Bash (12个项目)">Bash</a>
+<a href="http://www.xiaomastack.com/tag/cobbler/" class="tag-cloud-link tag-link-100 tag-link-position-3" style="font-size: 11.818181818182pt;" aria-label="Cobbler (3个项目)">Cobbler</a>
+<a href="http://www.xiaomastack.com/tag/consul/" class="tag-cloud-link tag-link-105 tag-link-position-4" style="font-size: 11.818181818182pt;" aria-label="consul (3个项目)">consul</a>
+<a href="http://www.xiaomastack.com/tag/django/" class="tag-cloud-link tag-link-41 tag-link-position-5" style="font-size: 15.636363636364pt;" aria-label="Django (7个项目)">Django</a>
+<a href="http://www.xiaomastack.com/tag/dns/" class="tag-cloud-link tag-link-90 tag-link-position-6" style="font-size: 8pt;" aria-label="DNS (1个项目)">DNS</a>
+<a href="http://www.xiaomastack.com/tag/docker-2/" class="tag-cloud-link tag-link-95 tag-link-position-7" style="font-size: 17.418181818182pt;" aria-label="docker (10个项目)">docker</a>
+<a href="http://www.xiaomastack.com/tag/elastix/" class="tag-cloud-link tag-link-52 tag-link-position-8" style="font-size: 8pt;" aria-label="Elastix (1个项目)">Elastix</a>
+<a href="http://www.xiaomastack.com/tag/fpm/" class="tag-cloud-link tag-link-65 tag-link-position-9" style="font-size: 8pt;" aria-label="fpm (1个项目)">fpm</a>
+<a href="http://www.xiaomastack.com/tag/git/" class="tag-cloud-link tag-link-96 tag-link-position-10" style="font-size: 8pt;" aria-label="git (1个项目)">git</a>
+<a href="http://www.xiaomastack.com/tag/go/" class="tag-cloud-link tag-link-107 tag-link-position-11" style="font-size: 10.290909090909pt;" aria-label="go (2个项目)">go</a>
+<a href="http://www.xiaomastack.com/tag/k8s/" class="tag-cloud-link tag-link-108 tag-link-position-12" style="font-size: 10.290909090909pt;" aria-label="k8s (2个项目)">k8s</a>
+<a href="http://www.xiaomastack.com/tag/logger/" class="tag-cloud-link tag-link-68 tag-link-position-13" style="font-size: 8pt;" aria-label="logger (1个项目)">logger</a>
+<a href="http://www.xiaomastack.com/tag/logrotate/" class="tag-cloud-link tag-link-70 tag-link-position-14" style="font-size: 10.290909090909pt;" aria-label="logrotate (2个项目)">logrotate</a>
+<a href="http://www.xiaomastack.com/tag/mongodb/" class="tag-cloud-link tag-link-93 tag-link-position-15" style="font-size: 11.818181818182pt;" aria-label="MongoDB (3个项目)">MongoDB</a>
+<a href="http://www.xiaomastack.com/tag/nginx/" class="tag-cloud-link tag-link-56 tag-link-position-16" style="font-size: 11.818181818182pt;" aria-label="nginx (3个项目)">nginx</a>
+<a href="http://www.xiaomastack.com/tag/openvpn/" class="tag-cloud-link tag-link-91 tag-link-position-17" style="font-size: 13.090909090909pt;" aria-label="OpenVPN (4个项目)">OpenVPN</a>
+<a href="http://www.xiaomastack.com/tag/phpscript/" class="tag-cloud-link tag-link-21 tag-link-position-18" style="font-size: 14.109090909091pt;" aria-label="PHP (5个项目)">PHP</a>
+<a href="http://www.xiaomastack.com/tag/pythonscript/" class="tag-cloud-link tag-link-20 tag-link-position-19" style="font-size: 19.836363636364pt;" aria-label="Python (16个项目)">Python</a>
+<a href="http://www.xiaomastack.com/tag/redis/" class="tag-cloud-link tag-link-92 tag-link-position-20" style="font-size: 10.290909090909pt;" aria-label="Redis (2个项目)">Redis</a>
+<a href="http://www.xiaomastack.com/tag/rrdtool/" class="tag-cloud-link tag-link-43 tag-link-position-21" style="font-size: 15.636363636364pt;" aria-label="RRDtool (7个项目)">RRDtool</a>
+<a href="http://www.xiaomastack.com/tag/rsyslog/" class="tag-cloud-link tag-link-69 tag-link-position-22" style="font-size: 11.818181818182pt;" aria-label="rsyslog (3个项目)">rsyslog</a>
+<a href="http://www.xiaomastack.com/tag/saltapi/" class="tag-cloud-link tag-link-61 tag-link-position-23" style="font-size: 14.109090909091pt;" aria-label="salt-api (5个项目)">salt-api</a>
+<a href="http://www.xiaomastack.com/tag/saltstack/" class="tag-cloud-link tag-link-27 tag-link-position-24" style="font-size: 17.418181818182pt;" aria-label="SaltStack (10个项目)">SaltStack</a>
+<a href="http://www.xiaomastack.com/tag/scribe/" class="tag-cloud-link tag-link-66 tag-link-position-25" style="font-size: 11.818181818182pt;" aria-label="scribe (3个项目)">scribe</a>
+<a href="http://www.xiaomastack.com/tag/sed/" class="tag-cloud-link tag-link-89 tag-link-position-26" style="font-size: 8pt;" aria-label="sed (1个项目)">sed</a>
+<a href="http://www.xiaomastack.com/tag/shellscript/" class="tag-cloud-link tag-link-23 tag-link-position-27" style="font-size: 15.636363636364pt;" aria-label="Shell (7个项目)">Shell</a>
+<a href="http://www.xiaomastack.com/tag/socket/" class="tag-cloud-link tag-link-33 tag-link-position-28" style="font-size: 11.818181818182pt;" aria-label="Socket (3个项目)">Socket</a>
+<a href="http://www.xiaomastack.com/tag/sql/" class="tag-cloud-link tag-link-97 tag-link-position-29" style="font-size: 16.909090909091pt;" aria-label="SQL (9个项目)">SQL</a>
+<a href="http://www.xiaomastack.com/tag/tinyproxy/" class="tag-cloud-link tag-link-101 tag-link-position-30" style="font-size: 8pt;" aria-label="tinyproxy (1个项目)">tinyproxy</a>
+<a href="http://www.xiaomastack.com/tag/uwsgi/" class="tag-cloud-link tag-link-55 tag-link-position-31" style="font-size: 10.290909090909pt;" aria-label="uwsgi (2个项目)">uwsgi</a>
+<a href="http://www.xiaomastack.com/tag/voip/" class="tag-cloud-link tag-link-53 tag-link-position-32" style="font-size: 8pt;" aria-label="VoIP (1个项目)">VoIP</a>
+<a href="http://www.xiaomastack.com/tag/wp/" class="tag-cloud-link tag-link-36 tag-link-position-33" style="font-size: 11.818181818182pt;" aria-label="WordPress (3个项目)">WordPress</a>
+<a href="http://www.xiaomastack.com/tag/zabbix/" class="tag-cloud-link tag-link-98 tag-link-position-34" style="font-size: 22pt;" aria-label="Zabbix (24个项目)">Zabbix</a>
+<a href="http://www.xiaomastack.com/tag/zabbixapi/" class="tag-cloud-link tag-link-42 tag-link-position-35" style="font-size: 15pt;" aria-label="ZabbixAPI (6个项目)">ZabbixAPI</a>
+<a href="http://www.xiaomastack.com/tag/%e5%ae%89%e5%85%a8/" class="tag-cloud-link tag-link-31 tag-link-position-36" style="font-size: 17.418181818182pt;" aria-label="安全 (10个项目)">安全</a>
+<a href="http://www.xiaomastack.com/tag/%e6%97%a5%e5%bf%97%e7%ae%a1%e7%90%86/" class="tag-cloud-link tag-link-67 tag-link-position-37" style="font-size: 16.272727272727pt;" aria-label="日志管理 (8个项目)">日志管理</a>
+<a href="http://www.xiaomastack.com/tag/%e7%89%88%e6%9c%ac%e6%9b%b4%e6%96%b0/" class="tag-cloud-link tag-link-54 tag-link-position-38" style="font-size: 15pt;" aria-label="版本更新 (6个项目)">版本更新</a>
+<a href="http://www.xiaomastack.com/tag/%e7%9b%91%e6%8e%a7/" class="tag-cloud-link tag-link-60 tag-link-position-39" style="font-size: 19.2pt;" aria-label="监控 (14个项目)">监控</a>
+<a href="http://www.xiaomastack.com/tag/%e7%bd%91%e7%bb%9c/" class="tag-cloud-link tag-link-40 tag-link-position-40" style="font-size: 8pt;" aria-label="网络 (1个项目)">网络</a>
+<a href="http://www.xiaomastack.com/tag/%e7%bd%91%e7%bb%9c%e7%bc%96%e7%a8%8b/" class="tag-cloud-link tag-link-34 tag-link-position-41" style="font-size: 11.818181818182pt;" aria-label="网络编程 (3个项目)">网络编程</a>
+<a href="http://www.xiaomastack.com/tag/%e8%87%aa%e5%8a%a8%e5%8c%96%e8%bf%90%e7%bb%b4/" class="tag-cloud-link tag-link-58 tag-link-position-42" style="font-size: 22pt;" aria-label="自动化运维 (24个项目)">自动化运维</a>
+<a href="http://www.xiaomastack.com/tag/%e8%bf%90%e7%bb%b4%e5%b9%b3%e5%8f%b0/" class="tag-cloud-link tag-link-32 tag-link-position-43" style="font-size: 18.818181818182pt;" aria-label="运维平台 (13个项目)">运维平台</a>
+<a href="http://www.xiaomastack.com/tag/%e8%bf%90%e7%bb%b4%e5%bc%80%e5%8f%91/" class="tag-cloud-link tag-link-62 tag-link-position-44" style="font-size: 20.218181818182pt;" aria-label="运维开发 (17个项目)">运维开发</a>
+<a href="http://www.xiaomastack.com/tag/%e9%85%8d%e7%bd%ae%e7%ae%a1%e7%90%86/" class="tag-cloud-link tag-link-63 tag-link-position-45" style="font-size: 14.109090909091pt;" aria-label="配置管理 (5个项目)">配置管理</a></div>
+</div><div id="archives-2" class="widget sidebar-widget widget_archive"><h3 class="widgettitle">文章归档</h3>		<label class="screen-reader-text" for="archives-dropdown-2">文章归档</label>
+		<select id="archives-dropdown-2" name="archive-dropdown" onchange='document.location.href=this.options[this.selectedIndex].value;'>
+			
+			<option value="">选择月份</option>
+				<option value='http://www.xiaomastack.com/2017/07/'> 2017年七月 &nbsp;(1)</option>
+	<option value='http://www.xiaomastack.com/2017/03/'> 2017年三月 &nbsp;(2)</option>
+	<option value='http://www.xiaomastack.com/2016/10/'> 2016年十月 &nbsp;(1)</option>
+	<option value='http://www.xiaomastack.com/2016/08/'> 2016年八月 &nbsp;(2)</option>
+	<option value='http://www.xiaomastack.com/2016/07/'> 2016年七月 &nbsp;(5)</option>
+	<option value='http://www.xiaomastack.com/2016/06/'> 2016年六月 &nbsp;(2)</option>
+	<option value='http://www.xiaomastack.com/2016/05/'> 2016年五月 &nbsp;(3)</option>
+	<option value='http://www.xiaomastack.com/2016/03/'> 2016年三月 &nbsp;(1)</option>
+	<option value='http://www.xiaomastack.com/2016/02/'> 2016年二月 &nbsp;(1)</option>
+	<option value='http://www.xiaomastack.com/2016/01/'> 2016年一月 &nbsp;(1)</option>
+	<option value='http://www.xiaomastack.com/2015/12/'> 2015年十二月 &nbsp;(3)</option>
+	<option value='http://www.xiaomastack.com/2015/11/'> 2015年十一月 &nbsp;(2)</option>
+	<option value='http://www.xiaomastack.com/2015/10/'> 2015年十月 &nbsp;(2)</option>
+	<option value='http://www.xiaomastack.com/2015/09/'> 2015年九月 &nbsp;(4)</option>
+	<option value='http://www.xiaomastack.com/2015/07/'> 2015年七月 &nbsp;(6)</option>
+	<option value='http://www.xiaomastack.com/2015/06/'> 2015年六月 &nbsp;(2)</option>
+	<option value='http://www.xiaomastack.com/2015/05/'> 2015年五月 &nbsp;(2)</option>
+	<option value='http://www.xiaomastack.com/2015/04/'> 2015年四月 &nbsp;(5)</option>
+	<option value='http://www.xiaomastack.com/2015/03/'> 2015年三月 &nbsp;(5)</option>
+	<option value='http://www.xiaomastack.com/2015/02/'> 2015年二月 &nbsp;(3)</option>
+	<option value='http://www.xiaomastack.com/2015/01/'> 2015年一月 &nbsp;(3)</option>
+	<option value='http://www.xiaomastack.com/2014/12/'> 2014年十二月 &nbsp;(5)</option>
+	<option value='http://www.xiaomastack.com/2014/11/'> 2014年十一月 &nbsp;(11)</option>
+	<option value='http://www.xiaomastack.com/2014/10/'> 2014年十月 &nbsp;(19)</option>
+	<option value='http://www.xiaomastack.com/2014/09/'> 2014年九月 &nbsp;(8)</option>
+	<option value='http://www.xiaomastack.com/2014/08/'> 2014年八月 &nbsp;(19)</option>
+	<option value='http://www.xiaomastack.com/2014/07/'> 2014年七月 &nbsp;(24)</option>
+	<option value='http://www.xiaomastack.com/2014/06/'> 2014年六月 &nbsp;(9)</option>
+
+		</select>
+		</div><div id="meta-2" class="widget sidebar-widget widget_meta"><h3 class="widgettitle">功能</h3>			<ul>
+						<li><a href="http://www.xiaomastack.com/wp-login.php">登录</a></li>
+			<li><a href="http://www.xiaomastack.com/feed/">文章<abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="http://www.xiaomastack.com/comments/feed/">评论<abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="https://cn.wordpress.org/" title="基于WordPress，一个优美、先进的个人信息发布平台。">WordPress.org</a></li>			</ul>
+			</div>            
+                    </div>
+    </aside>
+
+</div> <!-- End of content-wrapper row -->
+
+
+</div><!-- #content-wrapper -->
+
+<div class="row rtp-section-container rtp-footer-separator"><div class="large-12 columns rtp-full-width-grid"><hr /></div></div>
+
+<footer id="footer-wrapper" role="contentinfo" class="clearfix rtp-footer-wrapper rtp-section-wrapper">
+
+	
+	<div class="footer_content" align="center">
+	<a href="http://www.miitbeian.gov.cn/" rel="nofollow" title="工业和信息化部ICP/IP地址/域名信息备案管理系统" target="_blank">沪ICP备14024625号-1</a>
+	<p>Copyright (c) 2014-2017 小马. All rights reserved. <em> Designed on <a role="link" target="_blank" href="https://rtcamp.com/rtpanel/" class="rtp-common-link" title="rtPanel WordPress Theme Framework">rtPanel WordPress Theme Framework</a>.</em></p>
+</div>
+
+</footer><!-- #footer-wrapper-->
+
+
+
+</div><!-- #main-wrapper -->
+
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shCore.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushAS3.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushBash.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushColdFusion.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushClojure.js?ver=20090602'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushCpp.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushCSharp.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushCss.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushDelphi.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushDiff.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushErlang.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushFSharp.js?ver=20091003'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushGroovy.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushJava.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushJavaFX.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushJScript.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushLatex.js?ver=20090613'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushMatlabKey.js?ver=20091209'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushObjC.js?ver=20091207'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushPerl.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushPhp.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushPlain.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushPowerShell.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushPython.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/third-party-brushes/shBrushR.js?ver=20100919'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushRuby.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushScala.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushSql.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushVb.js?ver=3.0.9b'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/scripts/shBrushXml.js?ver=3.0.9b'></script>
+<script type='text/javascript'>
+	(function(){
+		var corecss = document.createElement('link');
+		var themecss = document.createElement('link');
+		var corecssurl = "http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shCore.css?ver=3.0.9b";
+		if ( corecss.setAttribute ) {
+				corecss.setAttribute( "rel", "stylesheet" );
+				corecss.setAttribute( "type", "text/css" );
+				corecss.setAttribute( "href", corecssurl );
+		} else {
+				corecss.rel = "stylesheet";
+				corecss.href = corecssurl;
+		}
+		document.getElementsByTagName("head")[0].insertBefore( corecss, document.getElementById("syntaxhighlighteranchor") );
+		var themecssurl = "http://www.xiaomastack.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shThemeEmacs.css?ver=3.0.9b";
+		if ( themecss.setAttribute ) {
+				themecss.setAttribute( "rel", "stylesheet" );
+				themecss.setAttribute( "type", "text/css" );
+				themecss.setAttribute( "href", themecssurl );
+		} else {
+				themecss.rel = "stylesheet";
+				themecss.href = themecssurl;
+		}
+		//document.getElementById("syntaxhighlighteranchor").appendChild(themecss);
+		document.getElementsByTagName("head")[0].insertBefore( themecss, document.getElementById("syntaxhighlighteranchor") );
+	})();
+	SyntaxHighlighter.config.strings.expandSource = '+ expand source';
+	SyntaxHighlighter.config.strings.help = '帮助';
+	SyntaxHighlighter.config.strings.alert = 'SyntaxHighlighter\n\n';
+	SyntaxHighlighter.config.strings.noBrush = '无法找到Brush：';
+	SyntaxHighlighter.config.strings.brushNotHtmlScript = 'Brush不能设置 html-script选项';
+	SyntaxHighlighter.defaults['gutter'] = false;
+	SyntaxHighlighter.defaults['pad-line-numbers'] = true;
+	SyntaxHighlighter.defaults['toolbar'] = false;
+	SyntaxHighlighter.defaults['wrap-lines'] = false;
+	SyntaxHighlighter.all();
+</script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-content/themes/rtpanel/js/rtp-package-min.js?ver=4.2'></script>
+<script type='text/javascript' src='http://www.xiaomastack.com/wp-includes/js/wp-embed.min.js?ver=4.9.1'></script>
+</body>
+</html>
