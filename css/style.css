@@ -1,0 +1,48 @@
+body {
+  background:gray;
+  margin:0px;
+  padding:0px;
+  font-size:14px;
+  font-family:Arial,KaiTi;
+}
+#container {
+  margin:0px auto;
+  width:780px;
+  height:600px;
+  text-align:left;
+}
+#banner {
+  margin:0px;
+  padding:0px;
+  background:#ffffff;
+  height:150px;
+  width:100%;
+}
+#globallink {
+  margin:0px;
+  padding:0px;
+  background:#ffffff;
+  height:50px;
+  width:100%;
+}
+#left {
+  margin:0px;
+  padding:0px 0px 0px 5px;
+  width:200px;
+  height:370px;
+  background:gray;
+  color:#d8ceff;
+  float:left;
+}
+#middle {
+  margin:0px;
+  padding:0px 0px 0px 5px;
+  width:500px;
+  height:370px;
+  background:gray;
+  color:#d8ceff;
+  float:left;
+}
+#footer {
+  clear:both;
+}
