@@ -1,5 +1,5 @@
 body {
-  background:gray;
+  background:#FFFFFF;
   margin:0px;
   padding:0px;
   font-size:14px;
@@ -7,9 +7,37 @@ body {
 }
 #container {
   margin:0px auto;
-  width:780px;
-  height:600px;
+  width:80%;
+  height:1400px;
   text-align:left;
+  overflow:hidden;
+  /*overflow:auto;*/
+}
+#header_top{
+  height:60px;
+  width:100%;
+  
+}
+div header_top {
+	border:solid 1px;
+	
+}
+#header {
+  margin:0px auto;
+  padding:5px 0px;
+  /*align:center;*/
+  background:#fff;
+  height:60px;
+  width:80%;
+}
+#header ul {
+  list-style:none;
+	
+}
+#header ul li {
+  display:inline;
+  font-size:20px;
+  
 }
 #banner {
   margin:0px;
@@ -25,23 +53,34 @@ body {
   height:50px;
   width:100%;
 }
+#content {
+	width:100%;
+	background:#eee333;
+	margin:0;
+	padding:0;
+	height:1200px;
+}
 #left {
   margin:0px;
-  padding:0px 0px 0px 5px;
-  width:200px;
-  height:370px;
-  background:gray;
+  padding:8px 0px 0px 15px;
+  width:20%;
+  height:1200px;
+  background:#eeeeee;
   color:#d8ceff;
-  float:left;
+  float:left
 }
 #middle {
-  margin:0px;
-  padding:0px 0px 0px 5px;
-  width:500px;
-  height:370px;
-  background:gray;
+  margin:0;
+  padding:0;
+  width:75%;
+  /*width:700px;*/
+  height:auto;
+  background:#eeffee;
   color:#d8ceff;
+  position:relative;
   float:left;
+  /*
+  overflow:hidden;*/
 }
 #footer {
   clear:both;
