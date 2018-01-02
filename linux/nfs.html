@@ -1,5 +1,6 @@
 
 <h2>Centos7 安装nfs </h2>
+<h3>Server 端操作</h3>
 <p>yum -y install nfs-utils rpcbind</p>
 <h3>/etc/exports</h3>
 <p>/production/attachment/ 192.168.7.4(rw,no_all_squash,anonuid=1000,anongid=1000) </p>
@@ -8,4 +9,8 @@
 <p>systemctl start nfs</p>
 <p>systemctl enable rpcbind</p>
 <p>systemctl enable nfs</p>
-
+<h3>Client 端操作</h3>
+<p>yum -y install nfs-utils rpcbind</p>
+<p>systemctl start rpcbind</p>
+<p>systemctl enable rpcbind</p>
+<p> 然后就可以mount 了</p>
