@@ -1,1 +1,11 @@
-#!
+
+<h2>Centos7 安装nfs </h2>
+<p>yum -y install nfs-utils rpcbind</p>
+<h3>/etc/exports</h3>
+<p>/production/attachment/ 192.168.7.4(rw,no_all_squash,anonuid=1000,anongid=1000) </p>
+<h3>启动nfs </h3>
+<p>systemctl start rpcbind</p>
+<p>systemctl start nfs</p>
+<p>systemctl enable rpcbind</p>
+<p>systemctl enable nfs</p>
+
