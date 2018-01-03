@@ -1,0 +1,29 @@
+
+<div class="daima">
+#!/bin/bash<br>
+#version one<br>
+<br>
+
+dd if=/dev/zero of=/mnt/tmpfs bs=1M count=4096<br>
+mkfs.ext4 -F /mnt/tmpfs<br>
+cp -ap /tmp /tmp.old<br>
+mount -o loop,noexec,nosuid,rw /mnt/tmpfs /tmp<br>
+echo "mount -o loop,noexec,nosuid,rw /mnt/tmpfs /tmp" >> /etc/rc.local<br>
+if [ $? = 0 ] ;then<br>
+	echo 'mount tmp succeded'<br>
+else<br>
+	echo 'mount tmp failed'<br>
+fi<br>
+chmod 1777 /tmp<br>
+mv -f /tmp.old/* /tmp<br>
+rm -rf /tmp.old<br>
+cp -ap /var/tmp/* /tmp/<br>
+<br>
+rm -rf /var/tmp<br>
+ln -sf /tmp /var/tmp<br>
+if [ $? = 0 ] ;then<br>
+	echo 'var-tmp succeded'<br>
+else<br>
+	echo 'var-tmp failed'<br>
+fi<br>
+</div>
