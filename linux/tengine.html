@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
+<div class="daima">
 <ul>
 <li>groupadd www</li>
 <li>useradd -M -s /sbin/nologin -g www www</li>
@@ -63,7 +64,7 @@
 <li>sed -i '/gzip_buffers/a\ \ \ \ gzip_types       text/plain application/x-javascript text/css application/xml text/javascript;' nginx.conf</li>
 <br>
 </ul>
-
+<div>
 cd /usr/local/src/modsecurity-2.9.2
 cp modsecurity.conf-recommended /production/server/tengine-2.1.2/conf/
 cp unicode.mapping /production/server/tengine-2.1.2/conf/
