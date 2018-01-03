@@ -1,0 +1,173 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+<ul>
+<li>groupadd www</li>
+<li>useradd -M -s /sbin/nologin -g www www</li>
+<li>yum -y install openssl openssl-devel pcre pcre-devel</li>
+<li>yum -y install jemalloc-devel</li>
+<li>wget http://tengine.taobao.org/download/tengine-2.1.2.tar.gz</li>
+<li>tar xf tengine-2.1.2.tar.gz</li>
+<li>cd tengine-2.1.2</li>
+<li>./configure --with-cc-opt='-O3 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2' --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro' --user=www --group=www --prefix=/production/server/tengine-2.1.2 --with-jemalloc --with-http_stub_status_module --with-http_ssl_module --with-http_gzip_static_module --with-http_concat_module --with-http_realip_module --with-http_spdy_module --with-http_v2_module --with-http_sysguard_module  --without-poll_module --without-select_module --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module</li>
+<li>#--without-http-cache</li>
+<li>make</li>
+<li>make install</li>
+
+<br>
+<li>./configure --with-cc-opt='-O3 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2' --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro' --add-module=../modsecurity-2.9.2/nginx/modsecurity/ --user=www --group=www --prefix=/production/server/tengine-2.1.2 --with-jemalloc --with-http_stub_status_module --with-http_ssl_module --with-http_gzip_static_module --with-http_concat_module --with-http_realip_module --with-http_spdy_module --with-http_v2_module --with-http_sysguard_module  --without-poll_module --without-select_module --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module</li>
+<br>
+
+<li>cd /production/server/tengine-2.1.2/conf</li>
+<li>cp nginx.conf nginx.conf.ori</li>
+
+<br>
+<li>mkdir vhosts</li>
+<br>
+<li>sed -i '2s/#user  nobody/user  www/' nginx.conf</li>
+<li>sed -i '/worker_processes/s/1;/auto;/' nginx.conf</li>
+<li>sed -i '/error.log;/s/#error_log/error_log/' nginx.conf</li>
+<li>sed -i '/nginx.pid;/s/#pid/pid/' nginx.conf</li>
+<li>sed -i '/nginx.pid;/aworker_rlimit_nofile 65535;' nginx.conf</li>
+<li>sed -i '/worker_connections/i\ \ \ \ use epoll;' nginx.conf</li>
+<li>sed -i '/worker_connections/s/1024/16384/' nginx.conf</li>
+<li>sed -i '/worker_connections/a\ \ \ \ reuse_port on;' nginx.conf</li>
+<li>sed -i '/server/,$d' nginx.conf</li>
+<li>sed -i '$a\ \ \ \ include vhosts/*.conf;' nginx.conf</li>
+<li>sed -i '$a}' nginx.conf</li>
+<li>sed -i '/tcp_nopush/s/#tcp_nopush/tcp_nopush/' nginx.conf</li>
+<li>sed -i '/gzip/s/#gzip/gzip/' nginx.conf</li>
+<li>sed -i '/log_format/s/#log_format/log_format/' nginx.conf</li>
+<li>sed -i '/log_format/{n;s/#//}' nginx.conf</li>
+<li>sed -i '/log_format/{n;n;s/#//}' nginx.conf</li>
+<li>sed -i '/tcp_nopush/a\ \ \ \ server_tokens off;' nginx.conf</li>
+<li>sed -i '/tcp_nopush/a\ \ \ \ server_info off;' nginx.conf</li>
+<li>sed -i '/tcp_nopush/a\ \ \ \ server_tag Apache;' nginx.conf</li>
+<li>sed -i '/tcp_nopush/G' nginx.conf</li>
+<br>
+<li>sed -i '/server_tokens/a\ \ \ \ client_header_buffer_size 4k;' nginx.conf</li>
+<li>sed -i '/client_header_buffer_size/a\ \ \ \ client_body_buffer_size  128k;' nginx.conf</li>
+<li>sed -i '/server_tokens/G' nginx.conf</li>
+<li>sed -i '/client_header_buffer_size/a\ \ \ \ open_file_cache max=102400 inactive=20s;' nginx.conf</li>
+<li>sed -i '/open_file_cache max=102400/a\ \ \ \ open_file_cache_valid 30s;' nginx.conf</li>
+<li>sed -i '/open_file_cache_valid 30s;/a\ \ \ \ open_file_cache_min_uses 2;' nginx.conf</li>
+
+
+<br>
+<li>sed -i '/gzip/a\ \ \ \ gzip_min_length  1k;' nginx.conf</li>
+<li>sed -i '/gzip_min_length/a\ \ \ \ gzip_comp_level  9;' nginx.conf</li>
+<li>sed -i '/gzip_comp_level/a\ \ \ \ gzip_buffers     4 8k;' nginx.conf</li>
+<li>sed -i '/gzip_buffers/a\ \ \ \ gzip_types       text/plain application/x-javascript text/css application/xml text/javascript;' nginx.conf</li>
+<br>
+</ul>
+
+cd /usr/local/src/modsecurity-2.9.2
+cp modsecurity.conf-recommended /production/server/tengine-2.1.2/conf/
+cp unicode.mapping /production/server/tengine-2.1.2/conf/
+
+
+
+内核优化：
+echo '# Increase the tcp-time-wait buckets pool size to prevent simple DOS attacks' >> /etc/sysctl.conf
+echo 'net.ipv4.tcp_max_tw_buckets = 220000' >> /etc/sysctl.conf
+echo 'fs.file-max = 2097152' >> /etc/sysctl.conf
+echo -e '# Do less swapping\nvm.swappiness = 10\nvm.dirty_ratio = 60\nvm.dirty_background_ratio = 2\n\n' >> /etc/sysctl.conf
+echo -e '# Number of times SYNACKs for passive TCP connection.\nnet.ipv4.tcp_synack_retries = 2\n' >> /etc/sysctl.conf
+echo -e '# Allowed local port range\nnet.ipv4.ip_local_port_range = 1024 65535\n' >> /etc/sysctl.conf
+echo -e '# Protect Against TCP Time-Wait\nnet.ipv4.tcp_rfc1337 = 1\n' >> /etc/sysctl.conf
+echo -e '# Decrease the time default value for tcp_fin_timeout connection\nnet.ipv4.tcp_fin_timeout = 8\n' >> /etc/sysctl.conf
+echo -e '# Decrease the time default value for connections to keep alive\nnet.ipv4.tcp_keepalive_time = 300\n' >> /etc/sysctl.conf
+echo -e 'net.ipv4.tcp_keepalive_probes = 5\nnet.ipv4.tcp_keepalive_intvl = 15\n' >> /etc/sysctl.conf
+echo -e '# Default Socket Receive Buffer\nnet.core.rmem_default = 31457280\n' >> /etc/sysctl.conf
+echo -e '# Maximum Socket Receive Buffer\nnet.core.rmem_max = 12582912\n' >> /etc/sysctl.conf
+echo -e '# Default Socket Send Buffer\nnet.core.wmem_default = 31457280\n' >> /etc/sysctl.conf
+echo -e '# Maximum Socket Send Buffer\nnet.core.wmem_max = 12582912\n' >> /etc/sysctl.conf
+echo -e '# Increase number of incoming connections\nnet.core.somaxconn = 4096' >> /etc/sysctl.conf
+echo -e '# Increase number of incoming connections backlog\nnet.core.netdev_max_backlog = 65536' >> /etc/sysctl.conf
+echo -e '# Increase the maximum amount of option memory buffers\nnet.core.optmem_max = 25165824' >> /etc/sysctl.conf
+echo '# Increase the maximum total buffer-space allocatable' >> /etc/sysctl.conf
+echo '# This is measured in units of pages (4096 bytes)' >> /etc/sysctl.conf
+echo -e 'net.ipv4.tcp_mem = 65536 131072 262144\nnet.ipv4.udp_mem = 65536 131072 262144\n' >> /etc/sysctl.conf
+echo '# Increase the read-buffer space allocatable' >> /etc/sysctl.conf
+echo -e 'net.ipv4.tcp_rmem = 8192 87380 16777216\nnet.ipv4.udp_rmem_min = 16384\n' >> /etc/sysctl.conf
+echo '# Increase the write-buffer-space allocatable' >> /etc/sysctl.conf
+echo -e 'net.ipv4.tcp_wmem = 8192 65536 16777216\nnet.ipv4.udp_wmem_min = 16384\n' >> /etc/sysctl.conf
+echo 'net.ipv4.tcp_tw_reuse = 1' >> /etc/sysctl.conf
+
+
+
+
+
+
+fs.file-max = 2097152
+
+# Do less swapping
+vm.swappiness = 10
+vm.dirty_ratio = 60
+vm.dirty_background_ratio = 2
+### GENERAL NETWORK SECURITY OPTIONS ###
+
+# Number of times SYNACKs for passive TCP connection.
+net.ipv4.tcp_synack_retries = 2
+
+# Allowed local port range
+net.ipv4.ip_local_port_range = 1024 65535
+
+# Protect Against TCP Time-Wait
+net.ipv4.tcp_rfc1337 = 1
+
+# Decrease the time default value for tcp_fin_timeout connection
+net.ipv4.tcp_fin_timeout = 8
+
+# Decrease the time default value for connections to keep alive
+net.ipv4.tcp_keepalive_time = 300
+net.ipv4.tcp_keepalive_probes = 5
+net.ipv4.tcp_keepalive_intvl = 15
+
+### TUNING NETWORK PERFORMANCE ###
+
+# Default Socket Receive Buffer
+net.core.rmem_default = 31457280
+
+# Maximum Socket Receive Buffer
+net.core.rmem_max = 12582912
+
+# Default Socket Send Buffer
+net.core.wmem_default = 31457280
+
+# Maximum Socket Send Buffer
+net.core.wmem_max = 12582912
+
+# Increase number of incoming connections
+net.core.somaxconn = 4096
+
+# Increase number of incoming connections backlog
+net.core.netdev_max_backlog = 65536
+
+# Increase the maximum amount of option memory buffers
+net.core.optmem_max = 25165824
+
+# Increase the maximum total buffer-space allocatable
+# This is measured in units of pages (4096 bytes)
+net.ipv4.tcp_mem = 65536 131072 262144
+net.ipv4.udp_mem = 65536 131072 262144
+
+# Increase the read-buffer space allocatable
+net.ipv4.tcp_rmem = 8192 87380 16777216
+net.ipv4.udp_rmem_min = 16384
+
+# Increase the write-buffer-space allocatable
+net.ipv4.tcp_wmem = 8192 65536 16777216
+net.ipv4.udp_wmem_min = 16384
+
+# Increase the tcp-time-wait buckets pool size to prevent simple DOS attacks
+net.ipv4.tcp_max_tw_buckets = 1440000
+
+net.ipv4.tcp_tw_reuse = 1
+# 但是要特别留意的是：这个选项一般不推荐启用，因为在NAT(Network Address Translation)网络下，会导致大量的TCP连接建立错误，从而引起网站访问故障。
+net.ipv4.tcp_tw_recycle = 0
+</body>
+</html>
