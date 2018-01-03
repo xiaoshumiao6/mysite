@@ -34,6 +34,15 @@ if [ $? = 0 ] ;then<br>
 else<br>
 	echo 'var-tmp failed'<br>
 fi<br>
+<ul>
+<li>sed -i '/shm/s/defaults/defaults,nosuid,noexec,rw/g' /etc/fstab</li>
+<li>mount -o remount /dev/shm</li>
+<li>if [ $? = 0 ] ;then</li>
+<li>&nbsp;&nbsp;	echo 'mount shm succeded'</li>
+<li>else</li>
+<li>&nbsp;&nbsp;	echo 'mount shm failed'</li>
+<li>fi</li>
+</ul>
 </div>
 	</body>
 </html>
