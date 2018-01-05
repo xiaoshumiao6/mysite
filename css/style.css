@@ -104,7 +104,11 @@ div header_top {
   padding-left: 10px;
   padding-right: 10px;
   background-color: #2d2d2d;
+  width:500px;
 }
 .codeeara ul {
   list-style:none;
+}
+.codeeara ul li {
+  font:#fff;
 }
