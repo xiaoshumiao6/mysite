@@ -17,8 +17,8 @@
 <li>GAWK is GNU AWK.所有的Linux发行版本都自带GAWK</li>
 </ul>
 <p>在linux系统中，你可以看到/bin/awk是一个软链接，链接到/bin/gawk 创建简单的实验文件</p>
-<p>employee.txt
-employee-number,employee-name,employee-title</p>
+<p>employee.txt</p>
+<p class="codecontent">employee-number,employee-name,employee-title</p>
 
 <div class="codeeara">
 <ul>
@@ -30,8 +30,8 @@ employee-number,employee-name,employee-title</p>
 <li>105,Jane Miller,Sales Manager</li>
 </ul>
 </div>
-<p>items.txt
-item-number,item-description,item-category,cost,quantityavailable</p>
+<p>items.txt</p>
+<p class="codecontent">item-number,item-description,item-category,cost,quantityavailable</p>
 
 <div class="codeeara">
 <ul>
@@ -43,8 +43,8 @@ item-number,item-description,item-category,cost,quantityavailable</p>
 <li>105,Laser Printer,Office,475,5</li>
 </ul>
 </div>
-<p>items-sold.txt
-item-number qty-sold-month1 qty-sold-month2 qty-sold-month3 qty-sold-month4 qty-sold-month5 qty-sold-month6</p>
+<p>items-sold.txt</p>
+<p class="codecontent">item-number qty-sold-month1 qty-sold-month2 qty-sold-month3 qty-sold-month4 qty-sold-month5 qty-sold-month6</p>
 <div class="codeeara">
 <ul>
 <li>$ vi items-sold.txt</li>
@@ -57,9 +57,9 @@ item-number qty-sold-month1 qty-sold-month2 qty-sold-month3 qty-sold-month4 qty-
 </div>
 <h2>Awk Command Syntax</h2>
 <h4>基本语法</h4>
-<p>awk -Fs ‘/pattern/ {action}’ input-file
-(or)
-awk -Fs ‘{action}’ intput-file</p>
+<p class="codecontent">awk -Fs ‘/pattern/ {action}’ input-file</p>
+<p class="codecontent">(or)</p>
+<p class="codecontent">awk -Fs ‘{action}’ intput-file</p>
 <p>/pattern/ {action}：表示当匹配到了/pattern/则执行{action}</p>
 <h2>Awk Program Structure (BEGIN, body, END block)</h2>
 <p>Awk程序结构。一个典型的Awk命令有三个结构</p>
@@ -156,14 +156,14 @@ awk -Fs ‘{action}’ intput-file</p>
 </div>
 <h5>Multiple Input Files</h5>
 
-<p>多个输入文件直接在后面添加参数文件就行。
+<p>多个输入文件直接在后面添加参数文件就行。</p>
 
-BEGIN块和END块都是只执行一次的，不管有多少个输入文件</p>
+<p>BEGIN块和END块都是只执行一次的，不管有多少个输入文件</p>
 <h3>Print Command（打印命令）</h3>
-<p>默认情况，print命令将输出所有行，就和cat命令一样
-awk '{print}' employee.txt
-你也可以输出特定字段，默认分隔符为空格-F ' '
-下列命令是等价的</p3>
+<p>默认情况，print命令将输出所有行，就和cat命令一样</p>
+<p>awk '{print}' employee.txt</p>
+<p>你也可以输出特定字段，默认分隔符为空格-F ' '</p>
+<p>下列命令是等价的</p>
 <div class="codeeara">
 <ul>
 <li>awk -F ',' '{print $2}' employee.txt</li>
