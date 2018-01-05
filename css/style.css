@@ -112,7 +112,8 @@ div header_top {
   color:#fff;
 }
 .codecontent {
-  background-color:#E8E8E8
+  background-color:#E8E8E8;
+  width:auto;
 }
 img {
   width:80%;
