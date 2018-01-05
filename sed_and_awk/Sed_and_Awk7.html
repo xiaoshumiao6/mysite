@@ -20,7 +20,7 @@
 <div class="codeeara">
 <ul>
 <li>sed = employee.txt |sed '{N;s/\n/ /g}'</li>
-<li></li>
+<li>&nbsp;</li>
 <li>1 101,John Doe,CEO</li>
 <li>2 102,Jason Smith,IT Manager </li>
 <li>3 103,Raj Reddy,Sysadmin </li>
@@ -34,7 +34,7 @@
 <div class="codeeara" >
 <ul>
 <li>sed -n '{x;2N;s/\n/:/;p;G;s/\n/::/;p}' employee.txt </li>
-<li> </li>
+<li>&nbsp; </li>
 <li>::101,John Doe,CEO</li>
 <li>101,John Doe,CEO:103,Raj Reddy,Sysadmin </li>
 <li>101,John Doe,CEO:103,Raj Reddy,Sysadmin ::102,Jason Smith,IT Manager </li>
@@ -48,7 +48,7 @@
 <div class="codeeara">
 <ul>
 <li>sed -n '{x;2n;s/\n/:/;p;G;s/\n/::/;p}' employee.txt </li>
-<li> </li>
+<li>&nbsp; </li>
 <li>::101,John Doe,CEO</li>
 <li>103,Raj Reddy,Sysadmin </li>
 <li>103,Raj Reddy,Sysadmin ::102,Jason Smith,IT Manager </li>
@@ -89,9 +89,9 @@ b命令打上标签label，然后:label为锚点，跳到指定标签位:label�
 <li>/Manager/ s/^/*/ </li>
 <li>/\*\*\*/!t repeat </li>
 <li>p</li>
-<li> </li>
+<li> &nbsp;</li>
 <li>$ chmod u+x label-t.sed</li>
-<li> </li>
+<li> &nbsp;</li>
 <li>$ ./label-t.sed empnametitle.txt </li>
 <li>John Doe:CEO</li>
 <li>***Jason Smith:IT Manager </li>
@@ -108,7 +108,7 @@ b命令打上标签label，然后:label为锚点，跳到指定标签位:label�
 </ul></div>
 <ul>
 <li>:repeat ：这个是标签</li>
-<li> </li>
+<li>&nbsp; </li>
 <li>/Manager/ s/^/*/： 匹配Manager行，在行首加一个*号</li>
 <li>/\*\*\*/!t repeat ：判断如果上一句执行成功，并且不是***则跳到标签repeat继续执行</li>
 		     </ul>
