@@ -60,7 +60,7 @@ div header_top {
 	padding:0;
 	height:1200px;
 }
-#left {
+#left_top {
   margin:0px;
   padding:8px 0px 0px 15px;
   width:20%;
@@ -69,7 +69,7 @@ div header_top {
   color:#d8ceff;
   float:left
 }
-#middle {
+#middle_top {
   margin:0;
   padding:0;
   width:75%;
