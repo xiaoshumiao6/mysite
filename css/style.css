@@ -91,3 +91,20 @@ div header_top {
   border-left:20px;
   margin-left:40px;
 }
+.post-title {
+  margin-left: 60px;
+  font-weight: normal;
+  line-height: inherit;
+  font-size: 26px;
+  text-align: center;
+  word-break: break-word;
+  font-weight: 400;
+}
+.coderara {
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #2d2d2d;
+}
+.coderara ul {
+  list-style:none;
+}
