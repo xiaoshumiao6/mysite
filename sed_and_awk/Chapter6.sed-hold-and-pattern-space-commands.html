@@ -1,13 +1,41 @@
 <html>
 <head></head>
 <body>
-<h3>sed的保留空间和模式空间</h3>
+  <h1><div class="post-title">Chapter 6. Sed Hold and Pattern Space Commands</div></h1>
+<p>sed的保留空间和模式空间<p>
 <ul>
   <li>pattern space（模式空间）相当于车间sed把流内容在这里处理；</li>
   <li>hold space（保留空间）相当于仓库，加工的半成品在这里临时储存（当然加工完的成品也在这里存储）。</li>
 </ul>
-<h3>Swap Pattern Space with Hold Space (x command)</h3>
-交换H空间和P空间里面的内容
+<h2>Swap Pattern Space with Hold Space (x command)</h2>
+  <p>交换H空间和P空间里面的内容</p>
+  <div class="codeeara">
+    <ul>
+      <li>[root@localordb sed_test]# sed  -e 'x;n' empnametitle.txt</li>
+      <li></li>
+      <li>CEO</li>
+      <li>John Doe</li>
+      <li>IT Manager</li>
+      <li>Jason Smith</li>
+      <li>Sysadmin</li>
+      <li>Raj Reddy</li>
+      <li>Developer</li>
+      <li>Anand Ram</li>
+      <li>Sales Manager</li>
+      <li></li>
+      <li>[root@localordb sed_test]# cat empnametitle.txt</li>
+      <li>John Doe</li>
+      <li>CEO</li>
+      <li>Jason Smith</li>
+      <li>IT Manager</li>
+      <li>Raj Reddy</li>
+      <li>Sysadmin</li>
+      <li>Anand Ram</li>
+      <li>Developer</li>
+      <li>Jane Miller</li>
+      <li>Sales Manager</li>
+    </ul>
+  </div>
 
 </ul>
 </body>
