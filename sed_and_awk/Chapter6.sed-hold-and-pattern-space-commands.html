@@ -68,6 +68,12 @@
 	<p>get从H空间复制到P空间</p>
 	<h3>Append Hold Space to Pattern Space (G command)</h3>
 	<p>添加P空间到H空间</p>
+	<h2>n 与 N 命令的区别</h2>
+	<img src="../img/sed_and_awk/sed_n1.png" alt="sed正常流程" />
+	<p>命令n：读取下一行到pattern space。由于pattern space中有按照正常流程读取的内容，使用n命令后，pattern space中又有了一行，此时，pattern space中有2行内容，但是先读取的那一行不会被取代、覆盖或删除；当n命令后，还有其他命令p的时候，此时打印出的结果是n命令读取的那一行的内容。</p>
+	<img src="../img/sed_and_awk/sed_n2.png" alt="sed使用n" />
+	<p>N命令：将下一行添加到pattern space中。将当前读入行和用N命令添加的下一行看成“一行”。</p>
+	<img src="../img/sed_and_awk/sed_n3.png" alt="sed使用N" />
 	
 	
 	
