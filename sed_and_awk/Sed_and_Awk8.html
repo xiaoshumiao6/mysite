@@ -1,0 +1,208 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../css/style.css" />
+  
+</head>
+<body>
+	
+<div class="container_top">
+<div id="left_top"></div>
+<div id="middle_top">	
+<h1><div class="post-title">Chapter 8. Awk Syntax and Basic Commands</div></h1>
+<h3>Awk是一个强大的处理文本的语言</h3>
+<ul>
+<li>AWK is original AWK.</li>
+<li>NAWK is new AWK.</li>
+<li>GAWK is GNU AWK.所有的Linux发行版本都自带GAWK</li>
+</ul>
+<p>在linux系统中，你可以看到/bin/awk是一个软链接，链接到/bin/gawk 创建简单的实验文件</p>
+<p>employee.txt
+employee-number,employee-name,employee-title</p>
+
+<div class="codeeara">
+<ul>
+<li>$ vi employee.txt</li>
+<li>101,John Doe,CEO</li>
+<li>102,Jason Smith,IT Manager</li>
+<li>103,Raj Reddy,Sysadmin</li>
+<li>104,Anand Ram,Developer</li>
+<li>105,Jane Miller,Sales Manager</li>
+</ul>
+</div>
+<p>items.txt
+item-number,item-description,item-category,cost,quantityavailable</p>
+
+<div class="codeeara">
+<ul>
+<li>$ vi items.txt</li>
+<li>101,HD Camcorder,Video,210,10</li>
+<li>102,Refrigerator,Appliance,850,2</li>
+<li>103,MP3 Player,Audio,270,15</li>
+<li>104,Tennis Racket,Sports,190,20</li>
+<li>105,Laser Printer,Office,475,5</li>
+</ul>
+</div>
+<p>items-sold.txt
+item-number qty-sold-month1 qty-sold-month2 qty-sold-month3 qty-sold-month4 qty-sold-month5 qty-sold-month6</p>
+<div class="codeeara">
+<ul>
+<li>$ vi items-sold.txt</li>
+<li>101 2 10 5 8 10 12</li>
+<li>102 0 1 4 3 0 2</li>
+<li>103 10 6 11 20 5 13</li>
+<li>104 2 3 4 0 6 5</li>
+<li>105 10 2 5 7 12 6</li>
+</ul>
+</div>
+<h2>Awk Command Syntax</h2>
+<h4>基本语法</h4>
+<p>awk -Fs ‘/pattern/ {action}’ input-file
+(or)
+awk -Fs ‘{action}’ intput-file</p>
+<p>/pattern/ {action}：表示当匹配到了/pattern/则执行{action}</p>
+<h2>Awk Program Structure (BEGIN, body, END block)</h2>
+<p>Awk程序结构。一个典型的Awk命令有三个结构</p>
+<ul>
+<li>BEGIN块</li>
+<li>body块</li>
+<li>END 块</li>
+</ul>
+<h4>BEGIN block</h4>
+<p>开始快语法:</p>
+<div class="codeeara">
+<ul>
+<li>BEGIN { awk-commands }</li>
+</ul>
+</div>
+<p>BEGIN块只在程序运行之初执行一次，在输入文件所有行之前</p>
+<ul>
+<li>BEGIN块是打印的报告头和初始化变量的好地方。</li>
+<li>您可以在开始块有一个或一个以上的awk命令。</li>
+<li>关键字BEGIN应该大写字母指定。</li>
+<li>开始块是可选的。</li></ul>
+<h4>body block
+基本语法：</h4>
+<div class="codeeara">
+<ul>
+<li>/pattern/ {action}</li>
+</ul>
+</div>
+<h4>END Block
+基本语法：</h4>
+<div class="codeeara">
+<ul>
+<li>END { awk-commands }</li>
+</ul>
+</div>
+<p>和BEGIN块一样，只在结尾执行一次</p>
+<ul>
+<li>END块是打印报表页脚和做任何清理活动的好地方。</li>
+<li>您可以在END块的一个或多个AWK命令。</li>
+<li>关键字应该以大写字母指定。</li>
+<li>END块是可选的。</li>
+</ul>
+<h2>AWK处理流程图</h2>
+<img src="../sed_and_awk/sed_8_1.png" alt="awk处理流程图" />
+<h5>一个简单的AWK例子</h5>
+<div class="codeeara">
+<ul>
+<li>$ awk 'BEGIN { FS=":";print "---header---" } \</li>
+<li>/mail/ {print $1} \</li>
+<li>END { print "---footer---"}' /etc/passwd</li>
+<li></li>
+<li>---header--</li>
+<li>mail</li>
+<li>mailnull</li>
+<li>---footer---</li>
+</ul>
+</div>
+<h4>创建AWK脚本执行</h4>
+<div class="codeeara">
+<ul>
+<li>$ vi myscript.awk</li>
+<li>BEGIN {</li>
+<li> FS=":"</li>
+<li> print "---header---"</li>
+<li>}</li>
+<li>/mail/ {</li>
+<li> print $1</li>
+<li>}</li>
+<li>END {</li>
+<li> print "---footer---"</li>
+<li>}</li>
+</ul>
+</div>
+<p>然后执行命令</p>
+<div class="codeeara">
+<ul>
+<li>$ awk -f myscript.awk /etc/passwd</li>
+<li></li>
+<li>---header--</li>
+<li>mail</li>
+<li>mailnull</li>
+<li>---footer---</li>
+</ul>
+</div>
+<h5>三个模块是都是可选的</h5>
+
+<p>一般来说，BEGIN和END模块都是可选的，主要用body块
+但是，也有只用BEGIN块的</p>
+<div class="codeeara">
+<ul>
+<li>$ awk 'BEGIN { print "Hello World!" }'</li>
+<li>Hello World!</li>
+</ul>
+</div>
+<h5>Multiple Input Files</h5>
+
+<p>多个输入文件直接在后面添加参数文件就行。
+
+BEGIN块和END块都是只执行一次的，不管有多少个输入文件</p>
+<h3>Print Command（打印命令）</h3>
+<p>默认情况，print命令将输出所有行，就和cat命令一样
+awk '{print}' employee.txt
+你也可以输出特定字段，默认分隔符为空格-F ' '
+下列命令是等价的</p3>
+<div class="codeeara">
+<ul>
+<li>awk -F ',' '{print $2}' employee.txt</li>
+<li>awk -F "," '{print $2}' employee.txt</li>
+<li>awk -F, '{print $2}' employee.txt</li>
+</ul>
+</div>
+<p>而$0等价与全部</p>
+<div class="codeeara">
+<ul>
+<li>awk '{print}' employee.txt</li>
+<li>awk '{print $0}' employee.txt</li>
+</ul>
+</div>
+<h2>Pattern Matching（模式匹配）</h2>
+<p>和sed命令差不多，匹配到相应行才执行后续命令</p>
+<div class="codeeara">
+<ul>
+<li>awk -F, '{print $3,":is:",$2}' employee.txt</li>
+<li>    </li>
+<li>CEO :is: John Doe</li>
+<li>IT Manager  :is: Jason Smith</li>
+<li>Sysadmin  :is: Raj Reddy</li>
+<li>Developer :is: anand Ram</li>
+<li>Sales Manager :is: Jane Miller</li>
+</ul>
+</div>
+<p>可以看出print还能在中间拼接文字，只有匹配到的行输出了</p>
+<div class="codeeara">
+<ul>
+<li>awk -F, '/^102/ {print $3,":is:",$2}' employee.txt</li>
+<li></li>
+<li>IT Manager  :is: Jason Smith</li>
+</ul>
+</div>
+
+
+</div>
+</div>
+
+</body>
+</html>
