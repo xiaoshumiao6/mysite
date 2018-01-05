@@ -51,6 +51,23 @@
 	<h2> Copy Pattern Space to Hold Space (h command)</h2>
 	<p>拷贝P空间到H空间</p>
 	<p>Print the names of the managers(输出managers的名字)</p>
+	<div class="codeeara">
+		<ul>
+			<li># sed -n -e '/Manager/!h' -e '/Manager/{x;p}' empnametitle.txt</li>
+			<li>Jason Smith</li>
+			<li>Jane Miller</li>
+		</ul>
+	</div>
+	<ul>
+		<li>/Manager/!h 不匹配Manager的行拷贝到H空间</li>
+		<li>/Manager/{x;p} 匹配到Manager后，交换H空间的内容，并输出</li>
+	</ul>
+	<h3>Append Pattern Space to Hold Space (H command)</h3>
+	<p>添加P空间到H空间</p>
+	<h3>Copy Hold Space to Pattern Space (g command)</h3>
+	<p>get从H空间复制到P空间</p>
+	<h3>Append Hold Space to Pattern Space (G command)</h3>
+	<p>添加P空间到H空间</p>
 	
 	
 	
