@@ -95,7 +95,7 @@ div header_top {
   font-weight: normal;
   line-height: inherit;
   font-size: 26px;
-  text-align: center;
+  /*text-align: center;*/
   word-break: break-word;
   font-weight: 400;
 }
