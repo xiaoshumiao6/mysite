@@ -65,7 +65,7 @@ div header_top {
   padding:8px 0px 0px 15px;
   width:20%;
   height:1200px;
-  background:#eeeeee;
+  background:#fff;
   color:#d8ceff;
   float:left
 }
@@ -75,7 +75,7 @@ div header_top {
   width:75%;
   /*width:700px;*/
   height:auto;
-  background:#eeffee;
+  background:#fff;
   color:#d8ceff;
   position:relative;
   float:left;
