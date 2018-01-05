@@ -16,14 +16,101 @@
   <p>添加下一行到P空间</p>
   <img src="../sed_and_awk/sed_7_1.png alt="pattern space" />
   <p>将回车替换成\n写入一行</p>
-  <p>在同一行输出行号</p>
-							  
- 
-							  
-							  
+<p>在同一行输出行号</p>
+<div class="codeeara">
+<ul>
+<li>sed = employee.txt |sed '{N;s/\n/ /g}'</li>
+<li></li>
+<li>1 101,John Doe,CEO</li>
+<li>2 102,Jason Smith,IT Manager </li>
+<li>3 103,Raj Reddy,Sysadmin </li>
+<li>4 104,anand Ram,Developer</li>
+<li>5 105,Jane Miller,Sales Manager</li>
+ </ul>
+</div>
+<h3>n与N；2n与2N差异化研究</h3>
+<p>下面例子显示结果是在第2N遍执行sed-command里面的2N命令；在第N遍则不执行
+推论：如为3N则第3N遍执行.</p>							  
+<div class="codeeara" >
+<ul>
+<li>sed -n '{x;2N;s/\n/:/;p;G;s/\n/::/;p}' employee.txt </li>
+<li></li>
+<li>::101,John Doe,CEO</li>
+<li>101,John Doe,CEO:103,Raj Reddy,Sysadmin </li>
+<li>101,John Doe,CEO:103,Raj Reddy,Sysadmin ::102,Jason Smith,IT Manager </li>
+<li>102,Jason Smith,IT Manager </li>
+<li>102,Jason Smith,IT Manager ::104,anand Ram,Developer</li>
+<li>104,anand Ram,Developer</li>
+<li>104,anand Ram,Developer::105,Jane Miller,Sales Manager</li>
+</ul>
+</div>
+<p>而n参数是输出最后一行</p>
+<div class="codeeara">
+<ul>
+<li>sed -n '{x;2n;s/\n/:/;p;G;s/\n/::/;p}' employee.txt </li>
+<li></li>
+<li>::101,John Doe,CEO</li>
+<li>103,Raj Reddy,Sysadmin </li>
+<li>103,Raj Reddy,Sysadmin ::102,Jason Smith,IT Manager </li>
+<li>102,Jason Smith,IT Manager </li>
+<li>102,Jason Smith,IT Manager ::104,anand Ram,Developer</li>
+<li>104,anand Ram,Developer</li>
+<li>104,anand Ram,Developer::105,Jane Miller,Sales Manager</li>
+</ul>		     
+</div> 
+<p>步骤分析</p>
+<src="../sed_and_awk/sed_7_2.png" />
 
-							  
-  
-  
+<h4>Print 1st Line in MultiLine (P command)</h4>
+
+<p>输出多行的第一行。
+P命令为输出模式空间，直到遇到一个\n符号，
+所以如果模式空间里有多个\n换行符（比如有个N命令），则只输出第一行。</p>
+
+<h4>Delete 1st Line in MultiLine (D command)</h4>
+
+<p>删除多行的第一行</p>
+
+<h4> Loop and Branch (b command and :label)</h4>
+
+<p>循环和分支
+b命令打上标签label，然后:label为锚点，跳到指定标签位:label处执行</p>
+
+<h4> Loop Using t command
+
+循环使用t命令</h4>
+
+<div class="codeeara"><ul>
+<li>$ vi label-t.sed </li>
+<li>#!/bin/sed -nf </li>
+<li>h;n;H;x </li>
+<li>s/\n/:/ </li>
+<li>:repeat</li>
+<li>/Manager/ s/^/*/ </li>
+<li>/\*\*\*/!t repeat </li>
+<li>p</li>
+<li></li>
+<li>$ chmod u+x label-t.sed</li>
+<li></li>
+<li>$ ./label-t.sed empnametitle.txt </li>
+<li>John Doe:CEO</li>
+<li>***Jason Smith:IT Manager </li>
+<li>Raj Reddy:Sysadmin </li>
+<li>Anand Ram:Developer</li>
+<li>***Jane Miller:Sales Manager</li>
+ </ul> </div>    
+<p>下面一小段代码是循环的</p>  
+<div class="codeeara"><ul>
+<li> :repeat</li>
+<li>/Manager/ s/^/*/</li>
+<li>/\*\*\*/!t repeat</li>
+
+</ul></div>
+<ul>
+<li>:repeat ：这个是标签</li>
+<li></li>
+<li>/Manager/ s/^/*/： 匹配Manager行，在行首加一个*号</li>
+<li>/\*\*\*/!t repeat ：判断如果上一句执行成功，并且不是***则跳到标签repeat继续执行</li>
+		     </ul>
   </div>
   </div>
