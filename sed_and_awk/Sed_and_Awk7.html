@@ -71,47 +71,81 @@ P命令为输出模式空间，直到遇到一个\n符号，
 
 <p>删除多行的第一行</p>
 
-<h4> Loop and Branch (b command and :label)</h4>
-
-<p>循环和分支
-b命令打上标签label，然后:label为锚点，跳到指定标签位:label处执行</p>
-
-<h4> Loop Using t command
-
-循环使用t命令</h4>
-
-<div class="codeeara"><ul>
-<li>$ vi label-t.sed </li>
-<li>#!/bin/sed -nf </li>
-<li>h;n;H;x </li>
-<li>s/\n/:/ </li>
-<li>:repeat</li>
-<li>/Manager/ s/^/*/ </li>
-<li>/\*\*\*/!t repeat </li>
+<h2>循环和分支（命令b 和:label 标签）</h2>
+<p>使用标签和分支命令b ， 可以改变sed 的执行流程：</p>
+<ul>
+<li>:label 定义一个标签；</li>
+<li>b label 执行标签后面的命令。sed 会跳转到该标签，然后执行后面的命令；</li>
+<li>注意：命令b 后面可以不跟任何标签，这种情况下，他会直接跳到sed 脚本的结尾</li>
+</ul>
+<p>例：</p>
+<div class="codeeara">
+<ul>
+<li>$cat label.sed</li>
+<li>#!/bin/sed -nf</li>
+<li>h;n;H;x</li>
+<li>s/\n/:/</li>
+<li>/Manager/!b end</li>
+<li>s/^/*/</li>
+<li>:end</li>
 <li>p</li>
-<li> &nbsp;</li>
-<li>$ chmod u+x label-t.sed</li>
-<li> &nbsp;</li>
-<li>$ ./label-t.sed empnametitle.txt </li>
+</ul>
+</div>
+
+<p>执行结果</p>
+<div class="codeeara">
+<ul>
+<li>$ ./label.sed empnametitle.txt</li>
 <li>John Doe:CEO</li>
-<li>***Jason Smith:IT Manager </li>
-<li>Raj Reddy:Sysadmin </li>
+<li>*Jason Smith:IT Manager</li>
+<li>Raj Reddy:Sysadmin</li>
+<li>Anand Ram:Developer</li>
+<li>*Jane Miller:Sales Manager</li>
+</ul>
+</div>
+<p color="red">h;n;H;x 可以使用N 代替，这样就不用使用保持空间了；如果不使用标签，可以用：
+sed 'N;s/\n/:/;/Manager/s/^/\*/' empnametitle.txt</p>
+<h2>使用命令t 进行循环</h2>
+<p>命令t的作用：如果前面的命令执行成功，那么就跳转到t指定的标签粗，继续往下执行后续命令。否则，仍然
+继续正常的执行流程。</p>
+<p>例</p>
+<div class="codeeara">
+<ul>
+<li>$ cat label-t.sed</li>
+<li>#!/bin/sed -nf</li>
+<li>h;n;H;x</li>
+<li>s/\n/:/</li>
+<li>:repeat</li>
+<li>/Manager/s/^/*/</li>
+<li>/\*\*\*/!t repeat</li>
+<li> </li>
+<li>p</li>
+
+<li> </li>
+<li>$ chmod u+x label-t.sed</li>
+<li>$ ./label-t.sed empnametitle.txt</li>
+<li>John Doe:CEO</li>
+<li>***Jason Smith:IT Manager</li>
+<li>Raj Reddy:Sysadmin</li>
 <li>Anand Ram:Developer</li>
 <li>***Jane Miller:Sales Manager</li>
- </ul> </div>    
-<p>下面一小段代码是循环的</p>  
-<div class="codeeara"><ul>
-<li> :repeat</li>
-<li>/Manager/ s/^/*/</li>
-<li>/\*\*\*/!t repeat</li>
-
-</ul></div>
+</ul>
+</div>
+<p>详解:</p>
 <ul>
-<li>:repeat ：这个是标签</li>
-<li>&nbsp; </li>
-<li>/Manager/ s/^/*/： 匹配Manager行，在行首加一个*号</li>
-<li>/\*\*\*/!t repeat ：判断如果上一句执行成功，并且不是***则跳到标签repeat继续执行</li>
-		     </ul>
+<li>下面的代码执行循环</li>
+<ul>
+<li>:repeat</li>
+<li>/Manager/s/^/*/</li>
+<li>/\*\*\*/!t repeat</li>
+</ul>
+<li>/Manager/s/^/*/ 如果匹配到Manager，在行首加上星号*</li>
+<li>/\*\*\*/!t repeat 如果没有匹配到三个连续的星号*,并且前面一行的替换命令成功执行了，
+则跳转到名为repeat 的标签处（即 t repeat）</li>
+<li>:repeat 标签</li>
+</ul>
+
+
   </div>
   </div>
 		     </body>
