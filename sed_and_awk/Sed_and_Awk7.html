@@ -30,7 +30,7 @@
 </div>
 <h3>n与N；2n与2N差异化研究</h3>
 <p>下面例子显示结果是在第2N遍执行sed-command里面的2N命令；在第N遍则不执行
-推论：如为3N则第3N遍执行.</p>							  
+推论：如为3N则第3N遍执行.(即为执行第i 的倍数的时候执行)</p>							  
 <div class="codeeara" >
 <ul>
 <li>sed -n '{x;2N;s/\n/:/;p;G;s/\n/::/;p}' employee.txt </li>
