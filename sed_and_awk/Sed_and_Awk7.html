@@ -103,7 +103,7 @@ P命令为输出模式空间，直到遇到一个\n符号，
 <li>*Jane Miller:Sales Manager</li>
 </ul>
 </div>
-<p color="red">h;n;H;x 可以使用N 代替，这样就不用使用保持空间了；如果不使用标签，可以用：
+<p style="color:red">h;n;H;x 可以使用N 代替，这样就不用使用保持空间了；如果不使用标签，可以用：
 sed 'N;s/\n/:/;/Manager/s/^/\*/' empnametitle.txt</p>
 <h2>使用命令t 进行循环</h2>
 <p>命令t的作用：如果前面的命令执行成功，那么就跳转到t指定的标签粗，继续往下执行后续命令。否则，仍然
