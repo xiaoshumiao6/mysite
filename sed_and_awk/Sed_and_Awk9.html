@@ -1,0 +1,168 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../css/style.css" />
+  
+</head>
+<body>
+	
+<div class="container_top">
+<div id="left_top"></div>
+<div id="middle_top">	
+<h1><div class="post-title">Chapter 9. Awk Built-in Variables（内建变量）</div></h1>
+<h3>FS - Input Field Separator(输入字段分隔符)</h3>
+<p>默认的输入字段分隔符为空格space</p>
+<ul><li>可以使用awk选项-F设置</li><li>可以使用内建变量FS=""在BEGIN块内设置</li></ul>
+<h4>多分隔符:FS = "[,:%]"表示以,或:或%分隔</h4>
+<h3>OFS - Output Field Separator(输出分隔符)</h3><p>默认也是space空格</p>
+<h5>输出是使用逗号，则默认使用OFS的默认值。没有使用逗号，则不使用,Note:使用的是变量时，则不管有没有逗号，都默认有OFS</h5>
+<div class="codeeara">
+<ul>
+<li>$ awk 'BEGIN { print "test1","test2" }'</li>
+<li>test1 test2</li>
+<li>-------------</li>
+<li>$ awk 'BEGIN { print "test1" "test2" }'</li>
+<li>test1test2</li>
+<li>-------------</li>
+<li>awk -F, '/^102/ {print $3 $2}' employee.txt</li>
+<li>IT Manager Jason Smith</li>
+<li>-------------</li>
+<li>awk -F, '/^102/ {print $3$2}' employee.txt</li>
+<li>IT Manager Jason Smith</li>
+</ul>
+</div>
+<h3>RS - Record Separator(记录分隔符)</h3>
+<p>awk默认的一条记录是一行，而记录分隔符可以将多行看成一条记录处理，也可以将一行拆分成多个记录。</p>
+<p>cat employee-one-line.txt</p>
+<div class="codecontent">101,John Doe:102,Jason Smith:103,Raj Reddy:104,Anand<br>
+Ram:105,Jane Miller</div>
+<p>以:分隔一行记录</p>
+<div class="codeeara">
+<ul>
+<li>$ awk -F, 'BEGIN { RS=":" } \</li>
+<li>{ print $2 }' employee-one-line.txt</li>
+<li>John Doe</li>
+<li>Jason Smith</li>
+<li>Raj Reddy</li>
+<li>Anand Ram</li>
+<li>Jane Miller</li>
+</ul>
+</div>
+<p>多行当作一条记录</p>
+<div class="codeeara">
+<ul>
+<li>$ vi employee-change-fs-ofs.txt</li>
+<li>&nbsp;</li>
+<li>101</li>
+<li>John Doe</li>
+<li>CEO</li>
+<li>-</li>
+<li>102</li>
+<li>Jason Smith</li>
+<li>IT Manager</li>
+<li>-</li>
+<li>103</li>
+<li>Raj Reddy</li>
+<li>Sysadmin</li>
+<li>-</li>
+<li>104</li>
+<li>Anand Ram</li>
+<li>Developer</li>
+<li>-</li>
+<li>105</li>
+<li>Jane Miller</li>
+<li>Sales Manager</li>
+</ul>
+</div>
+<p>以-\n为记录分隔符</p>
+
+<div class="codeeara"><ul>
+<li>$ awk 'BEGIN { FS="\n"; RS="-\n"; OFS=":" } \</li>
+<li>{print $2, $3}' employee-change-fs-ofs.txt</li>
+<li>&nbsp;</li>
+<li>John Doe:CEO</li>
+<li>Jason Smith:IT Manager</li>
+<li>Raj Reddy:Sysadmin</li>
+<li>Anand Ram:Developer</li>
+<li>Jane Miller:Sales Manager</li>
+</ul><div>
+<h3>ORS - Output Record Separator（输出记录分隔符）</h3>
+<p>同OFS相同，都是对输出进行格式化，
+差别是OFS是对字段间的分隔，而ORS是对记录的分隔</p>
+<div class="codeeara">
+<ul>
+<li>$ awk 'BEGIN { FS=","; ORS="\n---\n" } \</li>
+<li>{print $2, $3}' employee.txt</li>
+<li>&nbsp;</li>
+<li>John Doe CEO</li>
+<li>---</li>
+<li>Jason Smith IT Manager</li>
+<li>---</li>
+<li>Raj Reddy Sysadmin</li>
+<li>---</li>
+<li>Anand Ram Developer</li>
+<li>---</li>
+<li>Jane Miller Sales Manager</li>
+<li>---</li>
+</ul>
+</div>
+
+<p>OFS为\n，ORS为\n---\n结果</p>
+<div class="codeeara">
+<ul>
+<li>$ awk 'BEGIN { FS=","; OFS="\n";ORS="\n---\n" } \</li>
+<li>{print $1,$2,$3}' employee.txt</li>
+<li>&nbsp;</li>
+<li>101</li>
+<li>John Doe</li>
+<li>CEO</li>
+<li>--</li>
+<li>102</li>
+<li>Jason Smith</li>
+<li>IT Manager</li>
+<li>--</li>
+<li>103</li>
+<li>Raj Reddy</li>
+<li>Sysadmin</li>
+<li>--</li>
+<li>104</li>
+<li>Anand Ram</li>
+<li>Developer</li>
+<li>--</li>
+<li>105</li>
+<li>Jane Miller</li>
+<li>Sales Manager</li>
+<li>---</li>
+</ul>
+</div>
+<h3>NR - Number of Records（记录条号）</h3>
+<p>一条记录一个数字，表示第几条记录</p>
+<p style="color:red">Note：BEGIN块NR为0，END块NR为最后一条记录号</p>
+<div class="codeeara">
+<ul>
+<li>awk 'BEGIN {print NR} \       </li>
+<li>{print NR,$1} \</li>
+<li>&nbsp;</li>
+<li>END {print NR}' employee.txt </li>
+<li>0</li>
+<li>1 101,John</li>
+<li>2 102,Jason</li>
+<li>3 103,Raj</li>
+<li>4 104,anand</li>
+<li>5 105,Jane</li>
+<li>5</li>
+</ul>
+</div>
+<h3>NF - Number of Fields in a record（一条记录里的列数）</h3>
+<h3>FILENAME – Current File Name(获取当前文件的文件名)</h3>
+<p>当我们后面没有添加输入文件时（比如用通道符|处理的输入流），则获取的FILENAME的值为-</p>
+<p style="color:red">Note:当FILENAME在BEGIN块内时，则获取的值为””空。因为BEGIN块在输入流之前</p>
+<h3>FNR - File “Number of Record”</h3>
+<p style="color:red">和NR的区别是FNR是表示当前输入文件的记录数，而NR是整个输入的记录数
+FNR在有多个输入文件时会每个文件重新计数，而NR不会<p>
+
+
+</div>
+</div>
+</body>
+</html>
