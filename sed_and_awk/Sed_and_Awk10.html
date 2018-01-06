@@ -1,0 +1,109 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../css/style.css" />
+  
+</head>
+<body>
+	
+<div class="container_top">
+<div id="left_top"></div>
+<div id="middle_top">	
+<h1><div class="post-title">Chapter 10. Awk Variables and Operators</div></h1>
+<h3>Variables(变量)</h3>
+<ul><li>关键字不能被使用为变量名。</li>
+<li>和其他的编程语言不同，你不需要声明变量才能使用它。</li>
+<li>如果你想初始化变量，最好在BEGIN块，它将只执行一次</li></ul>
+<h5>实例</h5>
+<div class="codeeara">
+<ul>
+<li>$ vi employee-sal.txt</li>
+<li>&nbsp;</li>
+<li>101,John Doe,CEO,10000</li>
+<li>102,Jason Smith,IT Manager,5000</li>
+<li>103,Raj Reddy,Sysadmin,4500</li>
+<li>104,Anand Ram,Developer,4500</li>
+<li>105,Jane Miller,Sales Manager,3000</li>
+</ul>
+</div>
+<p>编写一个awk脚本,统计薪水</p>
+<div class="codeeara">
+<ul>
+<li>$ cat total-company-salary.awk</li>
+<li>BEGIN {</li>
+<li>	FS=",";</li>
+<li>	total=0;</li>
+<li>}</li>
+<li>{</li>
+<li>	print $2 "'s salary is: " $4;</li>
+<li>	total=total+$4</li>
+<li>} END {</li>
+<li>	print "---\nTotal company salary = $"total;</li>
+</ul>
+</div>
+<br>
+<div class="codeeara">
+<ul>
+<li>$ awk -f total-company-salary.awk employee-sal.txt</li>
+<li>John Doe's salary is: 10000</li>
+<li>Jason Smith's salary is: 5000</li>
+<li>Raj Reddy's salary is: 4500</li>
+<li>Anand Ram's salary is: 4500</li>
+<li>Jane Miller's salary is: 3000</li>
+<li>---</li>
+<li>Total company salary = $27000</li>
+</ul>
+</div>
+<h4>Unary Operators（单元操作符）</h4>
+<img src="../img/sed_and_awk/sed_10_1.png" alt="单元操作符" />
+<p>和数字前的正负号和C语言的自加自减符号一样
+遵循负负得正原则</p>
+<div class="codeeara">
+<ul>
+<li>$ vi negative.txt</li>
+<li>-1</li>
+<li>-2</li>
+<li>-3</li>
+<li>&nbsp;</li>
+<li>$ awk '{print +$1}' negative.txt</li>
+<li>-1</li>
+<li>-2</li>
+<li>-3</li>
+<li>&nbsp;</li>
+<li>$ awk '{print -$1}' negative.txt</li>
+<li>1</li>
+<li>2</li>
+<li>3</li>
+<li>&nbsp;</li>
+<li>awk '{print ++$1}' negative.txt </li>
+<li>0</li>
+<li>-1</li>
+<li>-2</li>
+<li>&nbsp;</li>
+<li>awk '{print $1++,$1}' negative.txt </li>
+<li>-1 0</li>
+<li>-2 -1</li>
+<li>-3 -2</li>
+</ul>
+</div>
+<h4>Arithmetic Operators(算数运算符)</h4>
+<img src="../img/sed_and_awk/sed_10_2.png" alt="数字运算符" />
+<h4>String Operator(字符串运算符)</h4>
+<p>空格`是字符串操作符，链接两个字符串string3=string1 string2`</p>
+<h4>Assignment Operators(赋值运算符)</h4>
+<p>like C:
+=、+=、-=、*=、/=、%=</p>
+<h4>Comparison Operators(对比运算符)</h4>
+<p>like C:
+>、>=、<、<=、!=、==、&&、||</p>
+<h4>Regular Expression Operators(正则表达式运算符)</h4>
+<ul>
+<li>~ 匹配正则表达式</li>
+<li>!~ 不匹配正则表达式(匹配不符合的)</li>
+</ul>
+
+
+</div>
+</div>
+</body>
+</html>
