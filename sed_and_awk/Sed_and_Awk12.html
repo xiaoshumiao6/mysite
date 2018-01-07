@@ -115,6 +115,54 @@
 <li>Return value from asort: 8</li>
 </ul>
 </div>
+	
+<div class="codeeara">
+<ul>
+<li>BEGIN {</li>
+<li>	item[101]=100;</li>
+<li>	item[102]="103";</li>
+<li>	item[103]="10000";</li>
+<li>	item[104]=42389;</li>
+<li>	item[105]=2;</li>
+<li>	item[1001]="3";</li>
+<li>	item[55]="8";</li>
+<li>	item["na"]=432;</li>
+<li>	</li>
+<li>	print "------Before asort------"</li>
+<li>	for (x in item)</li>
+<li>	print "Index",x,"contains",item[x];</li>
+<li>	total = asort(item);</li>
+<li>	</li>
+<li>	print "------After asort------"</li>
+<li>	for (x in item)</li>
+<li>	print "Index",x,"contains",item[x];</li>
+<li>	print "Return value from asort:", total;</li>
+<li>}</li>
+	
+	<li>&nbsp;</li>
+<li>------Before asort------</li>
+<li>Index na contains 432</li>
+<li>Index 55 contains 8</li>
+<li>Index 101 contains 100</li>
+<li>Index 102 contains 103</li>
+<li>Index 103 contains 10000</li>
+<li>Index 104 contains 42389</li>
+<li>Index 105 contains 2</li>
+<li>Index 1001 contains 3</li>
+<li>------After asort------</li>
+<li>Index 1 contains 2</li>
+<li>Index 2 contains 100</li>
+<li>Index 3 contains 432</li>
+<li>Index 4 contains 42389</li>
+<li>Index 5 contains 10000</li>
+<li>Index 6 contains 103</li>
+<li>Index 7 contains 3</li>
+<li>Index 8 contains 8</li>
+<li>Return value from asort: 8</li>
+</ul>
+</div>
+	
+<
 <p>看到上面的例子，排序后输出并没有按顺序输出，这是因为
 for (x in item)输出是无序的，可以使用
 for (i=1; i<= total; i++) 进行有序输出</p>
