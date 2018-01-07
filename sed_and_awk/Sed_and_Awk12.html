@@ -19,10 +19,149 @@
 <li>value 值</li>
 </ul>
 </div>
+<p style="color:red">数组的下标不一定要是序列，从0-10等，可以是字符串。可以相当于字典。和python差不多</p>
+<p>以awk 的角度来说，数组的索引通常是字符串，即你使用数组为索引，awk也会当字符串来处理，下面写法是等价的</p>
+<ul>
+<li>item[101]="xiaoshumiao"</li>
+<li>item["101"]="xiaoshumiao"</li>
+</ul>
+<p style="color:red">当定义一个数组，即使里面没有值也可以调用</p>
+<div class="codeeara">
+<ul>
+<li>awk 'BEGIN {</li>
+<li>x=item[105];</li>
+<li>for (105 in item) </li>
+<li>print "yes";</li>
+<li>}' </li>
+<li>&nbsp;</li>
+<li>yes</li>
+</ul>
+</div>
+<h4>Browse the Array using For Loop(使用循环遍历数组)</h4>  
+<p>语法：</p>
+<span class="codecontent">for (var in arrayname) actions</span>
+<h4>Delete Array Element(删除数组元素)</h4>
+<span class="codecontent">delete arrayname[index];</span>
 
-  
-  
-  </div>
+<h4>Multi Dimensional Array(多维数组)</h4>
+<div class="codeeara"><ul>
+<li>$cat array-multi3.awk</li>
+<li>BEGIN {</li>
+<li>	item["1,1"]=10;</li>
+<li>	item["1,2"]=20;</li>
+<li>	</li>
+<li>	item[2,1]=30;</li>
+<li>	item[2,2]=40;</li>
+<li>	</li>
+<li>	for (x in item)</li>
+<li>	print "Index",x,"contains",item[x];</li>
+<li>}</li>
+<li>&nbsp;</li>
+<li>$ awk -f array-multi3.awk</li>
+<li>Index 1,1 contains 10</li>
+<li>Index 1,2 contains 20</li>
+<li>Index 2#1 contains 30</li>
+<li>Index 2#2 contains 40</li>
+</ul></div>
+<p>下标使用""时，里面的都算一个下标;
+而没有分号，使用逗号,时，则为多维数组</p>
+<h4>SUBSEP - Subscript Separator(下标分隔符)</h4>
+<p>下标分隔符默认为#</p>
+<h4>Sort Array Values using asort(使用asort排序数组的值)</h4>
+<p>asort函数是将数组的值进行排序后，将下标用数字1-n表示</p>
+<div class="codeeara">
+<ul>
+<li>$ cat asort.awk</li>
+<li>BEGIN {</li>
+<li>	item[101]="HD Camcorder";</li>
+<li>	item[102]="Refrigerator";</li>
+<li>	item[103]="MP3 Player";</li>
+<li>	item[104]="Tennis Racket";</li>
+<li>	item[105]="Laser Printer";</li>
+<li>	item[1001]="Tennis Ball";</li>
+<li>	item[55]="Laptop";</li>
+<li>	item["na"]="Not Available";</li>
+<li>	</li>
+<li>	print "------Before asort------"</li>
+<li>	for (x in item)</li>
+<li>	print "Index",x,"contains",item[x];</li>
+<li>	total = asort(item);</li>
+<li>	</li>
+<li>	print "------After asort------"</li>
+<li>	for (x in item)</li>
+<li>	print "Index",x,"contains",item[x];</li>
+<li>	print "Return value from asort:", total;</li>
+<li>}</li>
+<li>&nbsp;</li>
+<li>$ awk -f asort.awk</li>
+<li>------Before asort-----</li>
+<li>Index 55 contains Laptop</li>
+<li>Index 101 contains HD Camcorder</li>
+<li>Index 102 contains Refrigerator</li>
+<li>Index 103 contains MP3 Player</li>
+<li>Index 104 contains Tennis Racket</li>
+<li>Index 105 contains Laser Printer</li>
+<li>Index na contains Not Available</li>
+<li>Index 1001 contains Tennis Ball</li>
+<li>------After asort-----</li>
+<li>Index 4 contains MP3 Player</li>
+<li>Index 5 contains Not Available</li>
+<li>Index 6 contains Refrigerator</li>
+<li>Index 7 contains Tennis Ball</li>
+<li>Index 8 contains Tennis Racket</li>
+<li>Index 1 contains HD Camcorder</li>
+<li>Index 2 contains Laptop</li>
+<li>Index 3 contains Laser Printer</li>
+<li>Return value from asort: 8</li>
+</ul>
+</div>
+<p>看到上面的例子，排序后输出并没有按顺序输出，这是因为
+for (x in item)输出是无序的，可以使用
+for (i=1; i<= total; i++) 进行有序输出</p>
+<h5>asort不修改原值赋值</h5>
+<p>下面的例子将不会修改原item数组，而会建立新的数组itemnew来排序</p>
+<span class="codecontent">total = asort(item, itemnew);</span>
+<h4> Sort Array Indexes using asorti（使用asorti排序indexs的值）</h4>
+<p>和asort用法一样，只不过是排序的对象不一样</p>
+<div class="codeeara"><ul>
+<li>$ cat asorti.awk</li>
+<li>BEGIN {</li>
+<li> state["TX"]="Texas";</li>
+<li> state["PA"]="Pennsylvania";</li>
+<li> state["NV"]="Nevada";</li>
+<li> state["CA"]="California";</li>
+<li> state["AL"]="Alabama";</li>
+<li> print "----- Function: asort -----"</li>
+<li> total = asort(state,statedesc);</li>
+<li> for (i=1; i<= total; i++)</li>
+<li>print "Index",i,"contains",statedesc[i];</li>
+<li> print "----- Function: asorti -----"</li>
+<li> total = asorti(state,stateabbr);</li>
+<li> for (i=1; i<= total; i++)</li>
+<li>print "Index",i,"contains",stateabbr[i];</li>
+<li>}</li>
+<li>&nbsp;</li>
+<li>$ awk -f asorti.awk</li>
+<li>----- Function: asort -----</li>
+<li>Index 1 contains Alabama</li>
+<li>Index 2 contains California</li>
+<li>Index 3 contains Nevada</li>
+<li>Index 4 contains Pennsylvania</li>
+<li>Index 5 contains Texas</li>
+<li>----- Function: asorti -----</li>
+<li>Index 1 contains AL</li>
+<li>Index 2 contains CA</li>
+<li>Index 3 contains NV</li>
+<li>Index 4 contains PA</li>
+<li>Index 5 contains TX </li>
+</ul></div>
+<p style="color:red">注意如果你使用asorti(array)，那么原来array的值将会替换成排序后的indexs。所以小心使用，多使用</p>
+
+
+
+
+
+</div>
 </div>
 </body>
 </html>
