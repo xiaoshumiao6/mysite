@@ -1,0 +1,465 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../css/style.css" />
+  
+</head>
+<body>
+	
+<div class="container_top">
+<div id="left_top"></div>
+<div id="middle_top">	
+<h1><div class="post-title">Chapter 13. Additional Awk Commands </div></h1>
+<h3>Pretty Printing Using printf(灵动输出使用printf)</h3>
+<span class="codecontent">printf "print format", variable1, variable2, etc.</span>
+<p>特殊符号</p>
+<img src="../img/sed_and_awk/sed_13_1.png" alt="特殊符号" />
+<p style="color:red">printf将不使用OFS,ORS的值</p>
+<div class="codeeara">
+<ul>
+<li>$ cat printf1.awk</li>
+<li>BEGIN {</li>
+<li>	FS=",";</li>
+<li>	OFS=":";</li>
+<li>	ORS="\n--\n";</li>
+<li>}</li>
+<li>{</li>
+<li>	printf "%s^^%s\n\n", $2, $3</li>
+<li>}</li>
+<li>&nbsp;</li>
+<li>$ awk -f printf1.awk items.txt</li>
+<li>&nbsp;</li>
+<li>HD Camcorder^^Video</li>
+<li>Refrigerator^^Appliance</li>
+<li>MP3 Player^^Audio</li>
+<li>Tennis Racket^^Sports</li>
+<li>Laser Printer^^Office</li>
+</ul>
+</div>
+<p>定制格式符</p>
+<img src="../img/sed_and_awk/sed_13_1.png" alt="定制格式符" />
+<h4>Print with Fixed Column Width (Basic)(输出固定列宽)</h4>
+<p>同C一样，在%后面加上限定宽度，e.g.</p>
+<ul>
+<li>%05s 最少5个字符宽度，不足在前面补0</li>
+<li>%5s 最少5个字符宽度，不足在前面补空格(右对齐)</li>
+<li>%-5s最少5个字符宽度，不足再后面补空格(左对齐)</li>
+<li>%.1s保留位数，浮点数是保留多少位小数</li>
+</ul>
+<div class="codeeara">
+<ul>
+<li>$ cat dot.awk</li>
+<li>BEGIN {</li>
+<li>	print "----Using .1----"</li>
+<li>	printf ".1d--> %.1d\n", 101.23</li>
+<li>	printf ".1e--> %.1e\n", 101.23</li>
+<li>	printf ".1f--> %.1f\n", 101.23</li>
+<li>	printf ".1g--> %.1g\n", 101.23</li>
+<li>	print "----Using .4----"</li>
+<li>	printf ".4d--> %.4d\n", 101.23</li>
+<li>	printf ".4e--> %.4e\n", 101.23</li>
+<li>	printf ".4f--> %.4f\n", 101.23</li>
+<li>	printf ".4g--> %.4g\n", 101.23</li>
+<li>}</li>
+<li>&nbsp;</li>
+<li>$ awk -f dot.awk</li>
+<li>&nbsp;</li>
+<li>----Using .1---</li>
+<li>.1d--> 101</li>
+<li>.1e--> 1.0e+02</li>
+<li>.1f--> 101.2</li>
+<li>.1g--> 1e+02</li>
+<li>&nbsp;</li>
+<li>----Using .4---</li>
+<li>.4d--> 0101</li>
+<li>.4e--> 1.0123e+02</li>
+<li>.4f--> 101.2300</li>
+<li>.4g--> 101.2</li>
+</ul>
+</div>
+<p>Print Report to File(输出结果到文件)<br>
+同shell脚本一样，可以配合> 、>>在awk脚本内或命令行添加输出到文件参数</p>
+<h3>Built-in Numeric Functions(内建数值函数)</h3>
+<p>Awk int(n) Function</p>
+<span class="codecontent">
+int函数，将值格式化为整数型;不是四舍五入，而是截断，print int(4.9)结果为4。
+<span>
+<p>Awk log(n) Function</p>
+<span class="codecontent">
+log n
+</span>
+<p>Awk sqrt(n) Function(平方根函数)</p>
+<span class="codecontent">
+&radic;n
+</span>
+<p>Awk exp(n) Function(指数函数)</p>
+<span class="codecontent">
+e<sup>n</sup>
+</span>
+<p>Awk sin(n)、cos(n) Function</p>
+<span class="codecontent">
+sin(n)cos(n)
+</span>
+<p>Awk atan2(m,n) Function(反正切函数)</p>
+<span class="codecontent">
+arctan m/n
+</span>
+<h3>Random Number Generator(随机数生成器)</h3>
+
+
+<p>Awk rand() Function(随机数函数),该函数随机生成一个0~1之间的一个数</p>
+
+<p>Awk srand(n) Function(随机数初始化函数)</p>
+<span class="codecontent">
+rand()函数产生的随机数有很高的重复率，srand(n) 函数使用的参数n作为种子来初始化随机数的产生过程
+。不论何时启动，只会依据n 产生随机数；如果不指定n，awk 默认使用当天的时间作为产生随机数的种子
+</span>
+<h3>Generic String Functions(常用字符串函数)</h3>
+<h4>Index Function(目录函数)</h4>
+<p>可以查找特定字符在特定字符串的位置</p>
+<div class="codeeara">
+<ul>
+<li>$ cat index.awk</li>
+<li>BEGIN {</li>
+<li>	state="CA is California"</li>
+<li>	print "String CA starts at location",index(state,"CA");</li>
+<li>	print "String Cali starts at location",index(state,"Cali");</li>
+<li>	if (index(state,"NY")==0)</li>
+<li>		print "String NY is not found in:", state</li>
+<li>}</li>
+<li>&nbsp;</li>
+<li>$ awk -f index.awk</li>
+<li>&nbsp;</li>
+<li>String CA starts at location 1</li>
+<li>String Cali starts at location 7</li>
+<li>String NY is not found in: CA is California</li>
+</ul>
+</div>
+<h4>Length Function(长度函数)</h4>
+<span class="codecontent">
+输出特定字符串长度length(string)
+</span>
+<h4>Split Function(分割函数)</h4>
+<span class="codecontent">
+split(input-string,output-array,separator)
+
+</span>
+<p>如果第三个参数没有指定，则使用默认的FS</p>
+<h4>Substr Function(截取函数)</h4>
+<p>将指定字符串从指定位置，输出指定长度的内容</p>
+<span class="codecontent">
+substr(input-string, location, length)
+</span>
+<div class="codeeara">
+<ul>
+<li>表示是从第3个字段里的第6个字符开始，一直到设定的分隔符","结束.</li>
+<li>awk -F ',' '{print substr($3,6)}'</li>
+<li>&nbsp;</li>
+<li>表示是从第3个字段里的第10个字符开始，截取8个字符结束.</li>
+<li>substr($3,10,8)</li>
+<li>&nbsp;</li>
+<li>表示是从第3个字段里的第6个字符开始，一直到结尾</li>
+<li>substr($3,6)</li>
+</ul>
+</div>
+<h3>GAWK/NAWK String Functions(GAWK/NAWK特有字符串函数)</h3>
+<h4>Sub Function(替换函数)</h4>
+<span class="codecontent">
+sub(original-string,replacement-string,string-variable)
+</span>
+<p>将指定字符串(string-variable)的源字符串(original-string)替换成替换字符串(replacement-string)</p>
+<ul>
+<li>第三个参数是可选的，默认为$0</li>
+<li>当成功执行sub函数，返回的结果是1而不是0</li>
+<li>每行记录值替换最左边匹配到的字符串一次</li>
+</ul>
+<h4>Gsub Function(全局替换函数)</h4>
+<p>法和sub一样的;
+相当于sed 's///g'</p>
+<span class="codecontent">
+
+</span>
+<h4>Match Function () and RSTART, RLENGTH variables(match函数和RSTART,RLENGTH参数)</h4>
+<p>查找指定字符串或正则表达式</p>
+<span class="codecontent">
+match(input-string,search-string)
+</span>
+<div class="codeeara">
+<ul>
+<li>$ cat match.awk</li>
+<li>BEGIN {</li>
+<li>	state="CA is California"</li>
+<li>	if (match(state,"Cali")) {</li>
+<li>		print substr(state,RSTART,RLENGTH),"is present in:", state; </li>
+<li>	}</li>
+<li>}</li>
+<li>&nbsp;</li>
+<li>$ awk -f match.awk</li>
+<li>Cali is present in: CA is California</li>
+</ul>
+</div>
+<ul>
+<li>RSTART 匹配字符串在源字符串开始的位置</li>
+<li>RLENGTH 匹配字符串长度</li>
+</ul>
+
+<h4>GAWK String Functions(GAWK特有的字符串函数)</h4>
+<span class="codecontent">
+改变大小写函数tolower和toupper函数是只在GAWK才有效的函数
+</span>
+<h3>Argument Processing (ARGC, ARGV, ARGIND)参数处理</h3>
+<ul>
+<li>在命令行上，参数ARGC和ARGV将会被忽略</li>
+<li>ARGC是统计参数个数</li>
+<li>ARGV是一个数组，里面记录了参数值，index从0开始到ARGC</li>
+<li>当你有5个参数，则ARGC的值为6</li>
+<li>ARGV[0]值总是awk</li>
+<li>ARGIND是当前处理文件的序列号ARGV[ARGIND]里面的值为当前处理的文件名</li>
+<li>只有一个文件是ARGIND为1</li>
+</ul>
+<h3>OFMT</h3>
+<p>The OFMT built-in variable is available only in NAWK and GAWK.这个函数值只在NAWK和GAWK里有效</p>
+<p>.g是全局的，.f是指☞.后面的</p>
+<div class="codeeara">
+<ul>
+<li>$ cat ofmt.awk</li>
+<li>BEGIN {</li>
+<li>	total=143.123456789;</li>
+<li>	print "---using g----"</li>
+<li>	print "Default OFMT:", total;</li>
+<li>	OFMT="%.3g";</li>
+<li>	print "%.3g OFMT:", total;</li>
+<li>	OFMT="%.4g";</li>
+<li>	print "%.4g OFMT:", total;</li>
+<li>	OFMT="%.5g";</li>
+<li>	print "%.5g OFMT:", total;</li>
+<li>	OFMT="%.6g";</li>
+<li>	print "%.6g OFMT:", total;</li>
+<li>	print "---using f----"</li>
+<li>	OFMT="%.0f";</li>
+<li>	print "%.0f OFMT:", total;</li>
+<li>	OFMT="%.1f";</li>
+<li>	print "%.1f OFMT:", total;</li>
+<li>	OFMT="%.2f";</li>
+<li>	print "%.2f OFMT:", total;</li>
+<li>	OFMT="%.3f";</li>
+<li>	print "%.3f OFMT:", total;</li>
+<li>}</li>
+<li>&nbsp;</li>
+<li>$ awk -f ofmt.awk</li>
+<li>&nbsp;</li>
+<li>---using g----</li>
+<li>Default OFMT: 143.123</li>
+<li>%.3g OFMT: 143</li>
+<li>%.4g OFMT: 143.1</li>
+<li>%.5g OFMT: 143.12</li>
+<li>%.6g OFMT: 143.123</li>
+<li>---using f---</li>
+<li>%.0f OFMT: 143</li>
+<li>%.1f OFMT: 143.1</li>
+<li>%.2f OFMT: 143.12</li>
+<li>%.3f OFMT: 143.123</li>
+</ul>
+</div>
+<h3>GAWK Built-in Environment Variables(内建环境变量)</h3>
+<p>只有GAWK有效</p>
+<h5>ENVIRON</h5>
+<p>这个是非常有用的，当你想在awk脚本中调用shell的环境变量时。
+ENVIRON是一个数组，包含了所有环境变量的值的数组，而index的值则是环境变量的名字。<br>
+For example,
+ENVIRON["PATH"]表示的就是环境变量PATH的值</p>
+
+<h5>IGNORECASE</h5>
+<p>IGNORECASE默认值为0，表示大小写敏感，可以设置为1表示忽略大小写</p>
+
+<h5>ERRNO</h5>
+<p>错误输出，将错误信息写入到变量ERRNO中</p>
+
+<h4>Awk Profiler - pgawk</h4>
+<p>这个选项会将程序文件以一种很优美的方式输出（译注：用于格式化 awk 脚本文件）。默认输出文件是 awkprof.out。</p>
+<div class="codeeara">
+<ul>
+<li>$ cat profiler.awk</li>
+<li>BEGIN {</li>
+<li>	FS=",";</li>
+<li>	print "Report Generated On:" strftime("%a %b %d %H:%M: %S %Z %Y",systime());</li>
+<li>}</li>
+<li>{</li>
+<li>	if ( $5 <= 5 )</li>
+<li>		print "Buy More: Order", $2, "immediately!"</li>
+<li>	else</li>
+<li>		print "Sell More: Give discount on", $2, "immediately!"</li>
+<li>}</li>
+<li>END {</li>
+<li>	print "----"</li>
+<li>}</li>
+</ul>
+</div>
+<span class="codecontent">$ pgawk --profile=myprofiler.out -f profiler.awk items.txt
+</span>
+<div class="codeeara">
+<ul>
+<li>$ cat myprofiler.out </li>
+<li>        # gawk 配置, 创建 Sun Sep 18 12:28:22 2016</li>
+<li>&nbsp;</li>
+<li>        # BEGIN 块</li>
+<li>&nbsp;</li>
+<li>        BEGIN {</li>
+<li>     1          FS = ","</li>
+<li>     1          print ("Report Generated On:" (strftime("%a %b %d %H:%M: %S %Z %Y", systime())))</li>
+<li>        }</li>
+<li>&nbsp;</li>
+<li>        # 规则</li>
+<li>&nbsp;</li>
+<li>     3  {</li>
+<li>     3          if ($5 <= 5) { # 3</li>
+<li>     3                  print "Buy More: Order", $2, "immediately!"</li>
+<li>                } else {</li>
+<li>                        print "Sell More: Give discount on", $2, "immediately!"</li>
+<li>                }</li>
+<li>        }</li>
+<li>&nbsp;</li>
+<li>        # END 块</li>
+<li>&nbsp;</li>
+<li>        END {</li>
+<li>     1          print "----"</li>
+<li>        }</li>
+</ul>
+</div>
+<h4>Bit Manipulation(位操作)</h4>
+<p>与或非、左移、右移</p>
+<div class="codeeara">
+<ul>
+<li>$ cat bits.awk</li>
+<li>BEGIN {</li>
+<li>	number1=15</li>
+<li>	number2=25</li>
+<li>	print "AND: " and(number1,number2);</li>
+<li>	print "OR: " or(number1,number2)</li>
+<li>	print "XOR: " xor(number1,number2)</li>
+<li>	print "LSHIFT: " lshift(number1,2)</li>
+<li>	print "RSHIFT: " rshift(number1,2)</li>
+<li>}</li>
+<li>&nbsp;</li>
+<li>$ awk -f bits.awk</li>
+<li>AND: 9</li>
+<li>OR: 31</li>
+<li>XOR: 22</li>
+<li>LSHIFT: 60</li>
+<li>RSHIFT: 3</li>
+</ul>
+</div>
+<h3>96. User Defined Functions(用户自定义函数)</h3>
+<div class="codeeara">
+<ul>
+<li>function fn-name(parameters)</li>
+<li>{</li>
+<li>	function-body</li>
+<li>}</li>
+</ul>
+</div>
+<h4>Language Independent Output (Internationalization)(语言独立输出(国际))</h4>
+<h4>Two Way Communication</h4>
+<p>Awk can communication to an external process using “|&”, which is two way communication.
+使用|&标记能调用其他命令</p>
+<div class="codeeara">
+<ul>
+<li>$ cat two-way.awk</li>
+<li>BEGIN {</li>
+<li>	command = "sed 's/Awk/Sed and Awk/'"</li>
+<li>	print "Awk is Great!" |& command</li>
+<li>	close(command,"to");</li>
+<li>	command |& getline tmp</li>
+<li>	print tmp;</li>
+<li>	close(command);</li>
+<li>}</li>
+<li>&nbsp;</li>
+<li>$ awk -f two-way.awk</li>
+<li>Sed and Awk is Great!</li>
+</ul>
+</div>
+<h3>System Function(system函数)</h3>
+<div class="codeeara">
+<ul>
+<li>$ awk 'BEGIN { system("date") }'</li>
+<li>Mon Sep 19 09:49:37 CST 2016</li>
+</ul>
+</div>
+<h3>Timestamp Functions(时间函数)</h3>
+<span class="codecontent">
+These are available only in GAWK.systime()
+</span>
+<h3>getline Command(getline命令)</h3>
+<h4>单独使用getline 则读取下一行(和sed的n命令一样)</h4>
+<div class="codeeara">
+<ul>
+<li>$ awk -F"," '{getline; print $0;}' items.txt 102,Refrigerator,Appliance,850,2</li>
+<li>104,Tennis Racket,Sports,190,20</li>
+<li>105,Laser Printer,Office,475,5</li>
+</ul>
+</div>
+<h4>getline后面带参数</h4>
+<p>和sed的hold空间差不多</p>
+<div class="codeeara">
+<ul>
+<li>$ awk -F"," '{getline tmp; print "$0->", $0; print "tmp->", tmp;}' items.txt</li>
+<li>&nbsp;</li>
+<li>$0-> 101,HD Camcorder,Video,210,10</li>
+<li>tmp-> 102,Refrigerator,Appliance,850,2</li>
+<li>$0-> 103,MP3 Player,Audio,270,15</li>
+<li>tmp-> 104,Tennis Racket,Sports,190,20</li>
+<li>$0-> 105,Laser Printer,Office,475,5</li>
+<li>tmp-> 104,Tennis Racket,Sports,190,20</li>
+</ul>
+</div>
+<h4>读取一个文件</h4>
+<p>使用&lt;<p>
+<h4>读取一个文件到变量</h4>
+<div class="codeeara">
+<ul>
+<li>$ awk -F"," '{print $0; getline tmp < "items-sold.txt"; print tmp;}' items.txt</li>
+<li>101,HD Camcorder,Video,210,10</li>
+<li>101 2 10 5 8 10 12</li>
+<li>102,Refrigerator,Appliance,850,2</li>
+<li>102 0 1 4 3 0 2</li>
+<li>103,MP3 Player,Audio,270,15</li>
+<li>103 10 6 11 20 5 13</li>
+<li>104,Tennis Racket,Sports,190,20</li>
+<li>104 2 3 4 0 6 5</li>
+<li>105,Laser Printer,Office,475,5</li>
+<li>105 10 2 5 7 12 6</li>
+</ul>
+</div>
+<h4>读取一个外部命令</h4>
+<div class="codeeara">
+<ul>
+<li>$ cat getline1.awk</li>
+<li>BEGIN {</li>
+<li>	FS=",";</li>
+<li>	"date" | getline</li>
+<li>	close("date")</li>
+<li>	print "Timestamp:" $0</li>
+<li>}</li>
+<li>{</li>
+<li>	if ( $5 <= 5 )</li>
+<li>		print "Buy More: Order", $2, "immediately!"</li>
+<li>	else</li>
+<li>		print "Sell More: Give discount on", $2, "immediately!"</li>
+<li>}</li>
+<li>$ awk -f getline1.awk items.txt</li>
+<li>Timestamp:Sat Mar 5 09:29:22 PST 2011</li>
+<li>Sell More: Give discount on HD Camcorder immediately!</li>
+<li>Buy More: Order Refrigerator immediately!</li>
+<li>Sell More: Give discount on MP3 Player immediately!</li>
+<li>Sell More: Give discount on Tennis Racket immediately!</li>
+<li>Buy More: Order Laser Printer immediately!</li>
+</ul>
+</div>
+
+
+
+
+</div>
+</div>
+</body>
+</html>
