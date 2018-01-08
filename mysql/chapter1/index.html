@@ -11,13 +11,13 @@
 <div id="middle_top">	
 <h1><div class="post-title">Chapter1 Using the mysql Client Program</div></h1>
 
-<div class="codeeara"><ul>
+<ul>
 <li> Setting up a MySQL account for using the cookbook database </li>
 <li> Specifying connection parameters and using option files </li>
 <li> Executing SQL statements interactively and in batch mode </li>
 <li> Controlling mysql output format </li>
 <li> Using user-defined variables to save information </li>
-</ul></div>
+</ul>
 
 <h4>新建mysql 用户</h4>
 <span class="codecontent">命令：CREATE USER \ GRANT <span>
@@ -25,6 +25,29 @@
 <li> mysql> CREATE USER 'cbuser'@'localhost' IDENTIFIED BY 'cbpass'; </li>
 <li> mysql> GRANT ALL ON cookbook.* TO 'cbuser'@'localhost'; </li>
 </ul></div>
+<h4>创建数据库与表格</h4>
+<div class="codeeara"><ul>
+<li> mysql&lt; CREATE DATABASE cookbook; </li>
+<li> mysql&lt; USE cookbook; </li>
+<li> mysql&lt; CREATE TABLE limbs (thing VARCHAR(20), legs INT, arms INT); </li>
+<li>&nbsp;</li>
+<li>&nbsp; </li>
+<li> mysql&lt; INSERT INTO limbs (thing,legs,arms) VALUES('human',2,2); </li>
+<li> mysql&lt; INSERT INTO limbs (thing,legs,arms) VALUES('insect',6,0); </li>
+<li> mysql&lt; INSERT INTO limbs (thing,legs,arms) VALUES('squid',0,10); </li>
+<li> mysql&lt; INSERT INTO limbs (thing,legs,arms) VALUES('fish',0,0); </li>
+<li> mysql&lt; INSERT INTO limbs (thing,legs,arms) VALUES('centipede',100,0); </li>
+<li> mysql&lt; INSERT INTO limbs (thing,legs,arms) VALUES('table',4,0); </li>
+<li> mysql&lt; INSERT INTO limbs (thing,legs,arms) VALUES('armchair',4,2); </li>
+<li> mysql&lt; INSERT INTO limbs (thing,legs,arms) VALUES('phonograph',0,1); </li>
+<li> mysql&lt; INSERT INTO limbs (thing,legs,arms) VALUES('tripod',3,0); </li>
+<li> mysql&lt; INSERT INTO limbs (thing,legs,arms) VALUES('Peg Leg Pete',1,2); </li>
+<li> mysql&lt; INSERT INTO limbs (thing,legs,arms) VALUES('space alien',NULL,NULL); </li>
+<li>&nbsp;</li>
+<li>mysql&lt; SELECT * FROM limbs;</li>
+</ul></div>
+
+
 
 
 </div>
