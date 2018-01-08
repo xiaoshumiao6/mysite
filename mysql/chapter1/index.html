@@ -92,11 +92,18 @@ shell 中执行mysql命令：% mysql -e "SELECT COUNT(*) FROM limbs" cookbook</s
 % mysql -h other-host.example.com cookbook &lt; dump.sql
 <br>使用管道：% mysqldump cookbook | mysql -h other-host.example.com cookbook</span>
 <h3>格式化mysql的输出</h3>
-<p>mysql 输出到文件</p>
+<p>mysql 输出到文件，当mysql输出内容到文件是，输出为没有表格化的tabdelimited格式</p>
 <span class="codecontent">% mysql cookbook &lt; inputfile &gt; outputfile</span>
-<p>tabular 格式</p>
+<p>tabular 格式，参数(显示指定table 格式输出)：-t / --table，对应的tabdelimited格式：-B or --batch</p>
 <img src="../../img/mysql/mysql_1_1.png" alt="mysql" />
-
+<h4>HTML or XML ,HTML格式输出: -H (or --html);XML:-X (or --xml) </4>
+<h4>抑制 column headings 的输出:--skip-column-names (or -ss)</h4>
+<h4>指定输出定界符</h4>
+<span class="codecontent"><ul>
+<li> % mysql cookbook &lt; inputfile | sed -e "s/TAB/:/g" &gt; outputfile </li>
+<li> % mysql cookbook &lt; inputfile | tr "TAB" ":" &gt; outputfile </li>
+<li> % mysql cookbook &lt; inputfile | tr "\011" ":" &gt; outputfile </li>
+</ul></span>
 
 
 
