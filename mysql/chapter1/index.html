@@ -47,6 +47,20 @@
 <li>&nbsp;</li>
 <li>mysql&gt; SELECT * FROM limbs;</li>
 </ul></div>
+<h4>mysql 参数</h4>
+<span class="codecontent">$ mysql -h localhost -u cbuser -p<span><p>
+<span class="codecontent">$ mysqldump -h localhost -u cbuser -p cookbook > cookbook.sql<span><p>
+<h5>指定socket文件：-S file_name or --socket=file_name.</h5>
+
+<h3>配置文件:my.cnf</h3>
+<span class="codecontent"> -与_ 效果一样，例如：skip-auto-rehash and skip_auto_rehash意义相同</span>
+<p>打印mysql 命令从配置文件中读取的默认配置:<br>
+% mysql --print-defaults<br>
+% my_print_defaults client mysqldump</p>
+<h3>交互式sql语句</h3>
+<span class="codecontent">mysql&gt; SELECT NOW();<br>
+terminators :; , \g, \G<br>
+shell 中执行mysql命令：% mysql -e "SELECT COUNT(*) FROM limbs" cookbook</span>
 
 
 
