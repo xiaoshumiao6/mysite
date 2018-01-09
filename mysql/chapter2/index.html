@@ -1,0 +1,47 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../../css/style.css" />
+  
+</head>
+<body>
+	
+<div class="container_top">
+<div id="left_top"></div>
+<div id="middle_top">	
+<h1><div class="post-title">Chapter 2. Writing MySQL-Based Programs</div></h1>
+<h3>api 连接/断开数据库</h3>
+<div class="codeeara"><ul>
+<li> #!/usr/bin/perl </li>
+<li> # connect.pl: connect to the MySQL server </li>
+<li>&nbsp;</li>
+<li> use strict; </li>
+<li> use warnings; </li>
+<li> use DBI; </li>
+<li>&nbsp;</li>
+<li> my $dsn = "DBI:mysql:host=localhost;database=cookbook"; </li>
+<li> my $dbh = DBI-&gt;connect ($dsn, "cbuser", "cbpass") </li>
+<li>     or die "Cannot connect to server\n"; </li>
+<li>&nbsp;</li>
+<li> print "Connected\n"; </li>
+<li> $dbh-&gt;disconnect (); </li>
+<li> print "Disconnected\n"; </li>
+</ul></div>
+
+<span class="codecontent">my $dbh = DBI-&gt;connect ($dsn, "cbuser", "cbpass",{PrintError => 0, RaiseError => 1, AutoCommit => 1});</span>
+
+<span class="codecontent">my $conn_attrs = {PrintError => 0, RaiseError => 1, AutoCommit => 1};<br>
+my $dbh = DBI->connect ($dsn, "cbuser", "cbpass", $conn_attrs);</span>
+<h4>指定socket/端口</h4>
+<span class="codecontent">my $dsn = "DBI:mysql:host=localhost;database=cookbook". ";mysql_socket=/var/tmp/mysql.sock";</span>
+<span class="codecontent">my $dsn = "DBI:mysql:host=127.0.0.1;database=cookbook;port=3307";</span>
+
+
+
+
+
+</div>
+</div>
+
+</body>
+</html>
