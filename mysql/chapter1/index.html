@@ -104,6 +104,25 @@ shell 中执行mysql命令：% mysql -e "SELECT COUNT(*) FROM limbs" cookbook</s
 <li> % mysql cookbook &lt; inputfile | tr "TAB" ":" &gt; outputfile </li>
 <li> % mysql cookbook &lt; inputfile | tr "\011" ":" &gt; outputfile </li>
 </ul></span>
+<h3>sql 语句中使用自定义变量</h3>
+<span class="codecontent">语法：@var_name := value </span>
+<div class="codeeara"><ul>
+<li> mysql&gt; SELECT @max_limbs := MAX(arms+legs) FROM limbs; </li>
+<li> +------------------------------+ </li>
+<li> | @max_limbs := MAX(arms+legs) | </li>
+<li> +------------------------------+ </li>
+<li> | 100 | </li>
+<li> +------------------------------+ </li>
+<li> mysql&gt; SELECT * FROM limbs WHERE arms+legs = @max_limbs; </li>
+<li> +-----------+------+------+ </li>
+<li> | thing | legs | arms | </li>
+<li> +-----------+------+------+ </li>
+<li> | centipede | 100 | 0 | </li>
+<li> +-----------+------+------+ </li>
+</ul></div>
+
+<span class="codecontent">mysql&gt; SELECT @last_id := LAST_INSERT_ID();<br>LAST_INSERT_ID() returns the most recent AUTO_INCREMENT value.</span>
+
 
 
 
