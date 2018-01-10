@@ -1,0 +1,49 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../css/style.css" />
+  
+</head>
+<body>
+	
+<div class="container_top">
+<div id="left_top"></div>
+<div id="middle_top">	
+<h3>lvm2 </h3>
+<div class="codeeara"><ul>
+<li> # yum install lvm2 -y </li>
+<li>&nbsp;</li>
+<li> # pvcreate /dev/sdb </li>
+<li>&nbsp;</li>
+<li> # vgcreate vg0 /dev/sdb </li>
+<li>&nbsp;</li>
+<li> # lvcreate -L 204800M -n lv0 vg0 </li>
+<li>&nbsp;</li>
+<li> # mkfs.ext4 /dev/vg0/lv0 </li>
+<li>&nbsp;</li>
+<li> 扩容： </li>
+<li>&nbsp;</li>
+<li> # pvcreate /dev/sde </li>
+<li>&nbsp;</li>
+<li> # vgextend vg0 /dev/sde </li>
+<li>&nbsp;</li>
+<li> # lvextend -L +992G /dev/vg0/lv0 </li>
+<li>&nbsp;</li>
+<li> # resize2fs /dev/mapper/vg0-lv0 </li>
+<li>&nbsp;</li>
+<li> # xfs_growfs /dev/mapper/vg0-lv0  </li>
+<li> # 如果文件系统使用xfs需要 xfs_growfs进行扩容要,否则报如下错误： </li>
+<li> [root@es12 ~]# resize2fs /dev/mapper/vg0-lv0 </li>
+<li> resize2fs 1.42.9 (28-Dec-2013) </li>
+<li> resize2fs: Bad magic number in super-block while trying to open /dev/mapper/vg0-lv0 </li>
+<li> Couldn't find valid filesystem superblock. </li>
+</ul></div>
+
+
+
+
+</div>
+</div>
+
+</body>
+</html>
