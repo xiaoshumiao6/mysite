@@ -9,7 +9,7 @@
 <div class="container_top">
 <div id="left_top"></div>
 <div id="middle_top">	
-<h1><div class="post-title">Chapter 2. Writing MySQL-Based Programs</div></h1>
+<h1><div class="post-title">Chapter?2.?Writing MySQL-Based Programs</div></h1>
 <h3>api 连接/断开数据库</h3>
 <div class="codeeara"><ul>
 <li> #!/usr/bin/perl </li>
@@ -36,6 +36,13 @@ my $dbh = DBI->connect ($dsn, "cbuser", "cbpass", $conn_attrs);</span>
 <span class="codecontent">my $dsn = "DBI:mysql:host=localhost;database=cookbook". ";mysql_socket=/var/tmp/mysql.sock";</span>
 <span class="codecontent">my $dsn = "DBI:mysql:host=127.0.0.1;database=cookbook;port=3307";</span>
 
+<h3>mysql error_log</h3>
+<p>mysql 错误日志由三部分组成：</p>
+<div class="codeeara"><ul>
+<li> A MySQL-specific error number </li>
+<li> A MySQL-specific descriptive text error message </li>
+<li> A five-character SQLSTATE error code defined according to the ANSI and ODBC standards </li>
+</ul></div>
 
 
 
