@@ -119,3 +119,12 @@ img {
   width:80%;
   /*heignt:100%;*/
 }
+.content {
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #C0C0C0;
+  width:500px;
+}
+.codeeara ul {
+  list-style:none;
+}
