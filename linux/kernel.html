@@ -12,29 +12,54 @@
 
 
 <div class="mycontent"><ul>
-<li> vm.swappiness=0 </li>
+<li> # vm.swappiness=0 </li>
+<li> ## 内核倾向于保留directory和inode cache </li>
 <li> vm.vfs_cache_pressure=30 </li>
+<li> ## 禁止“沿途MTU发现” </li>
 <li> net.ipv4.ip_no_pmtu_disc=1 </li>
 <li>&nbsp;</li>
 <li> net.ipv4.ip_local_port_range = 1024 65535 </li>
 <li> # Increase number of incoming connections </li>
+<li>&nbsp;</li>
+<li> ## 定义了系统中每一个端口最大的监听队列的长度 </li>
 <li> net.core.somaxconn = 4096 </li>
 <li> # Increase number of incoming connections backlog </li>
+<li>&nbsp;</li>
+<li> ##每个网络接口接收数据包的速率比内核处理这些包的速率快时，允许送到队列的数据包的最大数目 </li>
 <li> net.core.netdev_max_backlog = 4096 </li>
 <li> # allow testing with buffers up to 64MB </li>
+<li>&nbsp;</li>
+<li> ##接收套接字缓冲区大小的最大值(以字节为单位) </li>
 <li> net.core.rmem_max = 67108864 </li>
+<li> ##发送套接字缓冲区大小的最大值(以字节为单位) </li>
 <li> net.core.wmem_max = 67108864 </li>
 <li> # increase Linux autotuning TCP buffer limit to 32MB </li>
+<li> ## TCP接收缓冲区，3个字段分别是min，default，max。 </li>
 <li> net.ipv4.tcp_rmem = 4096 87380 33554432 </li>
+<li> ## TCP发送缓冲区 </li>
 <li> net.ipv4.tcp_wmem = 4096 65536 33554432 </li>
 <li> # recommended default congestion control is htcp </li>
 <li> net.ipv4.tcp_congestion_control=htcp </li>
 <li> # recommended for hosts with jumbo frames enabled </li>
-<li> net.ipv4.tcp_mtu_probing=1 </li>
+<li> #net.ipv4.tcp_mtu_probing=1 </li>
 <li> # recommended for CentOS7/Debian8 hosts </li>
 <li> net.core.default_qdisc = fq </li>
+<li>&nbsp;</li>
+<li>&nbsp;</li>
+<li> sysctl net.ipv4.tcp_available_congestion_control </li>
+<li> 如果没有下文提到的htcp,hybla算法，你可以尝试通过modprobe启用模块： </li>
+<li> /sbin/modprobe tcp_htcp </li>
+<li> /sbin/modprobe tcp_hybla </li>
+<li>&nbsp;</li>
+<li> tcp_mtu_probing (integer; default: 0; since Linux 2.6.17): </li>
+<li> This parameter controls TCP Packetization-Layer Path MTU Discovery. The following values may be assigned to the file: </li>
+<li> 0 Disabled </li>
+<li> 1 Disabled by default, enabled when an ICMP black hole detected </li>
+<li> 2 Always enabled, use initial MSS of tcp_base_mss. </li>
 </ul></div>
-
+	
+	
+	
 </div>
 </div>
 </body>
