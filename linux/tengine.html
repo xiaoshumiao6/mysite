@@ -70,7 +70,15 @@ cp modsecurity.conf-recommended /production/server/tengine-2.1.2/conf/
 cp unicode.mapping /production/server/tengine-2.1.2/conf/
 
 
-
+<div class="codeeara"><ul>
+<li>location ~* ^/(data|config)/.*\.php$ {</li>
+<li>	deny all;</li>
+<li>}</li>
+<li>location ~* ^/uc_server/data/.*\.php$ {</li>
+<li>	deny all;</li>
+<li>} </li>
+  </ul></div> </li>
+ 
 内核优化：
 echo '# Increase the tcp-time-wait buckets pool size to prevent simple DOS attacks' >> /etc/sysctl.conf
 echo 'net.ipv4.tcp_max_tw_buckets = 220000' >> /etc/sysctl.conf
