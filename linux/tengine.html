@@ -1,11 +1,16 @@
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" href="../css/style.css" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../../css/style.css" />
+  
 </head>
 <body>
-<div class="daima">
-<ul>
+	
+<div class="container_top">
+<div id="left_top"></div>
+<div id="middle_top">
+<h1><div class="post-title">tengine install</div></h1>  
+<div class="codeeara"><ul>
 <li>groupadd www</li>
 <li>useradd -M -s /sbin/nologin -g www www</li>
 <li>yum -y install openssl openssl-devel pcre pcre-devel</li>
@@ -77,8 +82,51 @@ cp unicode.mapping /production/server/tengine-2.1.2/conf/
 <li>location ~* ^/uc_server/data/.*\.php$ {</li>
 <li>	deny all;</li>
 <li>} </li>
-  </ul></div> </li>
- 
+</ul></div>
+<h3>安装考虑</h3>
+ <div class="codeeara"><ul>
+<li> location ~ /\. { </li>
+<li> 	deny all; </li>
+<li> } </li>
+<li>  </li>
+<li> #suffix </li>
+<li> # Block nginx from serving .git directories </li>
+<li> location ~ /\.(svn|git) { </li>
+<li>     deny all; </li>
+<li> } </li>
+<li>  </li>
+<li> # 溢出过滤 </li>
+<li> if ($query_string ~ "base64_(en|de)code\(.*\)") { </li>
+<li>     return 444; </li>
+<li> } </li>
+<li>  </li>
+<li> # 文件遍历禁止 </li>
+<li> if ($query_string ~ "[a-zA-Z0-9_]=(\.\.//?)+") { </li>
+<li>     return 444; </li>
+<li> } </li>
+<li>  </li>
+<li> # 对抗文件解析问题 </li>
+<li> if ($fastcgi_script_name ~ \..*\/.*php) { </li>
+<li> 	return 444; </li>
+<li> } </li>
+<li>  </li>
+<li> # 防止sql注入 </li>
+<li> if ( $query_string ~* ".*[\;'\<\>].*" ){ </li>
+<li> 	return 444; </li>
+<li> } </li>
+<li>  </li>
+<li> # 拒绝访问不常见后缀 </li>
+<li> location ~* .*\.(asp|aspx|log|rar|zip|bak|ori|sql|gz|class|mdb|dll|exe)$ { </li>
+<li> 	deny all; </li>
+<li> } </li>
+<li>  </li>
+<li> # Deny access to any files with a .php extension in the uploads directory </li>
+<li> # Works in sub-directory installs and also in multisite network </li>
+<li> # Keep logging the requests to parse later (or to pass to firewall utilities such as fail2ban) </li>
+<li> location ~* /(?:uploads|data|files|images)/.*\.php$ { </li>
+<li> 	deny all; </li>
+<li> } </li>
+</ul></div>
 内核优化：
 echo '# Increase the tcp-time-wait buckets pool size to prevent simple DOS attacks' >> /etc/sysctl.conf
 echo 'net.ipv4.tcp_max_tw_buckets = 220000' >> /etc/sysctl.conf
@@ -111,72 +159,6 @@ echo 'net.ipv4.tcp_tw_reuse = 1' >> /etc/sysctl.conf
 
 
 
-fs.file-max = 2097152
 
-# Do less swapping
-vm.swappiness = 10
-vm.dirty_ratio = 60
-vm.dirty_background_ratio = 2
-### GENERAL NETWORK SECURITY OPTIONS ###
-
-# Number of times SYNACKs for passive TCP connection.
-net.ipv4.tcp_synack_retries = 2
-
-# Allowed local port range
-net.ipv4.ip_local_port_range = 1024 65535
-
-# Protect Against TCP Time-Wait
-net.ipv4.tcp_rfc1337 = 1
-
-# Decrease the time default value for tcp_fin_timeout connection
-net.ipv4.tcp_fin_timeout = 8
-
-# Decrease the time default value for connections to keep alive
-net.ipv4.tcp_keepalive_time = 300
-net.ipv4.tcp_keepalive_probes = 5
-net.ipv4.tcp_keepalive_intvl = 15
-
-### TUNING NETWORK PERFORMANCE ###
-
-# Default Socket Receive Buffer
-net.core.rmem_default = 31457280
-
-# Maximum Socket Receive Buffer
-net.core.rmem_max = 12582912
-
-# Default Socket Send Buffer
-net.core.wmem_default = 31457280
-
-# Maximum Socket Send Buffer
-net.core.wmem_max = 12582912
-
-# Increase number of incoming connections
-net.core.somaxconn = 4096
-
-# Increase number of incoming connections backlog
-net.core.netdev_max_backlog = 65536
-
-# Increase the maximum amount of option memory buffers
-net.core.optmem_max = 25165824
-
-# Increase the maximum total buffer-space allocatable
-# This is measured in units of pages (4096 bytes)
-net.ipv4.tcp_mem = 65536 131072 262144
-net.ipv4.udp_mem = 65536 131072 262144
-
-# Increase the read-buffer space allocatable
-net.ipv4.tcp_rmem = 8192 87380 16777216
-net.ipv4.udp_rmem_min = 16384
-
-# Increase the write-buffer-space allocatable
-net.ipv4.tcp_wmem = 8192 65536 16777216
-net.ipv4.udp_wmem_min = 16384
-
-# Increase the tcp-time-wait buckets pool size to prevent simple DOS attacks
-net.ipv4.tcp_max_tw_buckets = 1440000
-
-net.ipv4.tcp_tw_reuse = 1
-# 但是要特别留意的是：这个选项一般不推荐启用，因为在NAT(Network Address Translation)网络下，会导致大量的TCP连接建立错误，从而引起网站访问故障。
-net.ipv4.tcp_tw_recycle = 0
 </body>
 </html>
