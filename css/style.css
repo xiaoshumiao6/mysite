@@ -128,3 +128,9 @@ img {
 .mycontent ul {
   list-style:none;
 }
+.dotcontent {
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #C0C0C0;
+  width:80%;
+}
