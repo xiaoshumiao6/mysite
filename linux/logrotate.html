@@ -6,6 +6,10 @@
 	</head>
 	
 <body>
+<div class="container_top">
+<div id="left_top"></div>
+<div id="middle_top">	
+<h1><div class="post-title">Chapter 2. Writing MySQL-Based Programs</div></h1>
 <h3>&nbsp;&nbsp;&nbsp;&nbsp;logrotate 分割nginx 日志</h3>
 <div class="daima">
 <ul>
@@ -21,11 +25,22 @@
 <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                [ -f /opt/f1/logs/nginx.pid ] && kill -USR1 `cat /opt/f1/logs/nginx.pid`</li>
 <li>&nbsp;&nbsp;&nbsp;&nbsp;        endscript</li>
 <li>}</li>
-
 </ul>
-
 </div>
 
+<ul>
+<li><strong>monthly</strong>: 日志文件将按月轮循。其它可用值为&lsquo;daily&rsquo;，&lsquo;weekly&rsquo;或者&lsquo;yearly&rsquo;。</li>
+<li><strong>rotate 5</strong>: 一次将存储5个归档日志。对于第六个归档，时间最久的归档将被删除。</li>
+<li><strong>compress</strong>: 在轮循任务完成后，已轮循的归档将使用gzip进行压缩。</li>
+<li><strong>delaycompress</strong>: 总是与compress选项一起用，delaycompress选项指示logrotate不要将最近的归档压缩，压缩将在下一次轮循周期进行。这在你或任何软件仍然需要读取最新归档时很有用。</li>
+<li><strong>missingok</strong>: 在日志轮循期间，任何错误将被忽略，例如&ldquo;文件无法找到&rdquo;之类的错误。</li>
+<li><strong>notifempty</strong>: 如果日志文件为空，轮循不会进行。</li>
+<li><strong>create 644 root root</strong>: 以指定的权限创建全新的日志文件，同时logrotate也会重命名原始日志文件。</li>
+<li><strong>postrotate/endscript</strong>: 在所有其它指令完成后，postrotate和endscript里面指定的命令将被执行。在这种情况下，rsyslogd 进程将立即再次读取其配置并继续运行。</li>
+</ul>
+	
 
+</div>
+</div>
 </body>
 </html>
