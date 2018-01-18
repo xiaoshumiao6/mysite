@@ -26,7 +26,8 @@
 <br>
 <li>./configure --with-cc-opt='-O3 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2' --with-ld-opt='-Wl,-Bsymbolic-functions -Wl,-z,relro' --add-module=../modsecurity-2.9.2/nginx/modsecurity/ --user=www --group=www --prefix=/production/server/tengine-2.1.2 --with-jemalloc --with-http_stub_status_module --with-http_ssl_module --with-http_gzip_static_module --with-http_concat_module --with-http_realip_module --with-http_spdy_module --with-http_v2_module --with-http_sysguard_module  --without-poll_module --without-select_module --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module</li>
 <br>
-
+</ul>
+</div>
 <li>cd /production/server/tengine-2.1.2/conf</li>
 <li>cp nginx.conf nginx.conf.ori</li>
 
