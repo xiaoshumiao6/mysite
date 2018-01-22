@@ -132,19 +132,19 @@ cp unicode.mapping /production/server/tengine-2.1.2/conf/
 </ul></div>
 <h3>对抗文件解析漏洞</h3>
 <div class="codeeara"><ul>
-<li> location ~ \.php($|/) { </li>
-<li>      fastcgi_pass   127.0.0.1:9000; </li>
-<li>      fastcgi_index  index.php; </li>
-<li>      set $script    $uri; </li>
-<li>      set $path_info ""; </li>
-<li>      if ($uri ~ "^(.+\.php)(/.*)") { </li>
-<li>           set  $script     $1; </li>
-<li>           set  $path_info  $2; </li>
-<li>      } </li>
-<li>      include       fastcgi_params; </li>
-<li>      fastcgi_param SCRIPT_FILENAME   $document_root$script; </li>
-<li>      fastcgi_param SCRIPT_NAME       $script; </li>
-<li>      fastcgi_param PATH_INFO         $path_info; </li>
+<li> location& nbsp;~& nbsp;\.php($|/)& nbsp;{ </li>
+<li> & nbsp;& nbsp;& nbsp;& nbsp;& nbsp;fastcgi_pass& nbsp;& nbsp;& nbsp;127.0.0.1:9000; </li>
+<li> & nbsp;& nbsp;& nbsp;& nbsp;& nbsp;fastcgi_index& nbsp;& nbsp;index.php; </li>
+<li> & nbsp;& nbsp;& nbsp;& nbsp;& nbsp;set& nbsp;$script& nbsp;& nbsp;& nbsp;& nbsp;$uri; </li>
+<li> & nbsp;& nbsp;& nbsp;& nbsp;& nbsp;set& nbsp;$path_info& nbsp;""; </li>
+<li> & nbsp;& nbsp;& nbsp;& nbsp;& nbsp;if& nbsp;($uri& nbsp;~& nbsp;"^(.+\.php)(/.*)")& nbsp;{ </li>
+<li> & nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;set& nbsp;& nbsp;$script& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;$1; </li>
+<li> & nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;set& nbsp;& nbsp;$path_info& nbsp;& nbsp;$2; </li>
+<li> & nbsp;& nbsp;& nbsp;& nbsp;& nbsp;} </li>
+<li> & nbsp;& nbsp;& nbsp;& nbsp;& nbsp;include& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;fastcgi_params; </li>
+<li> & nbsp;& nbsp;& nbsp;& nbsp;& nbsp;fastcgi_param& nbsp;SCRIPT_FILENAME& nbsp;& nbsp;& nbsp;$document_root$script; </li>
+<li> & nbsp;& nbsp;& nbsp;& nbsp;& nbsp;fastcgi_param& nbsp;SCRIPT_NAME& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;$script; </li>
+<li> & nbsp;& nbsp;& nbsp;& nbsp;& nbsp;fastcgi_param& nbsp;PATH_INFO& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;& nbsp;$path_info; </li>
 <li> } </li>
 </ul></div>
 内核优化：
