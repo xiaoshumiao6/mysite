@@ -174,7 +174,9 @@ sub(original-string,replacement-string,string-variable)
 <li>每行记录值替换最左边匹配到的字符串一次</li>
 </ul>
 <p style="color:red">sub dest 为&时，要是用\\&。如果使用& 代表src
-	sub(/>/,"\\&gt;")</p>
+	sub(/>/,"\\&gt;")<br>
+awk 'BEGIN{print "&lt;div class=\"codeeara\"&gt;&ltu&gt;"}{if ($0 ~ " ") gsub(" ","\\&nbsp;");print "&ltli&gt;",$0,"&lt\/li&gt;"};
+	END{print "&lt\/ul&gt;&lt\/div&gt;"}' test</p>
 <h4>Gsub Function(全局替换函数)</h4>
 <p>法和sub一样的;
 相当于sed 's///g'</p>
