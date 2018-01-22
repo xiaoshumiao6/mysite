@@ -175,7 +175,7 @@ sub(original-string,replacement-string,string-variable)
 </ul>
 <p style="color:red">sub dest 为&时，要是用\\&。如果使用& 代表src
 	sub(/>/,"\\&gt;")<br>
-awk 'BEGIN{print "&lt;div class=\"codeeara\"&gt;&ltu&gt;"}{if ($0 ~ " ") gsub(" ","\\&nbsp;");print "&ltli&gt;",$0,"&lt\/li&gt;"};
+awk 'BEGIN{print "&lt;div class=\"codeeara\"&gt;&ltul&gt;"}{if ($0 ~ " ") gsub(" ","\\&amp;nbsp;");print "&ltli&gt;",$0,"&lt\/li&gt;"};
 	END{print "&lt\/ul&gt;&lt\/div&gt;"}' test</p>
 <h4>Gsub Function(全局替换函数)</h4>
 <p>法和sub一样的;
