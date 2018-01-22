@@ -86,7 +86,7 @@ cp unicode.mapping /production/server/tengine-2.1.2/conf/
 <li>	deny all;</li>
 <li>} </li>
 </ul></div>
-<h3>安装考虑</h3>
+<h3>安全考虑</h3>
  <div class="codeeara"><ul>
 <li> location ~ /\. { </li>
 <li> 	deny all; </li>
@@ -128,6 +128,23 @@ cp unicode.mapping /production/server/tengine-2.1.2/conf/
 <li> # Keep logging the requests to parse later (or to pass to firewall utilities such as fail2ban) </li>
 <li> location ~* /(?:uploads|data|files|images)/.*\.php$ { </li>
 <li> 	deny all; </li>
+<li> } </li>
+</ul></div>
+<h3>对抗文件解析漏洞</h3>
+<div class="codeeara"><ul>
+<li> location ~ \.php($|/) { </li>
+<li>      fastcgi_pass   127.0.0.1:9000; </li>
+<li>      fastcgi_index  index.php; </li>
+<li>      set $script    $uri; </li>
+<li>      set $path_info ""; </li>
+<li>      if ($uri ~ "^(.+\.php)(/.*)") { </li>
+<li>           set  $script     $1; </li>
+<li>           set  $path_info  $2; </li>
+<li>      } </li>
+<li>      include       fastcgi_params; </li>
+<li>      fastcgi_param SCRIPT_FILENAME   $document_root$script; </li>
+<li>      fastcgi_param SCRIPT_NAME       $script; </li>
+<li>      fastcgi_param PATH_INFO         $path_info; </li>
 <li> } </li>
 </ul></div>
 内核优化：
