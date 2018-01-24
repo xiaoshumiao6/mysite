@@ -16,6 +16,9 @@
 <ul><li>Host gitlab.zlibs.com</li>
 <li>   IdentityFile /root/.ssh/id_rsa_deploy_key</li>
 </div>
+<h3>ssh-keygen 命令使用笔记</h3>
+<ul><li>查看公钥的指纹：ssh-keygen -l -f /tmp/ssh_host_rsa_dsa_key.pub</li>
+<li>由私钥生成公钥：ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub</li></ul>
 
 </div>
 </div>
