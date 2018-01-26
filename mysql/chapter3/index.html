@@ -34,6 +34,49 @@
 <li>|&nbsp;May&nbsp;14,&nbsp;2014&nbsp;|&nbsp;tricia@saturn&nbsp;|&nbsp;2394482&nbsp;|</li>
 <li>+--------------+---------------+---------+</li>
 </ul></div>
+<h3>Selecting Data from Multiple Tables</h3>
+<p>Use a join or a subquery</p>
+<div class="mycontent"><ul>
+<li>join</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;id,&nbsp;name,&nbsp;service,&nbsp;contact_name</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;&nbsp;FROM&nbsp;profile&nbsp;INNER&nbsp;JOIN&nbsp;profile_contact&nbsp;ON&nbsp;id&nbsp;=&nbsp;profile_id;</li>
+<li>subquery&nbsp;</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;*&nbsp;FROM&nbsp;profile_contact</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;&nbsp;WHERE&nbsp;profile_id&nbsp;=&nbsp;(SELECT&nbsp;id&nbsp;FROM&nbsp;profile&nbsp;WHERE&nbsp;name&nbsp;=&nbsp;'Nancy');</li>
+</ul></div>
+<h3>limit</h3>
+<div class="mycontent"><ul>
+<li>mysql&gt;&nbsp;SELECT&nbsp;*&nbsp;FROM&nbsp;profile&nbsp;LIMIT&nbsp;3;</li>
+<li>&nbsp;</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;*&nbsp;FROM&nbsp;profile&nbsp;ORDER&nbsp;BY&nbsp;birth&nbsp;LIMIT&nbsp;1;</li>
+<li></li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;*&nbsp;FROM&nbsp;profile&nbsp;ORDER&nbsp;BY&nbsp;birth&nbsp;DESC&nbsp;LIMIT&nbsp;1;</li>
+<li>查找生日最小的：</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;name,&nbsp;DATE_FORMAT(birth,'%m-%d')&nbsp;AS&nbsp;birthday</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;&nbsp;FROM&nbsp;profile&nbsp;ORDER&nbsp;BY&nbsp;birthday&nbsp;LIMIT&nbsp;1;</li>
+<li>输出第二个(小)的记录:</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;*&nbsp;FROM&nbsp;profile&nbsp;ORDER&nbsp;BY&nbsp;birth&nbsp;LIMIT&nbsp;2,1;</li>
+<li>&nbsp;</li>
+<li>按顺序输出：</li>
+<li>SELECT&nbsp;...&nbsp;FROM&nbsp;...&nbsp;ORDER&nbsp;BY&nbsp;...&nbsp;LIMIT&nbsp;0,&nbsp;20;</li>
+<li>SELECT&nbsp;...&nbsp;FROM&nbsp;...&nbsp;ORDER&nbsp;BY&nbsp;...&nbsp;LIMIT&nbsp;20,&nbsp;20;</li>
+<li>SELECT&nbsp;...&nbsp;FROM&nbsp;...&nbsp;ORDER&nbsp;BY&nbsp;...&nbsp;LIMIT&nbsp;40,&nbsp;20;</li>
+</ul></div>
+<p>获取数据表的条目数</p>
+<ul style="color:red"><il>SELECT SQL_CALC_FOUND_ROWS * FROM profile ORDER BY name LIMIT 4;</li>
+<li>SELECT FOUND_ROWS();</li></ul>
+<p>or<br>SELECT COUNT(*) FROM profile;</p>
+
+<div class="mycontent"><ul>
+<li>mysql&gt;&nbsp;SELECT&nbsp;name,&nbsp;birth&nbsp;FROM&nbsp;profile&nbsp;ORDER&nbsp;BY&nbsp;birth&nbsp;DESC&nbsp;LIMIT&nbsp;4;</li>
+<li>对以上的四条记录重新进行排序</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;*&nbsp;FROM</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;&nbsp;(SELECT&nbsp;name,&nbsp;birth&nbsp;FROM&nbsp;profile&nbsp;ORDER&nbsp;BY&nbsp;birth&nbsp;DESC&nbsp;LIMIT&nbsp;4)&nbsp;AS&nbsp;t</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;&nbsp;ORDER&nbsp;BY&nbsp;birth;</li>
+</ul></div>
+
+
+
 
 
 </div>
