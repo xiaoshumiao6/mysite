@@ -12,8 +12,15 @@
 <h1><div class="post-title">Chapter 3. Select Data from Tables</div></h1>
 
 <h3>view</h3>
-<div class="dotcontent"><ul>
-<li>mysql&gt;&nbsp;SELECT&nbsp;DATE_FORMAT(t,'%M&nbsp;%e,&nbsp;%Y')&nbsp;AS&nbsp;date_sent,&nbsp;CONCAT(srcuser,'@',srchost)&nbsp;AS&nbsp;sender,&nbsp;CONCAT(dstuser,'@',dsthost)&nbsp;AS&nbsp;recipient,&nbsp;size&nbsp;FROM&nbsp;mail;</li>
+<div class="mycontent"><ul>
+<li>mysql&gt;&nbsp;SELECT&nbsp;DATE_FORMAT(t,'%M&nbsp;%e,&nbsp;%Y')&nbsp;AS&nbsp;date_sent,&nbsp;CONCAT(srcuser,'@',srchost)&nbsp;AS&nbsp;sender,&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;&nbsp;CONCAT(dstuser,'@',dsthost)&nbsp;AS&nbsp;recipient,&nbsp;size&nbsp;FROM&nbsp;mail;</li>
+<li>mysql&gt;&nbsp;CREATE&nbsp;VIEW&nbsp;mail_view&nbsp;AS</li>
+<li>-&gt;&nbsp;SELECT</li>
+<li>-&gt;&nbsp;DATE_FORMAT(t,'%M&nbsp;%e,&nbsp;%Y')&nbsp;AS&nbsp;date_sent,</li>
+<li>-&gt;&nbsp;CONCAT(srcuser,'@',srchost)&nbsp;AS&nbsp;sender,</li>
+<li>-&gt;&nbsp;CONCAT(dstuser,'@',dsthost)&nbsp;AS&nbsp;recipient,</li>
+<li>-&gt;&nbsp;size&nbsp;FROM&nbsp;mail;</li>
 </ul></div>
 
 
