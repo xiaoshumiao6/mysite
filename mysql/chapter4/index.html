@@ -9,8 +9,54 @@
 <div class="container_top">
 <div id="left_top"></div>
 <div id="middle_top">	
-
-
+<h1><div class="post-title">Chapter 4. Table Management</div></h1>
+<h3>克隆表格</h3>
+<p>克隆表结构：<br>CREATE TABLE … LIKE</p>
+<p>克隆表数据：<br> INSERT INTO … SELECT</p>
+<p>例：</p>
+<div class="mycontent"><ul>
+<li>CREATE&nbsp;TABLE&nbsp;new_table&nbsp;LIKE&nbsp;original_table;</li>
+<li>&nbsp;</li>
+<li>INSERT&nbsp;INTO&nbsp;new_table&nbsp;SELECT&nbsp;*&nbsp;FROM&nbsp;original_table;</li>
+<li>&nbsp;</li>
+<li>INSERT&nbsp;INTO&nbsp;mail2&nbsp;SELECT&nbsp;*&nbsp;FROM&nbsp;mail&nbsp;WHERE&nbsp;srcuser&nbsp;=&nbsp;'barb';</li>
+</ul></div>
+<h3>保存查询结果到表中</h3>
+<p>如果表存在：INSERT INTO … SELECT</p>
+<p>如果表不存在：CREATE TABLE … SELECT</p>
+<div class="mycontent"><ul>
+<li>INSERT&nbsp;INTO&nbsp;dst_tbl&nbsp;(i,&nbsp;s)&nbsp;SELECT&nbsp;val,&nbsp;name&nbsp;FROM&nbsp;src_tbl;</li>
+<li>&nbsp;</li>
+<li>INSERT&nbsp;INTO&nbsp;dst_tbl&nbsp;SELECT&nbsp;*&nbsp;FROM&nbsp;src_tbl;</li>
+<li>&nbsp;</li>
+<li>INSERT&nbsp;INTO&nbsp;dst_tbl&nbsp;SELECT&nbsp;*&nbsp;FROM&nbsp;src_tbl</li>
+<li>WHERE&nbsp;val&nbsp;&gt;&nbsp;100&nbsp;AND&nbsp;name&nbsp;LIKE&nbsp;'A%';</li>
+<li>&nbsp;</li>
+<li>INSERT&nbsp;INTO&nbsp;dst_tbl&nbsp;(i,&nbsp;s)&nbsp;SELECT&nbsp;COUNT(*),&nbsp;name</li>
+<li>FROM&nbsp;src_tbl&nbsp;GROUP&nbsp;BY&nbsp;name;&nbsp;</li>
+<li>&nbsp;</li>
+<li>CREATE&nbsp;TABLE&nbsp;dst_tbl&nbsp;SELECT&nbsp;*&nbsp;FROM&nbsp;src_tbl;</li>
+<li>创建一个空表&nbsp;</li>
+<li>CREATE&nbsp;TABLE&nbsp;dst_tbl&nbsp;SELECT&nbsp;*&nbsp;FROM&nbsp;src_tbl&nbsp;WHERE&nbsp;FALSE;</li>
+<li>&nbsp;</li>
+<li>CREATE&nbsp;TABLE&nbsp;dst_tbl&nbsp;SELECT&nbsp;b,&nbsp;d&nbsp;FROM&nbsp;src_tbl;</li>
+<li>增加其他列：</li>
+<li>CREATE&nbsp;TABLE&nbsp;dst_tbl</li>
+<li>(</li>
+<li>id&nbsp;INT&nbsp;NOT&nbsp;NULL&nbsp;AUTO_INCREMENT,</li>
+<li>PRIMARY&nbsp;KEY&nbsp;(id)</li>
+<li>)</li>
+<li>SELECT&nbsp;a,&nbsp;b,&nbsp;c&nbsp;FROM&nbsp;src_tbl;</li>
+<li>&nbsp;</li>
+<li>存在表达式，&nbsp;定义alias&nbsp;</li>
+<li>CREATE&nbsp;TABLE&nbsp;dst_tbl</li>
+<li>SELECT&nbsp;inv_no,&nbsp;SUM(unit_cost*quantity)&nbsp;AS&nbsp;total_cost</li>
+<li>FROM&nbsp;src_tbl&nbsp;GROUP&nbsp;BY&nbsp;inv_no;&nbsp;</li>
+<li>&nbsp;</li>
+<li>如果src&nbsp;的表中存在primary&nbsp;id&nbsp;,并且为auto_increment&nbsp;:</li>
+<li>CREATE&nbsp;TABLE&nbsp;dst_tbl&nbsp;(PRIMARY&nbsp;KEY&nbsp;(id))&nbsp;SELECT&nbsp;*&nbsp;FROM&nbsp;src_tbl;</li>
+<li>ALTER&nbsp;TABLE&nbsp;dst_tbl&nbsp;MODIFY&nbsp;id&nbsp;INT&nbsp;UNSIGNED&nbsp;NOT&nbsp;NULL&nbsp;AUTO_INCREMENT;</li>
+</ul></div>
 
 
 
