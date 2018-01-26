@@ -21,6 +21,16 @@
 <li>-&gt;&nbsp;CONCAT(srcuser,'@',srchost)&nbsp;AS&nbsp;sender,</li>
 <li>-&gt;&nbsp;CONCAT(dstuser,'@',dsthost)&nbsp;AS&nbsp;recipient,</li>
 <li>-&gt;&nbsp;size&nbsp;FROM&nbsp;mail;</li>
+<li></li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;date_sent,&nbsp;sender,&nbsp;size&nbsp;FROM&nbsp;mail_view</li>
+<li>-&gt;&nbsp;WHERE&nbsp;size&nbsp;&gt;&nbsp;100000&nbsp;ORDER&nbsp;BY&nbsp;size;</li>
+<li>+--------------+---------------+---------+</li>
+<li>|&nbsp;date_sent&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;sender&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;size&nbsp;&nbsp;&nbsp;&nbsp;|</li>
+<li>+--------------+---------------+---------+</li>
+<li>|&nbsp;May&nbsp;12,&nbsp;2014&nbsp;|&nbsp;tricia@mars&nbsp;&nbsp;&nbsp;|&nbsp;194925&nbsp;&nbsp;|</li>
+<li>|&nbsp;May&nbsp;15,&nbsp;2014&nbsp;|&nbsp;gene@mars&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;998532&nbsp;&nbsp;|</li>
+<li>|&nbsp;May&nbsp;14,&nbsp;2014&nbsp;|&nbsp;tricia@saturn&nbsp;|&nbsp;2394482&nbsp;|</li>
+<li>+--------------+---------------+---------+</li>
 </ul></div>
 
 
