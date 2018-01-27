@@ -57,6 +57,87 @@
 <li>CREATE&nbsp;TABLE&nbsp;dst_tbl&nbsp;(PRIMARY&nbsp;KEY&nbsp;(id))&nbsp;SELECT&nbsp;*&nbsp;FROM&nbsp;src_tbl;</li>
 <li>ALTER&nbsp;TABLE&nbsp;dst_tbl&nbsp;MODIFY&nbsp;id&nbsp;INT&nbsp;UNSIGNED&nbsp;NOT&nbsp;NULL&nbsp;AUTO_INCREMENT;</li>
 </ul></div>
+<h3>创建临时表:CREATE TEMPORARY TABLE</h3>
+<p>显式的创建columns:CREATE TEMPORARY TABLE tbl_name (...column definitions...);</p>
+<p>克隆表：CREATE TEMPORARY TABLE new_table LIKE original_table;</p>
+<p>query：CREATE TEMPORARY TABLE tbl_name SELECT ... ;</p>
+<p>删除临时表：DROP TEMPORARY TABLE IF EXISTS tbl_name</p>
+<h3>Generating Unique Table Names</h3>
+<p>法一、使用进程的pid （注意， 多线程的程序使用此法要注意）</p>
+<div class="mycontent"><ul>
+<li>Perl:</li>
+<li>&nbsp;&nbsp;my&nbsp;$tbl_name&nbsp;=&nbsp;"tmp_tbl_$$";</li>
+<li>Ruby:</li>
+<li>&nbsp;&nbsp;tbl_name&nbsp;=&nbsp;"tmp_tbl_"&nbsp;+&nbsp;Process.pid.to_s</li>
+<li>PHP:</li>
+<li>&nbsp;&nbsp;$tbl_name&nbsp;=&nbsp;"tmp_tbl_"&nbsp;.&nbsp;posix_getpid&nbsp;();</li>
+<li>Python:</li>
+<li>&nbsp;&nbsp;import&nbsp;os</li>
+<li>&nbsp;&nbsp;tbl_name&nbsp;=&nbsp;"tmp_tbl_%d"&nbsp;%&nbsp;os.getpid()</li>
+</ul></div>
+<p>法二、SELECT CONNECTION_ID();</p>
+<div class="mycontent"><ul>
+<li>SET&nbsp;@tbl_name&nbsp;=&nbsp;CONCAT('tmp_tbl_',&nbsp;CONNECTION_ID());</li>
+<li>SET&nbsp;@stmt&nbsp;=&nbsp;CONCAT('DROP&nbsp;TABLE&nbsp;IF&nbsp;EXISTS&nbsp;',&nbsp;@tbl_name);</li>
+<li>PREPARE&nbsp;stmt&nbsp;FROM&nbsp;@stmt;</li>
+<li>EXECUTE&nbsp;stmt;</li>
+<li>DEALLOCATE&nbsp;PREPARE&nbsp;stmt;</li>
+<li>SET&nbsp;@stmt&nbsp;=&nbsp;CONCAT('CREATE&nbsp;TABLE&nbsp;',&nbsp;@tbl_name,&nbsp;'&nbsp;(i&nbsp;INT)');</li>
+<li>PREPARE&nbsp;stmt&nbsp;FROM&nbsp;@stmt;</li>
+<li>EXECUTE&nbsp;stmt;</li>
+<li>DEALLOCATE&nbsp;PREPARE&nbsp;stmt;</li>
+</ul></div>
+<h3>表存储引擎</h3>
+<p>改变表的存储引擎： ALTER TABLE with an ENGINE clause<br>注： 如果一个表的数据较多， 则会消耗比较多的时间更改存储引擎（cpu and i/o）</p>
+
+<p>查看表的存储引擎：check INFORMATION_SCHEMA or use the SHOW TABLE STATUS or SHOW CREATE TABLE statement</p>
+<div class="mycontent"><ul>
+<li>更改存储引擎</li>
+<li>mysql&gt;&nbsp;SHOW&nbsp;CREATE&nbsp;TABLE&nbsp;mail\G</li>
+<li></li>
+<li>查看存储引擎</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;ENGINE&nbsp;FROM&nbsp;INFORMATION_SCHEMA.TABLES</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;&nbsp;WHERE&nbsp;TABLE_SCHEMA&nbsp;=&nbsp;'cookbook'&nbsp;AND&nbsp;TABLE_NAME&nbsp;=&nbsp;'mail';</li>
+<li>&nbsp;</li>
+<li>mysql&gt;&nbsp;SHOW&nbsp;TABLE&nbsp;STATUS&nbsp;LIKE&nbsp;'mail'\G</li>
+<li>&nbsp;</li>
+<li>mysql&gt;&nbsp;SHOW&nbsp;CREATE&nbsp;TABLE&nbsp;mail\G</li>
+</ul></div>
+<h3>mysqldump 拷贝数据库</h3>
+<div class="mycontent"><ul>
+<li>%&nbsp;mysqldump&nbsp;cookbook&nbsp;mail&nbsp;&gt;&nbsp;mail.sql</li>
+<li>拷贝一个表到另一个数据库</li>
+<li>%&nbsp;mysqldump&nbsp;cookbook&nbsp;mail&nbsp;&gt;&nbsp;mail.sql</li>
+<li>%&nbsp;mysql&nbsp;other_db&nbsp;<&nbsp;mail.sql</li>
+<li>拷贝一个数据库到另一个数据库</li>
+<li>%&nbsp;mysqldump&nbsp;cookbook&nbsp;&gt;&nbsp;cookbook.sql</li>
+<li>%&nbsp;mysql&nbsp;other_db&nbsp;<&nbsp;cookbook.sql</li>
+</ul></div>
+<p>拷贝一个表，表名字改变</p>
+<div class="mycontent"><ul>
+<li>%&nbsp;mysqldump&nbsp;cookbook&nbsp;mail&nbsp;&gt;&nbsp;mail.sql</li>
+<li>%&nbsp;mysql&nbsp;other_db&nbsp;<&nbsp;mail.sql</li>
+<li>重命名表&nbsp;</li>
+<li>%&nbsp;mysql&nbsp;other_db</li>
+<li>mysql&gt;&nbsp;RENAME&nbsp;mail&nbsp;TO&nbsp;mail2;</li>
+</ul></div>
+<p>移动一个表到另一个库，并且改变表名</p>
+<div class="mycontent"><ul>
+<li>%&nbsp;mysql&nbsp;other_db</li>
+<li>mysql&gt;&nbsp;RENAME&nbsp;mail&nbsp;TO&nbsp;cookbook.mail2;</li>
+</ul></div>
+<p>拷贝表， 不使用中间文件</p>
+<div class="mycontent"><ul>
+<li>%&nbsp;mysqldump&nbsp;cookbook&nbsp;mail&nbsp;|&nbsp;mysql&nbsp;other_db</li>
+<li>%&nbsp;mysqldump&nbsp;cookbook&nbsp;|&nbsp;mysql&nbsp;other_db</li>
+<li>%&nbsp;</li>
+<li>%&nbsp;% mysqldump cookbook mail | mysql -h other-host.example.com other_db</li>
+<li>%&nbsp; 如果远程主机mysql 的3306 没有对外暴漏：</li>
+<li>%&nbsp;% mysqldump cookbook mail | ssh other-host.example.com mysql other_db<li>
+</ul></div>
+
+
+
 
 
 
