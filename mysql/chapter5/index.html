@@ -9,17 +9,17 @@
 <div class="container_top">
 <div id="left_top"></div>
 <div id="middle_top">	
-<h1><div class="post-title">Chapter 4. Working with Strings</div></h1>
+<h1><div class="post-title">Chapter 5. Working with Strings</div></h1>
 <p>字符类型：</p>
 <ul>
-<li><ul>binary strings</li>
-<li>BINARY</li>
+<li>binary strings</li>
+<ul><li>BINARY</li>
 <li>VARBINARY</li>
 <li>BLOB</li>
 
 </ul>
-<li><ul>nonbinary strings</li>
-<li>CHAR</li>
+<li>nonbinary strings</li>
+<ul><li>CHAR</li>
 <li>VARCHAR</li>
 <li>TEXT</li>
 </ul>
@@ -46,7 +46,7 @@
 <li>|&nbsp;6&nbsp;|&nbsp;3&nbsp;|</li>
 <li>+------------+-----------------+</li>
 </ul></div>
-<p>查看支持collation</p>
+<p>查看支持collation(SHOW CHARACTER SET)</p>
 <div class="mycontent"><ul>
 <li>mysql&gt;&nbsp;SHOW&nbsp;COLLATION&nbsp;LIKE&nbsp;'latin1%';</li>
 <li>+-------------------+---------+----+---------+----------+---------+</li>
@@ -62,6 +62,54 @@
 <li>|&nbsp;latin1_spanish_ci&nbsp;|&nbsp;latin1&nbsp;|&nbsp;94&nbsp;|&nbsp;|&nbsp;Yes&nbsp;|&nbsp;1&nbsp;|</li>
 <li>+-------------------+---------+----+---------+----------+---------+</li>
 </ul></div>
+<p style="color:red">字符集分别以_ci, _cs, or _bin结尾，分别指：大小写不明感（case insensitive），大小写敏感（case sensitive），二进制（binary）</p>
+<p>例：(utf8 默认collation：utf8_general_ci)</p>
+<div class="mycontent"><ul>
+<li>mysql&gt;&nbsp;CREATE&nbsp;TABLE&nbsp;t&nbsp;(c&nbsp;CHAR(3)&nbsp;CHARACTER&nbsp;SET&nbsp;latin1);</li>
+<li>mysql&gt;&nbsp;INSERT&nbsp;INTO&nbsp;t&nbsp;(c)&nbsp;VALUES('AAA'),('bbb'),('aaa'),('BBB');</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;c&nbsp;FROM&nbsp;t;</li>
+<li>+------+</li>
+<li>|&nbsp;c&nbsp;|</li>
+<li>+------+</li>
+<li>|&nbsp;AAA&nbsp;|</li>
+<li>|&nbsp;bbb&nbsp;|</li>
+<li>|&nbsp;aaa&nbsp;|</li>
+<li>|&nbsp;BBB&nbsp;|</li>
+<li>+------+</li>
+<li>&nbsp;</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;c&nbsp;FROM&nbsp;t&nbsp;ORDER&nbsp;BY&nbsp;c&nbsp;COLLATE&nbsp;latin1_swedish_ci;</li>
+<li>+------+</li>
+<li>|&nbsp;c&nbsp;|</li>
+<li>+------+</li>
+<li>|&nbsp;AAA&nbsp;|</li>
+<li>|&nbsp;aaa&nbsp;|</li>
+<li>|&nbsp;bbb&nbsp;|</li>
+<li>|&nbsp;BBB&nbsp;|</li>
+<li>+------+</li>
+<li>&nbsp;</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;c&nbsp;FROM&nbsp;t&nbsp;ORDER&nbsp;BY&nbsp;c&nbsp;COLLATE&nbsp;latin1_general_cs;</li>
+<li>+------+</li>
+<li>|&nbsp;c&nbsp;|</li>
+<li>+------+</li>
+<li>|&nbsp;AAA&nbsp;|</li>
+<li>|&nbsp;aaa&nbsp;|</li>
+<li>|&nbsp;BBB&nbsp;|</li>
+<li>|&nbsp;bbb&nbsp;|</li>
+<li>+------+</li>
+<li>&nbsp;</li>
+<li>ql&gt;&nbsp;SELECT&nbsp;c&nbsp;FROM&nbsp;t&nbsp;ORDER&nbsp;BY&nbsp;c&nbsp;COLLATE&nbsp;latin1_bin;</li>
+<li>+------+</li>
+<li>|&nbsp;c&nbsp;|</li>
+<li>+------+</li>
+<li>|&nbsp;AAA&nbsp;|</li>
+<li>|&nbsp;BBB&nbsp;|</li>
+<li>|&nbsp;aaa&nbsp;|</li>
+<li>|&nbsp;bbb&nbsp;|</li>
+<li>+------+</li>
+</ul></div>
+
+
+
 
 
 
