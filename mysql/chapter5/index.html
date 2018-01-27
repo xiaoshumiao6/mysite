@@ -145,11 +145,49 @@
 <td>4,294,967,295</td>
 </tr>
 </table>
+<p style="color:red">BINARY/CHAR类型：BINARY(10) or CHAR(10) 会占用十个字节，如果不足十字节，会进行不全（ 0x00/空格）；VARBINARY, VARCHAR, and the BLOB and TEXT 则不会进行补全<br>
+如果CHAR类型的字段末尾存在空格， 则无法取出空格</p>
+<div class="mycontent"><ul>
+<li>mysql&gt;&nbsp;CREATE&nbsp;TABLE&nbsp;t&nbsp;(c1&nbsp;CHAR(10),&nbsp;c2&nbsp;VARCHAR(10));</li>
+<li>mysql&gt;&nbsp;INSERT&nbsp;INTO&nbsp;t&nbsp;(c1,c2)&nbsp;VALUES('abc&nbsp;','abc&nbsp;');</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;c1,&nbsp;c2,&nbsp;CHAR_LENGTH(c1),&nbsp;CHAR_LENGTH(c2)&nbsp;FROM&nbsp;t;</li>
+<li>+------+------------+-----------------+-----------------+</li>
+<li>|&nbsp;c1&nbsp;|&nbsp;c2&nbsp;|&nbsp;CHAR_LENGTH(c1)&nbsp;|&nbsp;CHAR_LENGTH(c2)&nbsp;|</li>
+<li>+------+------------+-----------------+-----------------+</li>
+<li>|&nbsp;abc&nbsp;|&nbsp;abc&nbsp;|&nbsp;3&nbsp;|&nbsp;10&nbsp;|</li>
+<li>+------+------------+-----------------+-----------------+</li>
+</ul></div>
+<p>一个表可以同时包含binary and nonbinary string columns；并且nonbinary columns可以使用不同的character sets and collations</p>
+<div class="mycontent"><ul>
+<li>CREATE&nbsp;TABLE&nbsp;mytbl</li>
+<li>(</li>
+<li>utf8str&nbsp;VARCHAR(100)&nbsp;CHARACTER&nbsp;SET&nbsp;utf8&nbsp;COLLATE&nbsp;utf8_danish_ci,</li>
+<li>sjisstr&nbsp;VARCHAR(100)&nbsp;CHARACTER&nbsp;SET&nbsp;sjis&nbsp;COLLATE&nbsp;sjis_japanese_ci</li>
+<li>);</li>
+</ul></div>
+<p style="color:red">my.cnf 更改默认的字符： character_set_server and collation_server</p>
+<h3>设置客户端连接的Character Set</h3>
+<p>SET NAMES </p>
+<div class="mycontent"><ul>
+<li>1\</li>
+<li>mysql&gt;&nbsp;SET&nbsp;NAMES&nbsp;'utf8';</li>
+<li>mysql&gt;&nbsp;SET&nbsp;NAMES&nbsp;'utf8'&nbsp;COLLATE&nbsp;'utf8_general_ci';</li>
+<li>2\</li>
+<li>--default-character-set&nbsp;</li>
+<li>3\</li>
+<li>[mysql]</li>
+<li>default-character-set=utf8</li>
+<li>4\</li>
+<li>配置系统变量：LC_ALL&nbsp;to&nbsp;en_US.UTF-8&nbsp;causes&nbsp;programs&nbsp;such&nbsp;as&nbsp;mysql&nbsp;to&nbsp;use&nbsp;utf8</li>
+<li>5\</li>
+<li>api:for&nbsp;php:$dsn&nbsp;=&nbsp;"mysql:host=localhost;dbname=cookbook;charset=utf8";</li>
+</ul></div>
 
 
-
-
-
+<br>
+<br>
+<br>
+<br>
 </div>
 </div>
 
