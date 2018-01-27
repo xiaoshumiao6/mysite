@@ -1,0 +1,73 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../../css/style.css" />
+  
+</head>
+<body>
+	
+<div class="container_top">
+<div id="left_top"></div>
+<div id="middle_top">	
+<h1><div class="post-title">Chapter 4. Working with Strings</div></h1>
+<p>字符类型：</p>
+<ul>
+<li><ul>binary strings</li>
+<li>BINARY</li>
+<li>VARBINARY</li>
+<li>BLOB</li>
+
+</ul>
+<li><ul>nonbinary strings</li>
+<li>CHAR</li>
+<li>VARCHAR</li>
+<li>TEXT</li>
+</ul>
+</ul>
+<p>查看nobinary 字符集</p>
+<div class="mycontent"><ul>
+<li>mysql> SHOW CHARACTER SET;</li>
+</ul></div>
+<p>查看string 占用字节数</p>
+<div class="mycontent"><ul>
+<li>mysql&gt;&nbsp;SET&nbsp;@s&nbsp;=&nbsp;CONVERT('abc'&nbsp;USING&nbsp;utf8);</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;LENGTH(@s),&nbsp;CHAR_LENGTH(@s);</li>
+<li>+------------+-----------------+</li>
+<li>|&nbsp;LENGTH(@s)&nbsp;|&nbsp;CHAR_LENGTH(@s)&nbsp;|</li>
+<li>+------------+-----------------+</li>
+<li>|&nbsp;3&nbsp;|&nbsp;3&nbsp;|</li>
+<li>+------------+-----------------+</li>
+<li>&nbsp;</li>
+<li>mysql&gt;&nbsp;SET&nbsp;@s&nbsp;=&nbsp;CONVERT('abc'&nbsp;USING&nbsp;ucs2);</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;LENGTH(@s),&nbsp;CHAR_LENGTH(@s);</li>
+<li>+------------+-----------------+</li>
+<li>|&nbsp;LENGTH(@s)&nbsp;|&nbsp;CHAR_LENGTH(@s)&nbsp;|</li>
+<li>+------------+-----------------+</li>
+<li>|&nbsp;6&nbsp;|&nbsp;3&nbsp;|</li>
+<li>+------------+-----------------+</li>
+</ul></div>
+<p>查看支持collation</p>
+<div class="mycontent"><ul>
+<li>mysql&gt;&nbsp;SHOW&nbsp;COLLATION&nbsp;LIKE&nbsp;'latin1%';</li>
+<li>+-------------------+---------+----+---------+----------+---------+</li>
+<li>|&nbsp;Collation&nbsp;|&nbsp;Charset&nbsp;|&nbsp;Id&nbsp;|&nbsp;Default&nbsp;|&nbsp;Compiled&nbsp;|&nbsp;Sortlen&nbsp;|</li>
+<li>+-------------------+---------+----+---------+----------+---------+</li>
+<li>|&nbsp;latin1_german1_ci&nbsp;|&nbsp;latin1&nbsp;|&nbsp;5&nbsp;|&nbsp;|&nbsp;Yes&nbsp;|&nbsp;1&nbsp;|</li>
+<li>|&nbsp;latin1_swedish_ci&nbsp;|&nbsp;latin1&nbsp;|&nbsp;8&nbsp;|&nbsp;Yes&nbsp;|&nbsp;Yes&nbsp;|&nbsp;1&nbsp;|</li>
+<li>|&nbsp;latin1_danish_ci&nbsp;|&nbsp;latin1&nbsp;|&nbsp;15&nbsp;|&nbsp;|&nbsp;Yes&nbsp;|&nbsp;1&nbsp;|</li>
+<li>|&nbsp;latin1_german2_ci&nbsp;|&nbsp;latin1&nbsp;|&nbsp;31&nbsp;|&nbsp;|&nbsp;Yes&nbsp;|&nbsp;2&nbsp;|</li>
+<li>|&nbsp;latin1_bin&nbsp;|&nbsp;latin1&nbsp;|&nbsp;47&nbsp;|&nbsp;|&nbsp;Yes&nbsp;|&nbsp;1&nbsp;|</li>
+<li>|&nbsp;latin1_general_ci&nbsp;|&nbsp;latin1&nbsp;|&nbsp;48&nbsp;|&nbsp;|&nbsp;Yes&nbsp;|&nbsp;1&nbsp;|</li>
+<li>|&nbsp;latin1_general_cs&nbsp;|&nbsp;latin1&nbsp;|&nbsp;49&nbsp;|&nbsp;|&nbsp;Yes&nbsp;|&nbsp;1&nbsp;|</li>
+<li>|&nbsp;latin1_spanish_ci&nbsp;|&nbsp;latin1&nbsp;|&nbsp;94&nbsp;|&nbsp;|&nbsp;Yes&nbsp;|&nbsp;1&nbsp;|</li>
+<li>+-------------------+---------+----+---------+----------+---------+</li>
+</ul></div>
+
+
+
+
+</div>
+</div>
+
+</body>
+</html>
