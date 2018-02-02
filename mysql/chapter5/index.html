@@ -236,6 +236,171 @@
 <li>|&nbsp;I'm&nbsp;asleep&nbsp;|</li>
 <li>+------------------------+</li>
 </ul></div>
+<h3>修改字符集和Collation</h3>
+<p>查看字符集： CHARSET() or COLLATION() </p>
+<p>修改字符集： CONVERT()</p>
+<div class="mycontent"><ul>
+<li>mysql&gt;&nbsp;SELECT&nbsp;USER(),&nbsp;CHARSET(USER()),&nbsp;COLLATION(USER());</li>
+<li>+------------------+-----------------+-------------------+</li>
+<li>|&nbsp;USER()&nbsp;|&nbsp;CHARSET(USER())&nbsp;|&nbsp;COLLATION(USER())&nbsp;|</li>
+<li>+------------------+-----------------+-------------------+</li>
+<li>|&nbsp;cbuser@localhost&nbsp;|&nbsp;utf8&nbsp;|&nbsp;utf8_general_ci&nbsp;|</li>
+<li>+------------------+-----------------+-------------------+</li>
+</ul></div>
+
+<div class="mycontent"><ul>
+<li>mysql&gt;&nbsp;SET&nbsp;NAMES&nbsp;'latin1';</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;CHARSET('abc'),&nbsp;COLLATION('abc');</li>
+<li>+----------------+-------------------+</li>
+<li>|&nbsp;CHARSET('abc')&nbsp;|&nbsp;COLLATION('abc')&nbsp;|</li>
+<li>+----------------+-------------------+</li>
+<li>|&nbsp;latin1&nbsp;|&nbsp;latin1_swedish_ci&nbsp;|</li>
+<li>+----------------+-------------------+</li>
+<li>mysql&gt;&nbsp;SET&nbsp;NAMES&nbsp;utf8&nbsp;COLLATE&nbsp;'utf8_bin';</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;CHARSET('abc'),&nbsp;COLLATION('abc');</li>
+<li>+----------------+------------------+</li>
+<li>|&nbsp;CHARSET('abc')&nbsp;|&nbsp;COLLATION('abc')&nbsp;|</li>
+<li>+----------------+------------------+</li>
+<li>|&nbsp;utf8&nbsp;|&nbsp;utf8_bin&nbsp;|</li>
+<li>+----------------+------------------+</li>
+</ul></div>
+<p>CONVERT/COLLATE</p>
+<div class="mycontent"><ul>
+<li>mysql&gt;&nbsp;SET&nbsp;@s1&nbsp;=&nbsp;_latin1&nbsp;'my&nbsp;string',&nbsp;@s2&nbsp;=&nbsp;CONVERT(@s1&nbsp;USING&nbsp;utf8);</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;CHARSET(@s1),&nbsp;CHARSET(@s2);</li>
+<li>+--------------+--------------+</li>
+<li>|&nbsp;CHARSET(@s1)&nbsp;|&nbsp;CHARSET(@s2)&nbsp;|</li>
+<li>+--------------+--------------+</li>
+<li>|&nbsp;latin1&nbsp;|&nbsp;utf8&nbsp;|</li>
+<li>+--------------+--------------+</li>
+<li>&nbsp;</li>
+<li>mysql&gt;&nbsp;SET&nbsp;@s1&nbsp;=&nbsp;_latin1&nbsp;'my&nbsp;string',&nbsp;@s2&nbsp;=&nbsp;@s1&nbsp;COLLATE&nbsp;latin1_spanish_ci;</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;COLLATION(@s1),&nbsp;COLLATION(@s2);</li>
+<li>+-------------------+-------------------+</li>
+<li>|&nbsp;COLLATION(@s1)&nbsp;|&nbsp;COLLATION(@s2)&nbsp;|</li>
+<li>+-------------------+-------------------+</li>
+<li>|&nbsp;latin1_swedish_ci&nbsp;|&nbsp;latin1_spanish_ci&nbsp;|</li>
+<li>+-------------------+-------------------+</li>
+<li>&nbsp;</li>
+<li>mysql&gt;&nbsp;SET&nbsp;@s1&nbsp;=&nbsp;_latin1&nbsp;'my&nbsp;string';</li>
+<li>mysql&gt;&nbsp;SET&nbsp;@s2&nbsp;=&nbsp;CONVERT(@s1&nbsp;USING&nbsp;utf8)&nbsp;COLLATE&nbsp;utf8_spanish_ci;</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;CHARSET(@s1),&nbsp;COLLATION(@s1),&nbsp;CHARSET(@s2),&nbsp;COLLATION(@s2);</li>
+<li>+--------------+-------------------+--------------+-----------------+</li>
+<li>|&nbsp;CHARSET(@s1)&nbsp;|&nbsp;COLLATION(@s1)&nbsp;|&nbsp;CHARSET(@s2)&nbsp;|&nbsp;COLLATION(@s2)&nbsp;|</li>
+<li>+--------------+-------------------+--------------+-----------------+</li>
+<li>|&nbsp;latin1&nbsp;|&nbsp;latin1_swedish_ci&nbsp;|&nbsp;utf8&nbsp;|&nbsp;utf8_spanish_ci&nbsp;|</li>
+<li>+--------------+-------------------+--------------+-----------------+</li>
+<li>&nbsp;</li>
+<li>mysql&gt;&nbsp;SET&nbsp;@s1&nbsp;=&nbsp;_latin1&nbsp;'my&nbsp;string';</li>
+<li>mysql&gt;&nbsp;SET&nbsp;@s2&nbsp;=&nbsp;CONVERT(@s1&nbsp;USING&nbsp;binary);</li>
+<li>mysql&gt;&nbsp;SET&nbsp;@s3&nbsp;=&nbsp;CONVERT(@s2&nbsp;USING&nbsp;utf8);</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;CHARSET(@s1),&nbsp;CHARSET(@s2),&nbsp;CHARSET(@s3);</li>
+<li>+--------------+--------------+--------------+</li>
+<li>|&nbsp;CHARSET(@s1)&nbsp;|&nbsp;CHARSET(@s2)&nbsp;|&nbsp;CHARSET(@s3)&nbsp;|</li>
+<li>+--------------+--------------+--------------+</li>
+<li>|&nbsp;latin1&nbsp;|&nbsp;binary&nbsp;|&nbsp;utf8&nbsp;|</li>
+<li>+--------------+--------------+--------------+</li>
+<li>&nbsp;</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;CHARSET(BINARY&nbsp;_latin1&nbsp;'my&nbsp;string');</li>
+<li>+-------------------------------------+</li>
+<li>|&nbsp;CHARSET(BINARY&nbsp;_latin1&nbsp;'my&nbsp;string')&nbsp;|</li>
+<li>+-------------------------------------+</li>
+<li>|&nbsp;binary&nbsp;|</li>
+<li>+-------------------------------------+</li>
+</ul></div>
+<h3>改变字符的大小写</h3>
+<p>UPPER() or LOWER() function
+<br> BINARY or BLOB data type 不分大小写， 所以对于这两种数据类型不起作用（需要先转换为nonbinary string）</p>
+<div class="mycontent"><ul>
+<li>mysql&gt;&nbsp;SELECT&nbsp;thing,&nbsp;UPPER(thing),&nbsp;LOWER(thing)&nbsp;FROM&nbsp;limbs;</li>
+</ul></div>
+<h3>Pattern Matching with SQL Patterns</h3>
+<p>_: 匹配一个字符；% ： 匹配任意多个字符，包括空字符</p>
+<div class="mycontent"><ul>
+<li>mysql&gt;&nbsp;SELECT&nbsp;name&nbsp;FROM&nbsp;metal&nbsp;where&nbsp;name&nbsp;LIKE&nbsp;'__at%';</li>
+<li>+----------+</li>
+<li>|&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</li>
+<li>+----------+</li>
+<li>|&nbsp;platinum&nbsp;|</li>
+<li>+----------+</li>
+</ul></div>
+<table>
+<th>
+<td>Pattern match</td><td>Substring comparison</td>
+</th>
+<tr>
+<td>str LIKE 'abc%'</td><td>LEFT(str,3) = 'abc'</td>
+</tr>
+<tr>
+<td>str LIKE '%abc'</td><td>RIGHT(str,3) = 'abc'</td>
+</tr>
+<table>
+<h3>REGEXP matching</h3>
+<table>
+<th>
+<td>Pattern</td><td>What the pattern matches</td>
+</th>
+<tr>
+<td>^</td><td>Beginning of string</td>
+</tr>
+<tr>
+<td>$</td><td>End of string</td>
+</tr>
+<tr>
+<td>.</td><td>Any single character</td>
+</tr>
+<tr>
+<td>[...]</td><td>Any character listed between the square brackets</td>
+</tr>
+<tr>
+<td>[^...]</td><td>Any character not listed between the square brackets</td>
+</tr>
+<tr>
+<td>p1|p2|p3 </td><td>Alternation; matches any of the patterns p1, p2, or p3</td>
+</tr>
+<tr>
+<td>*</td><td>Zero or more instances of preceding element</td>
+</tr>
+<tr>
+<td>+</td><td>One or more instances of preceding element</td>
+</tr>
+<tr>
+<td>{n}</td><td>n instances of preceding element</td>
+</tr>
+<tr>
+<td>{m,n}</td><td>m through n instances of preceding element</td>
+</tr>
+</table>
+<img src="../../img/mysql/mysql_5_1.png alt="regrex" />
+<div class="mycontent"><ul>
+<li>mysql&gt;&nbsp;SELECT&nbsp;name,&nbsp;name&nbsp;REGEXP&nbsp;'[[:xdigit:]]'&nbsp;FROM&nbsp;metal;</li>
+<li>&nbsp;</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;name&nbsp;FROM&nbsp;metal&nbsp;WHERE&nbsp;name&nbsp;REGEXP&nbsp;'^[aeiou]|d$';</li>
+<li>&nbsp;</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;'0m'&nbsp;REGEXP&nbsp;'^[[:digit:]]+|[[:alpha:]]+$';</li>
+<li>+-------------------------------------------+</li>
+<li>|&nbsp;'0m'&nbsp;REGEXP&nbsp;'^[[:digit:]]+|[[:alpha:]]+$'&nbsp;|</li>
+<li>+-------------------------------------------+</li>
+<li>|&nbsp;1&nbsp;|</li>
+<li>+-------------------------------------------+</li>
+<li>&nbsp;</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;'0m'&nbsp;REGEXP&nbsp;'^([[:digit:]]+|[[:alpha:]]+)$';</li>
+<li>+---------------------------------------------+</li>
+<li>|&nbsp;'0m'&nbsp;REGEXP&nbsp;'^([[:digit:]]+|[[:alpha:]]+)$'&nbsp;|</li>
+<li>+---------------------------------------------+</li>
+<li>|&nbsp;0&nbsp;|</li>
+<li>+---------------------------------------------+</li>
+<li>&nbsp;</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;NULL&nbsp;REGEXP&nbsp;'.*',&nbsp;NULL&nbsp;NOT&nbsp;REGEXP&nbsp;'.*';</li>
+<li>+------------------+----------------------+</li>
+<li>|&nbsp;NULL&nbsp;REGEXP&nbsp;'.*'&nbsp;|&nbsp;NULL&nbsp;NOT&nbsp;REGEXP&nbsp;'.*'&nbsp;|</li>
+<li>+------------------+----------------------+</li>
+<li>|&nbsp;NULL&nbsp;|&nbsp;NULL&nbsp;|</li>
+<li>+------------------+----------------------+</li>
+</ul></div>
+<h3>Breaking Apart or Combining Strings</h3>
+
+
 
 
 
