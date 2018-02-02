@@ -1,420 +1,55 @@
-<html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<link rel="stylesheet" href="../../css/style.css" />
-  
-</head>
-<body>
-	
-<div class="container_top">
-<div id="left_top"></div>
-<div id="middle_top">	
-<h1><div class="post-title">Chapter 5. Working with Strings</div></h1>
-<h3>字符类型：</h3>
-<ul>
-<li>binary strings</li>
-<ul><li>BINARY</li>
-<li>VARBINARY</li>
-<li>BLOB</li>
-
-</ul>
-<li>nonbinary strings</li>
-<ul><li>CHAR</li>
-<li>VARCHAR</li>
-<li>TEXT</li>
-</ul>
-</ul>
-<p>查看nobinary 字符集</p>
 <div class="mycontent"><ul>
-<li>mysql> SHOW CHARACTER SET;</li>
-</ul></div>
-<p>查看string 占用字节数</p>
-<div class="mycontent"><ul>
-<li>mysql&gt;&nbsp;SET&nbsp;@s&nbsp;=&nbsp;CONVERT('abc'&nbsp;USING&nbsp;utf8);</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;LENGTH(@s),&nbsp;CHAR_LENGTH(@s);</li>
-<li>+------------+-----------------+</li>
-<li>|&nbsp;LENGTH(@s)&nbsp;|&nbsp;CHAR_LENGTH(@s)&nbsp;|</li>
-<li>+------------+-----------------+</li>
-<li>|&nbsp;3&nbsp;|&nbsp;3&nbsp;|</li>
-<li>+------------+-----------------+</li>
+<li>mysql&gt;&nbsp;SET&nbsp;@date&nbsp;=&nbsp;'2015-07-21';</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;@date,&nbsp;LEFT(@date,4)&nbsp;AS&nbsp;year,</li>
+<li>-&gt;&nbsp;MID(@date,6,2)&nbsp;AS&nbsp;month,&nbsp;RIGHT(@date,2)&nbsp;AS&nbsp;day;</li>
+<li>+------------+------+-------+------+</li>
+<li>|&nbsp;@date&nbsp;|&nbsp;year&nbsp;|&nbsp;month&nbsp;|&nbsp;day&nbsp;|</li>
+<li>+------------+------+-------+------+</li>
+<li>|&nbsp;2015-07-21&nbsp;|&nbsp;2015&nbsp;|&nbsp;07&nbsp;|&nbsp;21&nbsp;|</li>
+<li>+------------+------+-------+------+</li>
 <li>&nbsp;</li>
-<li>mysql&gt;&nbsp;SET&nbsp;@s&nbsp;=&nbsp;CONVERT('abc'&nbsp;USING&nbsp;ucs2);</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;LENGTH(@s),&nbsp;CHAR_LENGTH(@s);</li>
-<li>+------------+-----------------+</li>
-<li>|&nbsp;LENGTH(@s)&nbsp;|&nbsp;CHAR_LENGTH(@s)&nbsp;|</li>
-<li>+------------+-----------------+</li>
-<li>|&nbsp;6&nbsp;|&nbsp;3&nbsp;|</li>
-<li>+------------+-----------------+</li>
-</ul></div>
-<p>查看支持collation(SHOW CHARACTER SET)</p>
-<div class="mycontent"><ul>
-<li>mysql&gt;&nbsp;SHOW&nbsp;COLLATION&nbsp;LIKE&nbsp;'latin1%';</li>
-<li>+-------------------+---------+----+---------+----------+---------+</li>
-<li>|&nbsp;Collation&nbsp;|&nbsp;Charset&nbsp;|&nbsp;Id&nbsp;|&nbsp;Default&nbsp;|&nbsp;Compiled&nbsp;|&nbsp;Sortlen&nbsp;|</li>
-<li>+-------------------+---------+----+---------+----------+---------+</li>
-<li>|&nbsp;latin1_german1_ci&nbsp;|&nbsp;latin1&nbsp;|&nbsp;5&nbsp;|&nbsp;|&nbsp;Yes&nbsp;|&nbsp;1&nbsp;|</li>
-<li>|&nbsp;latin1_swedish_ci&nbsp;|&nbsp;latin1&nbsp;|&nbsp;8&nbsp;|&nbsp;Yes&nbsp;|&nbsp;Yes&nbsp;|&nbsp;1&nbsp;|</li>
-<li>|&nbsp;latin1_danish_ci&nbsp;|&nbsp;latin1&nbsp;|&nbsp;15&nbsp;|&nbsp;|&nbsp;Yes&nbsp;|&nbsp;1&nbsp;|</li>
-<li>|&nbsp;latin1_german2_ci&nbsp;|&nbsp;latin1&nbsp;|&nbsp;31&nbsp;|&nbsp;|&nbsp;Yes&nbsp;|&nbsp;2&nbsp;|</li>
-<li>|&nbsp;latin1_bin&nbsp;|&nbsp;latin1&nbsp;|&nbsp;47&nbsp;|&nbsp;|&nbsp;Yes&nbsp;|&nbsp;1&nbsp;|</li>
-<li>|&nbsp;latin1_general_ci&nbsp;|&nbsp;latin1&nbsp;|&nbsp;48&nbsp;|&nbsp;|&nbsp;Yes&nbsp;|&nbsp;1&nbsp;|</li>
-<li>|&nbsp;latin1_general_cs&nbsp;|&nbsp;latin1&nbsp;|&nbsp;49&nbsp;|&nbsp;|&nbsp;Yes&nbsp;|&nbsp;1&nbsp;|</li>
-<li>|&nbsp;latin1_spanish_ci&nbsp;|&nbsp;latin1&nbsp;|&nbsp;94&nbsp;|&nbsp;|&nbsp;Yes&nbsp;|&nbsp;1&nbsp;|</li>
-<li>+-------------------+---------+----+---------+----------+---------+</li>
-</ul></div>
-<p style="color:red">字符集分别以_ci, _cs, or _bin结尾，分别指：大小写不明感（case insensitive），大小写敏感（case sensitive），二进制（binary）</p>
-<p>例：(utf8 默认collation：utf8_general_ci)</p>
-<div class="mycontent"><ul>
-<li>mysql&gt;&nbsp;CREATE&nbsp;TABLE&nbsp;t&nbsp;(c&nbsp;CHAR(3)&nbsp;CHARACTER&nbsp;SET&nbsp;latin1);</li>
-<li>mysql&gt;&nbsp;INSERT&nbsp;INTO&nbsp;t&nbsp;(c)&nbsp;VALUES('AAA'),('bbb'),('aaa'),('BBB');</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;c&nbsp;FROM&nbsp;t;</li>
-<li>+------+</li>
-<li>|&nbsp;c&nbsp;|</li>
-<li>+------+</li>
-<li>|&nbsp;AAA&nbsp;|</li>
-<li>|&nbsp;bbb&nbsp;|</li>
-<li>|&nbsp;aaa&nbsp;|</li>
-<li>|&nbsp;BBB&nbsp;|</li>
-<li>+------+</li>
+<li>mysql&gt;&nbsp;SET&nbsp;@date&nbsp;=&nbsp;'2015-07-21';</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;@date,&nbsp;SUBSTRING(@date,6),&nbsp;MID(@date,6);</li>
+<li>+------------+--------------------+--------------+</li>
+<li>|&nbsp;@date&nbsp;|&nbsp;SUBSTRING(@date,6)&nbsp;|&nbsp;MID(@date,6)&nbsp;|</li>
+<li>+------------+--------------------+--------------+</li>
+<li>|&nbsp;2015-07-21&nbsp;|&nbsp;07-21&nbsp;|&nbsp;07-21&nbsp;|</li>
+<li>+------------+--------------------+--------------+</li>
 <li>&nbsp;</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;c&nbsp;FROM&nbsp;t&nbsp;ORDER&nbsp;BY&nbsp;c&nbsp;COLLATE&nbsp;latin1_swedish_ci;</li>
-<li>+------+</li>
-<li>|&nbsp;c&nbsp;|</li>
-<li>+------+</li>
-<li>|&nbsp;AAA&nbsp;|</li>
-<li>|&nbsp;aaa&nbsp;|</li>
-<li>|&nbsp;bbb&nbsp;|</li>
-<li>|&nbsp;BBB&nbsp;|</li>
-<li>+------+</li>
+<li>mysql&gt;&nbsp;SET&nbsp;@email&nbsp;=&nbsp;'postmaster@example.com';</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;@email,</li>
+<li>-&gt;&nbsp;SUBSTRING_INDEX(@email,'@',1)&nbsp;AS&nbsp;user,</li>
+<li>-&gt;&nbsp;SUBSTRING_INDEX(@email,'@',-1)&nbsp;AS&nbsp;host;</li>
+<li>+------------------------+------------+-------------+</li>
+<li>|&nbsp;@email&nbsp;|&nbsp;user&nbsp;|&nbsp;host&nbsp;|</li>
+<li>+------------------------+------------+-------------+</li>
+<li>|&nbsp;postmaster@example.com&nbsp;|&nbsp;postmaster&nbsp;|&nbsp;example.com&nbsp;|</li>
+<li>+------------------------+------------+-------------+</li>
 <li>&nbsp;</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;c&nbsp;FROM&nbsp;t&nbsp;ORDER&nbsp;BY&nbsp;c&nbsp;COLLATE&nbsp;latin1_general_cs;</li>
-<li>+------+</li>
-<li>|&nbsp;c&nbsp;|</li>
-<li>+------+</li>
-<li>|&nbsp;AAA&nbsp;|</li>
-<li>|&nbsp;aaa&nbsp;|</li>
-<li>|&nbsp;BBB&nbsp;|</li>
-<li>|&nbsp;bbb&nbsp;|</li>
-<li>+------+</li>
-<li>&nbsp;</li>
-<li>ql&gt;&nbsp;SELECT&nbsp;c&nbsp;FROM&nbsp;t&nbsp;ORDER&nbsp;BY&nbsp;c&nbsp;COLLATE&nbsp;latin1_bin;</li>
-<li>+------+</li>
-<li>|&nbsp;c&nbsp;|</li>
-<li>+------+</li>
-<li>|&nbsp;AAA&nbsp;|</li>
-<li>|&nbsp;BBB&nbsp;|</li>
-<li>|&nbsp;aaa&nbsp;|</li>
-<li>|&nbsp;bbb&nbsp;|</li>
-<li>+------+</li>
+<li>LOCATE&nbsp;的用法:</li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;name,&nbsp;LOCATE('in',name),&nbsp;LOCATE('in',name,3)&nbsp;FROM&nbsp;metal;</li>
+<li>+----------+-------------------+---------------------+</li>
+<li>|&nbsp;name&nbsp;|&nbsp;LOCATE('in',name)&nbsp;|&nbsp;LOCATE('in',name,3)&nbsp;|</li>
+<li>+----------+-------------------+---------------------+</li>
+<li>|&nbsp;gold&nbsp;|&nbsp;0&nbsp;|&nbsp;0&nbsp;|</li>
+<li>|&nbsp;iron&nbsp;|&nbsp;0&nbsp;|&nbsp;0&nbsp;|</li>
+<li>|&nbsp;lead&nbsp;|&nbsp;0&nbsp;|&nbsp;0&nbsp;|</li>
+<li>|&nbsp;mercury&nbsp;|&nbsp;0&nbsp;|&nbsp;0&nbsp;|</li>
+<li>|&nbsp;platinum&nbsp;|&nbsp;5&nbsp;|&nbsp;5&nbsp;|</li>
+<li>|&nbsp;tin&nbsp;|&nbsp;2&nbsp;|&nbsp;0&nbsp;|</li>
+<li>+----------+-------------------+---------------------+</li>
+<li></li>
+<li>mysql&gt;&nbsp;SELECT&nbsp;name,&nbsp;name&nbsp;LIKE&nbsp;'%in%',&nbsp;name&nbsp;REGEXP&nbsp;'in'&nbsp;FROM&nbsp;metal;</li>
+<li>+----------+------------------+------------------+</li>
+<li>|&nbsp;name&nbsp;|&nbsp;name&nbsp;LIKE&nbsp;'%in%'&nbsp;|&nbsp;name&nbsp;REGEXP&nbsp;'in'&nbsp;|</li>
+<li>+----------+------------------+------------------+</li>
+<li>|&nbsp;gold&nbsp;|&nbsp;0&nbsp;|&nbsp;0&nbsp;|</li>
+<li>|&nbsp;iron&nbsp;|&nbsp;0&nbsp;|&nbsp;0&nbsp;|</li>
+<li>|&nbsp;lead&nbsp;|&nbsp;0&nbsp;|&nbsp;0&nbsp;|</li>
+<li>|&nbsp;mercury&nbsp;|&nbsp;0&nbsp;|&nbsp;0&nbsp;|</li>
+<li>|&nbsp;platinum&nbsp;|&nbsp;1&nbsp;|&nbsp;1&nbsp;|&nbsp;</li>
+<li>+----------+-------------------+---------------------+</li>
+<li>FULLTEXT&nbsp;的用法(适合于text或者多columns&nbsp;的搜索):</li>
+<li></li>
+<li></li>
 </ul></div>
-<h3>选择字符数据类型</h3>
-<table border="1" style="border-collapse:collapse">
-<tr>
-<th>Binary data type</th>
-<th>Nonbinary data type</th>
-<th>Maximum length(bytes)</th>
-</tr>
-<tr>
-<td>BINARY</td>
-<td>CHAR</td>
-<td>255</td>
-</tr>
-<tr>
-<td>VARBINARY</td>
-<td>VARCHAR</td>
-<td>65,535</td>
-</tr>
-<tr>
-<td>TINYBLOB</td>
-<td>TINYTEXT</td>
-<td>255</td>
-</tr>
-<tr>
-<td>BLOB</td>
-<td>TEXT</td>
-<td>65,535</td>
-</tr>
-<tr>
-<td>MEDIUMBLOB</td>
-<td>MEDIUMTEXT</td>
-<td>16,777,215</td>
-</tr>
-<tr>
-<td>LONGBLOB</td>
-<td>LONGTEXT</td>
-<td>4,294,967,295</td>
-</tr>
-</table>
-<p style="color:red">BINARY/CHAR类型：BINARY(10) or CHAR(10) 会占用十个字节，如果不足十字节，会进行不全（ 0x00/空格）；VARBINARY, VARCHAR, and the BLOB and TEXT 则不会进行补全<br>
-如果CHAR类型的字段末尾存在空格， 则无法取出空格</p>
-<div class="mycontent"><ul>
-<li>mysql&gt;&nbsp;CREATE&nbsp;TABLE&nbsp;t&nbsp;(c1&nbsp;CHAR(10),&nbsp;c2&nbsp;VARCHAR(10));</li>
-<li>mysql&gt;&nbsp;INSERT&nbsp;INTO&nbsp;t&nbsp;(c1,c2)&nbsp;VALUES('abc&nbsp;','abc&nbsp;');</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;c1,&nbsp;c2,&nbsp;CHAR_LENGTH(c1),&nbsp;CHAR_LENGTH(c2)&nbsp;FROM&nbsp;t;</li>
-<li>+------+------------+-----------------+-----------------+</li>
-<li>|&nbsp;c1&nbsp;|&nbsp;c2&nbsp;|&nbsp;CHAR_LENGTH(c1)&nbsp;|&nbsp;CHAR_LENGTH(c2)&nbsp;|</li>
-<li>+------+------------+-----------------+-----------------+</li>
-<li>|&nbsp;abc&nbsp;|&nbsp;abc&nbsp;|&nbsp;3&nbsp;|&nbsp;10&nbsp;|</li>
-<li>+------+------------+-----------------+-----------------+</li>
-</ul></div>
-<p>一个表可以同时包含binary and nonbinary string columns；并且nonbinary columns可以使用不同的character sets and collations</p>
-<div class="mycontent"><ul>
-<li>CREATE&nbsp;TABLE&nbsp;mytbl</li>
-<li>(</li>
-<li>utf8str&nbsp;VARCHAR(100)&nbsp;CHARACTER&nbsp;SET&nbsp;utf8&nbsp;COLLATE&nbsp;utf8_danish_ci,</li>
-<li>sjisstr&nbsp;VARCHAR(100)&nbsp;CHARACTER&nbsp;SET&nbsp;sjis&nbsp;COLLATE&nbsp;sjis_japanese_ci</li>
-<li>);</li>
-</ul></div>
-<p style="color:red">my.cnf 更改默认的字符： character_set_server and collation_server</p>
-<h3>设置客户端连接的Character Set</h3>
-<p>SET NAMES </p>
-<div class="mycontent"><ul>
-<li>1\</li>
-<li>mysql&gt;&nbsp;SET&nbsp;NAMES&nbsp;'utf8';</li>
-<li>mysql&gt;&nbsp;SET&nbsp;NAMES&nbsp;'utf8'&nbsp;COLLATE&nbsp;'utf8_general_ci';</li>
-<li>2\</li>
-<li>--default-character-set&nbsp;</li>
-<li>3\</li>
-<li>[mysql]</li>
-<li>default-character-set=utf8</li>
-<li>4\</li>
-<li>配置系统变量：LC_ALL&nbsp;to&nbsp;en_US.UTF-8&nbsp;causes&nbsp;programs&nbsp;such&nbsp;as&nbsp;mysql&nbsp;to&nbsp;use&nbsp;utf8</li>
-<li>5\</li>
-<li>api:for&nbsp;php:$dsn&nbsp;=&nbsp;"mysql:host=localhost;dbname=cookbook;charset=utf8";</li>
-</ul></div>
-<p>拼写strings ：可以使用单/双引号引起来，如果ANSI_QUOTES SQL 模式打开， 那么就不能使用双引号；</p>
-<div class="mycontent"><ul>
-<li>'my&nbsp;string'</li>
-<li>"my&nbsp;string"</li>
-</ul></div>
-<p>十六进制</p>
-<div class="mycontent"><ul>
-<li>0x61626364</li>
-<li>X'61626364'</li>
-<li>x'61626364'"my&nbsp;string"</li>
-<li>&nbsp;</li>
-<li>INSERT&nbsp;INTO&nbsp;t&nbsp;SET&nbsp;binary_col&nbsp;=&nbsp;0xdeadbeef;</li>
-</ul></div>
-<p>一个string 指定字符编码格式</p>
-<div class="mycontent"><ul>
-<li>_latin1&nbsp;'abcd'</li>
-<li>_ucs2&nbsp;'abcd'</li>
-</ul></div>
-<p>特殊字符的处理：单/双引号</p>
-<div class="mycontent"><ul>
-<li>mysql&gt;&nbsp;SELECT&nbsp;"I'm&nbsp;asleep",&nbsp;'He&nbsp;said,&nbsp;"Boo!"';</li>
-<li>+------------+-----------------+</li>
-<li>|&nbsp;I'm&nbsp;asleep&nbsp;|&nbsp;He&nbsp;said,&nbsp;"Boo!"&nbsp;|</li>
-<li>+------------+-----------------+</li>
-<li>|&nbsp;I'm&nbsp;asleep&nbsp;|&nbsp;He&nbsp;said,&nbsp;"Boo!"&nbsp;|</li>
-<li>+------------+-----------------+</li>
-<li>&nbsp;</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;'I''m&nbsp;asleep',&nbsp;'I\'m&nbsp;wide&nbsp;awake';</li>
-<li>+------------+----------------+</li>
-<li>|&nbsp;I'm&nbsp;asleep&nbsp;|&nbsp;I'm&nbsp;wide&nbsp;awake&nbsp;|</li>
-<li>+------------+----------------+</li>
-<li>|&nbsp;I'm&nbsp;asleep&nbsp;|&nbsp;I'm&nbsp;wide&nbsp;awake&nbsp;|</li>
-<li>+------------+----------------+</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;"He&nbsp;said,&nbsp;""Boo!""",&nbsp;"And&nbsp;I&nbsp;said,&nbsp;\"Yikes!\"";</li>
-<li>+-----------------+----------------------+</li>
-<li>|&nbsp;He&nbsp;said,&nbsp;"Boo!"&nbsp;|&nbsp;And&nbsp;I&nbsp;said,&nbsp;"Yikes!"&nbsp;|</li>
-<li>+-----------------+----------------------+</li>
-<li>|&nbsp;He&nbsp;said,&nbsp;"Boo!"&nbsp;|&nbsp;And&nbsp;I&nbsp;said,&nbsp;"Yikes!"&nbsp;|</li>
-<li>+-----------------+----------------------+</li>
-<li>字符：\</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;'Install&nbsp;MySQL&nbsp;in&nbsp;C:\\mysql&nbsp;on&nbsp;Windows';</li>
-<li>+--------------------------------------+</li>
-<li>|&nbsp;Install&nbsp;MySQL&nbsp;in&nbsp;C:\mysql&nbsp;on&nbsp;Windows&nbsp;|</li>
-<li>+--------------------------------------+</li>
-<li>|&nbsp;Install&nbsp;MySQL&nbsp;in&nbsp;C:\mysql&nbsp;on&nbsp;Windows&nbsp;|</li>
-<li>+--------------------------------------+</li>
-<li>十六进制：</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;0x49276D2061736C656570;</li>
-<li>+------------------------+</li>
-<li>|&nbsp;0x49276D2061736C656570&nbsp;|</li>
-<li>+------------------------+</li>
-<li>|&nbsp;I'm&nbsp;asleep&nbsp;|</li>
-<li>+------------------------+</li>
-</ul></div>
-<h3>修改字符集和Collation</h3>
-<p>查看字符集： CHARSET() or COLLATION() </p>
-<p>修改字符集： CONVERT()</p>
-<div class="mycontent"><ul>
-<li>mysql&gt;&nbsp;SELECT&nbsp;USER(),&nbsp;CHARSET(USER()),&nbsp;COLLATION(USER());</li>
-<li>+------------------+-----------------+-------------------+</li>
-<li>|&nbsp;USER()&nbsp;|&nbsp;CHARSET(USER())&nbsp;|&nbsp;COLLATION(USER())&nbsp;|</li>
-<li>+------------------+-----------------+-------------------+</li>
-<li>|&nbsp;cbuser@localhost&nbsp;|&nbsp;utf8&nbsp;|&nbsp;utf8_general_ci&nbsp;|</li>
-<li>+------------------+-----------------+-------------------+</li>
-</ul></div>
-
-<div class="mycontent"><ul>
-<li>mysql&gt;&nbsp;SET&nbsp;NAMES&nbsp;'latin1';</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;CHARSET('abc'),&nbsp;COLLATION('abc');</li>
-<li>+----------------+-------------------+</li>
-<li>|&nbsp;CHARSET('abc')&nbsp;|&nbsp;COLLATION('abc')&nbsp;|</li>
-<li>+----------------+-------------------+</li>
-<li>|&nbsp;latin1&nbsp;|&nbsp;latin1_swedish_ci&nbsp;|</li>
-<li>+----------------+-------------------+</li>
-<li>mysql&gt;&nbsp;SET&nbsp;NAMES&nbsp;utf8&nbsp;COLLATE&nbsp;'utf8_bin';</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;CHARSET('abc'),&nbsp;COLLATION('abc');</li>
-<li>+----------------+------------------+</li>
-<li>|&nbsp;CHARSET('abc')&nbsp;|&nbsp;COLLATION('abc')&nbsp;|</li>
-<li>+----------------+------------------+</li>
-<li>|&nbsp;utf8&nbsp;|&nbsp;utf8_bin&nbsp;|</li>
-<li>+----------------+------------------+</li>
-</ul></div>
-<p>CONVERT/COLLATE</p>
-<div class="mycontent"><ul>
-<li>mysql&gt;&nbsp;SET&nbsp;@s1&nbsp;=&nbsp;_latin1&nbsp;'my&nbsp;string',&nbsp;@s2&nbsp;=&nbsp;CONVERT(@s1&nbsp;USING&nbsp;utf8);</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;CHARSET(@s1),&nbsp;CHARSET(@s2);</li>
-<li>+--------------+--------------+</li>
-<li>|&nbsp;CHARSET(@s1)&nbsp;|&nbsp;CHARSET(@s2)&nbsp;|</li>
-<li>+--------------+--------------+</li>
-<li>|&nbsp;latin1&nbsp;|&nbsp;utf8&nbsp;|</li>
-<li>+--------------+--------------+</li>
-<li>&nbsp;</li>
-<li>mysql&gt;&nbsp;SET&nbsp;@s1&nbsp;=&nbsp;_latin1&nbsp;'my&nbsp;string',&nbsp;@s2&nbsp;=&nbsp;@s1&nbsp;COLLATE&nbsp;latin1_spanish_ci;</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;COLLATION(@s1),&nbsp;COLLATION(@s2);</li>
-<li>+-------------------+-------------------+</li>
-<li>|&nbsp;COLLATION(@s1)&nbsp;|&nbsp;COLLATION(@s2)&nbsp;|</li>
-<li>+-------------------+-------------------+</li>
-<li>|&nbsp;latin1_swedish_ci&nbsp;|&nbsp;latin1_spanish_ci&nbsp;|</li>
-<li>+-------------------+-------------------+</li>
-<li>&nbsp;</li>
-<li>mysql&gt;&nbsp;SET&nbsp;@s1&nbsp;=&nbsp;_latin1&nbsp;'my&nbsp;string';</li>
-<li>mysql&gt;&nbsp;SET&nbsp;@s2&nbsp;=&nbsp;CONVERT(@s1&nbsp;USING&nbsp;utf8)&nbsp;COLLATE&nbsp;utf8_spanish_ci;</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;CHARSET(@s1),&nbsp;COLLATION(@s1),&nbsp;CHARSET(@s2),&nbsp;COLLATION(@s2);</li>
-<li>+--------------+-------------------+--------------+-----------------+</li>
-<li>|&nbsp;CHARSET(@s1)&nbsp;|&nbsp;COLLATION(@s1)&nbsp;|&nbsp;CHARSET(@s2)&nbsp;|&nbsp;COLLATION(@s2)&nbsp;|</li>
-<li>+--------------+-------------------+--------------+-----------------+</li>
-<li>|&nbsp;latin1&nbsp;|&nbsp;latin1_swedish_ci&nbsp;|&nbsp;utf8&nbsp;|&nbsp;utf8_spanish_ci&nbsp;|</li>
-<li>+--------------+-------------------+--------------+-----------------+</li>
-<li>&nbsp;</li>
-<li>mysql&gt;&nbsp;SET&nbsp;@s1&nbsp;=&nbsp;_latin1&nbsp;'my&nbsp;string';</li>
-<li>mysql&gt;&nbsp;SET&nbsp;@s2&nbsp;=&nbsp;CONVERT(@s1&nbsp;USING&nbsp;binary);</li>
-<li>mysql&gt;&nbsp;SET&nbsp;@s3&nbsp;=&nbsp;CONVERT(@s2&nbsp;USING&nbsp;utf8);</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;CHARSET(@s1),&nbsp;CHARSET(@s2),&nbsp;CHARSET(@s3);</li>
-<li>+--------------+--------------+--------------+</li>
-<li>|&nbsp;CHARSET(@s1)&nbsp;|&nbsp;CHARSET(@s2)&nbsp;|&nbsp;CHARSET(@s3)&nbsp;|</li>
-<li>+--------------+--------------+--------------+</li>
-<li>|&nbsp;latin1&nbsp;|&nbsp;binary&nbsp;|&nbsp;utf8&nbsp;|</li>
-<li>+--------------+--------------+--------------+</li>
-<li>&nbsp;</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;CHARSET(BINARY&nbsp;_latin1&nbsp;'my&nbsp;string');</li>
-<li>+-------------------------------------+</li>
-<li>|&nbsp;CHARSET(BINARY&nbsp;_latin1&nbsp;'my&nbsp;string')&nbsp;|</li>
-<li>+-------------------------------------+</li>
-<li>|&nbsp;binary&nbsp;|</li>
-<li>+-------------------------------------+</li>
-</ul></div>
-<h3>改变字符的大小写</h3>
-<p>UPPER() or LOWER() function
-<br> BINARY or BLOB data type 不分大小写， 所以对于这两种数据类型不起作用（需要先转换为nonbinary string）</p>
-<div class="mycontent"><ul>
-<li>mysql&gt;&nbsp;SELECT&nbsp;thing,&nbsp;UPPER(thing),&nbsp;LOWER(thing)&nbsp;FROM&nbsp;limbs;</li>
-</ul></div>
-<h3>Pattern Matching with SQL Patterns</h3>
-<p>_: 匹配一个字符；% ： 匹配任意多个字符，包括空字符</p>
-<div class="mycontent"><ul>
-<li>mysql&gt;&nbsp;SELECT&nbsp;name&nbsp;FROM&nbsp;metal&nbsp;where&nbsp;name&nbsp;LIKE&nbsp;'__at%';</li>
-<li>+----------+</li>
-<li>|&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</li>
-<li>+----------+</li>
-<li>|&nbsp;platinum&nbsp;|</li>
-<li>+----------+</li>
-</ul></div>
-<table>
-<th>
-<td>Pattern match</td><td>Substring comparison</td>
-</th>
-<tr>
-<td>str LIKE 'abc%'</td><td>LEFT(str,3) = 'abc'</td>
-</tr>
-<tr>
-<td>str LIKE '%abc'</td><td>RIGHT(str,3) = 'abc'</td>
-</tr>
-<table>
-<h3>REGEXP matching</h3>
-<table>
-<th>
-<td>Pattern</td><td>What the pattern matches</td>
-</th>
-<tr>
-<td>^</td><td>Beginning of string</td>
-</tr>
-<tr>
-<td>$</td><td>End of string</td>
-</tr>
-<tr>
-<td>.</td><td>Any single character</td>
-</tr>
-<tr>
-<td>[...]</td><td>Any character listed between the square brackets</td>
-</tr>
-<tr>
-<td>[^...]</td><td>Any character not listed between the square brackets</td>
-</tr>
-<tr>
-<td>p1|p2|p3 </td><td>Alternation; matches any of the patterns p1, p2, or p3</td>
-</tr>
-<tr>
-<td>*</td><td>Zero or more instances of preceding element</td>
-</tr>
-<tr>
-<td>+</td><td>One or more instances of preceding element</td>
-</tr>
-<tr>
-<td>{n}</td><td>n instances of preceding element</td>
-</tr>
-<tr>
-<td>{m,n}</td><td>m through n instances of preceding element</td>
-</tr>
-</table>
-<img src="../../img/mysql/mysql_5_1.png alt="regrex" />
-<div class="mycontent"><ul>
-<li>mysql&gt;&nbsp;SELECT&nbsp;name,&nbsp;name&nbsp;REGEXP&nbsp;'[[:xdigit:]]'&nbsp;FROM&nbsp;metal;</li>
-<li>&nbsp;</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;name&nbsp;FROM&nbsp;metal&nbsp;WHERE&nbsp;name&nbsp;REGEXP&nbsp;'^[aeiou]|d$';</li>
-<li>&nbsp;</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;'0m'&nbsp;REGEXP&nbsp;'^[[:digit:]]+|[[:alpha:]]+$';</li>
-<li>+-------------------------------------------+</li>
-<li>|&nbsp;'0m'&nbsp;REGEXP&nbsp;'^[[:digit:]]+|[[:alpha:]]+$'&nbsp;|</li>
-<li>+-------------------------------------------+</li>
-<li>|&nbsp;1&nbsp;|</li>
-<li>+-------------------------------------------+</li>
-<li>&nbsp;</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;'0m'&nbsp;REGEXP&nbsp;'^([[:digit:]]+|[[:alpha:]]+)$';</li>
-<li>+---------------------------------------------+</li>
-<li>|&nbsp;'0m'&nbsp;REGEXP&nbsp;'^([[:digit:]]+|[[:alpha:]]+)$'&nbsp;|</li>
-<li>+---------------------------------------------+</li>
-<li>|&nbsp;0&nbsp;|</li>
-<li>+---------------------------------------------+</li>
-<li>&nbsp;</li>
-<li>mysql&gt;&nbsp;SELECT&nbsp;NULL&nbsp;REGEXP&nbsp;'.*',&nbsp;NULL&nbsp;NOT&nbsp;REGEXP&nbsp;'.*';</li>
-<li>+------------------+----------------------+</li>
-<li>|&nbsp;NULL&nbsp;REGEXP&nbsp;'.*'&nbsp;|&nbsp;NULL&nbsp;NOT&nbsp;REGEXP&nbsp;'.*'&nbsp;|</li>
-<li>+------------------+----------------------+</li>
-<li>|&nbsp;NULL&nbsp;|&nbsp;NULL&nbsp;|</li>
-<li>+------------------+----------------------+</li>
-</ul></div>
-<h3>Breaking Apart or Combining Strings</h3>
-
-
-
-
-
-
-
-
-
-
-<br>
-<br>
-<br>
-<br>
-</div>
-</div>
-
-</body>
-</html>
