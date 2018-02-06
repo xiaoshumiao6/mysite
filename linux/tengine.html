@@ -147,6 +147,46 @@ cp unicode.mapping /production/server/tengine-2.1.2/conf/
 <li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fastcgi_param&nbsp;PATH_INFO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$path_info; </li>
 <li> } </li>
 </ul></div>
+<p>vhost 配置:</p>	
+<div class="mycontent"><ul>
+<li>upstream&nbsp;fastcgi_backend&nbsp;{</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;server&nbsp;127.0.0.1:9000;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;keepalive&nbsp;60;</li>
+<li>}</li>
+<li></li>
+<li>server&nbsp;{</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;listen&nbsp;&nbsp;80;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;index&nbsp;&nbsp;&nbsp;index.php&nbsp;index.html;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;server_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;test.com;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;access_log&nbsp;&nbsp;logs/access.log&nbsp;&nbsp;main;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;error_log&nbsp;&nbsp;logs/error.log&nbsp;warn;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;root&nbsp;&nbsp;&nbsp;&nbsp;/production/sites/;</li>
+<li></li>
+<li></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;charset&nbsp;utf-8;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;client_max_body_size&nbsp;&nbsp;&nbsp;&nbsp;16m;</li>
+<li></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;location&nbsp;/&nbsp;{</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;location&nbsp;~&nbsp;.*\.(gif|jpg|jpeg|png|bmp|swf)$&nbsp;{</li>
+<li>		expires&nbsp;30d;</li>
+<li>	}</li>
+<li></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;location&nbsp;~&nbsp;.*\.(js|css)?$&nbsp;{</li>
+<li>		expires&nbsp;7d;</li>
+<li>	}</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;location&nbsp;~&nbsp;\.php$&nbsp;{</li>
+<li>	fastcgi_pass&nbsp;&nbsp;&nbsp;fastcgi_backend;</li>
+<li>	fastcgi_index&nbsp;&nbsp;index.php;</li>
+<li></li>
+<li>	include&nbsp;fastcgi.conf;</li>
+<li>	fastcgi_connect_timeout&nbsp;300;</li>
+<li>	fastcgi_send_timeout&nbsp;300;</li>
+<li>	fastcgi_read_timeout&nbsp;300;</li>
+<li>	fastcgi_keep_conn&nbsp;on;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;}</li>
+<li>}</li>
+</ul></div>
 内核优化：
 echo '# Increase the tcp-time-wait buckets pool size to prevent simple DOS attacks' >> /etc/sysctl.conf
 echo 'net.ipv4.tcp_max_tw_buckets = 220000' >> /etc/sysctl.conf
