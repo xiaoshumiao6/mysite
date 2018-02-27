@@ -1,0 +1,60 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../css/style.css" />
+  
+</head>
+<body>
+	
+<div class="container_top">
+<div id="left_top"></div>
+<div id="middle_top">	
+<h1>zabbix_nginx 配置</h1>
+
+<h3>nginx.conf</h3>
+<div class="mycontent"><ul>
+<li>#nginx&nbsp;status</li>
+<li>UserParameter=nginx.status[*],/etc/zabbix/zabbix_agentd.d/scripts/ngx-status.sh&nbsp;$1</li>
+</ul></div>
+<h3>ngx-status.sh 脚本内容</h3>
+<div class="mycontent"><ul>
+<li>#!/bin/bash</li>
+<li></li>
+<li>HOST="127.0.0.1"</li>
+<li>PORT="80"</li>
+<li></li>
+<li>#&nbsp;检测nginx进程是否存在</li>
+<li>function&nbsp;ping&nbsp;{</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;/sbin/pidof&nbsp;/production/server/nginx/sbin/nginx&nbsp;|&nbsp;wc&nbsp;-l</li>
+<li>}</li>
+<li>#&nbsp;检测nginx性能</li>
+<li>function&nbsp;active&nbsp;{</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;/usr/bin/curl&nbsp;"http://$HOST:$PORT/ngx_status/"&nbsp;2&gt;/dev/null|&nbsp;grep&nbsp;'Active'&nbsp;|&nbsp;awk&nbsp;'{print&nbsp;$NF}'</li>
+<li>}</li>
+<li>function&nbsp;reading&nbsp;{</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;/usr/bin/curl&nbsp;"http://$HOST:$PORT/ngx_status/"&nbsp;2&gt;/dev/null|&nbsp;grep&nbsp;'Reading'&nbsp;|&nbsp;awk&nbsp;'{print&nbsp;$2}'</li>
+<li>}</li>
+<li>function&nbsp;writing&nbsp;{</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;/usr/bin/curl&nbsp;"http://$HOST:$PORT/ngx_status/"&nbsp;2&gt;/dev/null|&nbsp;grep&nbsp;'Writing'&nbsp;|&nbsp;awk&nbsp;'{print&nbsp;$4}'</li>
+<li>}</li>
+<li>function&nbsp;waiting&nbsp;{</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;/usr/bin/curl&nbsp;"http://$HOST:$PORT/ngx_status/"&nbsp;2&gt;/dev/null|&nbsp;grep&nbsp;'Waiting'&nbsp;|&nbsp;awk&nbsp;'{print&nbsp;$6}'</li>
+<li>}</li>
+<li>function&nbsp;accepts&nbsp;{</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;/usr/bin/curl&nbsp;"http://$HOST:$PORT/ngx_status/"&nbsp;2&gt;/dev/null|&nbsp;awk&nbsp;NR==3&nbsp;|&nbsp;awk&nbsp;'{print&nbsp;$1}'</li>
+<li>}</li>
+<li>function&nbsp;handled&nbsp;{</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;/usr/bin/curl&nbsp;"http://$HOST:$PORT/ngx_status/"&nbsp;2&gt;/dev/null|&nbsp;awk&nbsp;NR==3&nbsp;|&nbsp;awk&nbsp;'{print&nbsp;$2}'</li>
+<li>}</li>
+<li>function&nbsp;requests&nbsp;{</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;/usr/bin/curl&nbsp;"http://$HOST:$PORT/ngx_status/"&nbsp;2&gt;/dev/null|&nbsp;awk&nbsp;NR==3&nbsp;|&nbsp;awk&nbsp;'{print&nbsp;$3}'</li>
+<li>}</li>
+<li>#&nbsp;执行function</li>
+<li>$1</li>
+</ul></div>
+
+
+</div>
+</div>
+</body>
+</html>
