@@ -31,10 +31,10 @@
 <li>&nbsp;&nbsp;&nbsp;router_id&nbsp;&nbsp;Uclou_odn</li>
 <li>}</li>
 <li></li>
-<li>vrrp_script&nbsp;check&nbsp;{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#定义脚本</li>
+<li>vrrp_script&nbsp;check&nbsp;{</li>
 <li>&nbsp;&nbsp;&nbsp;script&nbsp;"curl&nbsp;--connect-timeout&nbsp;2&nbsp;-x&nbsp;127.0.0.1:80&nbsp;w.huanqiu.com"&nbsp;</li>
 <li>&nbsp;&nbsp;&nbsp;interval&nbsp;10&nbsp;</li>
-<li>&nbsp;&nbsp;&nbsp;weight&nbsp;100&nbsp;&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;weight&nbsp;-60&nbsp;&nbsp;</li>
 <li>}</li>
 <li></li>
 <li>vrrp_instance&nbsp;VI_1&nbsp;{</li>
