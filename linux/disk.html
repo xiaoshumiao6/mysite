@@ -38,10 +38,27 @@
 <li> resize2fs: Bad magic number in super-block while trying to open /dev/mapper/vg0-lv0 </li>
 <li> Couldn't find valid filesystem superblock. </li>
 </ul></div>
+<br>
+<h3>FIO 测试工具</h3>
+<p>FIO是测试IOPS非常好的工具，用来对硬件进行压力测试和验证。建议使用libaio的I/O引擎进行测试，请用户自行安装FIO和Libaio。
 
+不同场景的测试公式基本一致，只有3个参数（读写模式，ipdepth，blocksize）的区别。下面举例说明使用block size为4k，iodepth为1来测试顺序读性能的命令。
 
-
-
+命令如下：</p>
+<div class="mycontent"><ul>
+<li>fio&nbsp;--bs=4k&nbsp;--ioengine=libaio&nbsp;--iodepth=1&nbsp;--direct=1&nbsp;--rw=read&nbsp;--time_based&nbsp;--runtime=600&nbsp;&nbsp;--refill_buffers&nbsp;--norandommap&nbsp;--randrepeat=0&nbsp;--group_reporting&nbsp;--name=fio-read&nbsp;--size=100G&nbsp;--filename=/dev/sdb</li>
+</ul></div>
+<p>参数说明：</p>
+<img src="../img/linux/kernel_1.jpg" alt="paramter define" />
+<p>常见用例如下：</p>
+<ul>
+<li>block=4k iodepth=1 随机读测试，能反映磁盘的时延性能；</li>
+<li>block=128K iodepth=32 能反映峰值吞吐性能 ;</li>
+<li>block=4k iodepth=32 能反映峰值IOPS性能。</li>
+</ul>
+	
+	
+	
 </div>
 </div>
 
