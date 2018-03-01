@@ -63,44 +63,12 @@
 <li>block=4k iodepth=32 能反映峰值IOPS性能。</li>
 </ul>
 
-<div class="mycontent"><ul>
-<li>[f1-1-gz@192.168.8.8&nbsp;~]&nbsp;fio&nbsp;--bs=4k&nbsp;--ioengine=libaio&nbsp;--iodepth=1&nbsp;--direct=1&nbsp;--rw=read&nbsp;--time_based&nbsp;--runtime=600&nbsp;&nbsp;--refill_buffers&nbsp;--norandommap&nbsp;--randrepeat=0&nbsp;--group_reporting&nbsp;--name=fio-read&nbsp;--size=100G&nbsp;--filename=/dev/vda</li>
-<li>fio-read:&nbsp;(g=0):&nbsp;rw=read,&nbsp;bs=4K-4K/4K-4K/4K-4K,&nbsp;ioengine=libaio,&nbsp;iodepth=1</li>
-<li>fio-2.2.8</li>
-<li>Starting&nbsp;1&nbsp;process</li>
-<li>Jobs:&nbsp;1&nbsp;(f=1):&nbsp;[R(1)]&nbsp;[100.0%&nbsp;done]&nbsp;[2244KB/0KB/0KB&nbsp;/s]&nbsp;[561/0/0&nbsp;iops]&nbsp;[eta&nbsp;00m:00s]</li>
-<li>fio-read:&nbsp;(groupid=0,&nbsp;jobs=1):&nbsp;err=&nbsp;0:&nbsp;pid=27752:&nbsp;Thu&nbsp;Mar&nbsp;&nbsp;1&nbsp;16:15:54&nbsp;2018</li>
-	<li>&nbsp;&nbsp;read&nbsp;:&nbsp;io=808812KB,&nbsp;<font color="red">bw=1347.1KB/s</font>,&nbsp;<font color="red">iops=336</font>,&nbsp;runt=600036msec</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;slat&nbsp;(usec):&nbsp;min=2,&nbsp;max=723450,&nbsp;avg=26.02,&nbsp;stdev=2773.91</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;clat&nbsp;(usec):&nbsp;min=0,&nbsp;max=1274.1K,&nbsp;avg=2939.28,&nbsp;stdev=27891.43</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lat&nbsp;(usec):&nbsp;min=15,&nbsp;max=1359.3K,&nbsp;<font color="red">avg=2965.59</font>,&nbsp;stdev=28374.18</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;clat&nbsp;percentiles&nbsp;(usec):</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;1.00th=[&nbsp;&nbsp;&nbsp;13],&nbsp;&nbsp;5.00th=[&nbsp;&nbsp;&nbsp;15],&nbsp;10.00th=[&nbsp;&nbsp;&nbsp;21],&nbsp;20.00th=[&nbsp;&nbsp;636],</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;30.00th=[&nbsp;&nbsp;660],&nbsp;40.00th=[&nbsp;&nbsp;748],&nbsp;50.00th=[&nbsp;1012],&nbsp;60.00th=[&nbsp;1144],</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;70.00th=[&nbsp;1288],&nbsp;80.00th=[&nbsp;1672],&nbsp;90.00th=[&nbsp;2768],&nbsp;95.00th=[&nbsp;4256],</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;99.00th=[16192],&nbsp;99.50th=[52480],&nbsp;99.90th=[536576],&nbsp;99.95th=[684032],</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;99.99th=[946176]</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;bw&nbsp;(KB&nbsp;&nbsp;/s):&nbsp;min=&nbsp;&nbsp;&nbsp;&nbsp;2,&nbsp;max=14785,&nbsp;per=100.00%,&nbsp;avg=1567.56,&nbsp;stdev=1569.23</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;lat&nbsp;(usec)&nbsp;:&nbsp;2=0.01%,&nbsp;4=0.01%,&nbsp;10=0.01%,&nbsp;20=9.72%,&nbsp;50=1.57%</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;lat&nbsp;(usec)&nbsp;:&nbsp;100=0.08%,&nbsp;250=0.07%,&nbsp;500=0.19%,&nbsp;750=28.47%,&nbsp;1000=9.41%</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;lat&nbsp;(msec)&nbsp;:&nbsp;2=34.99%,&nbsp;4=9.86%,&nbsp;10=4.09%,&nbsp;20=0.71%,&nbsp;50=0.31%</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;lat&nbsp;(msec)&nbsp;:&nbsp;100=0.17%,&nbsp;250=0.14%,&nbsp;500=0.10%,&nbsp;750=0.08%,&nbsp;1000=0.02%</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;lat&nbsp;(msec)&nbsp;:&nbsp;2000=0.01%</li>
-<li>&nbsp;&nbsp;cpu&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;usr=0.13%,&nbsp;sys=0.41%,&nbsp;ctx=202219,&nbsp;majf=0,&nbsp;minf=35</li>
-<li>&nbsp;&nbsp;IO&nbsp;depths&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;1=100.0%,&nbsp;2=0.0%,&nbsp;4=0.0%,&nbsp;8=0.0%,&nbsp;16=0.0%,&nbsp;32=0.0%,&nbsp;&gt;=64=0.0%</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;submit&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;0=0.0%,&nbsp;4=100.0%,&nbsp;8=0.0%,&nbsp;16=0.0%,&nbsp;32=0.0%,&nbsp;64=0.0%,&nbsp;&gt;=64=0.0%</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;complete&nbsp;&nbsp;:&nbsp;0=0.0%,&nbsp;4=100.0%,&nbsp;8=0.0%,&nbsp;16=0.0%,&nbsp;32=0.0%,&nbsp;64=0.0%,&nbsp;&gt;=64=0.0%</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;issued&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;total=r=202203/w=0/d=0,&nbsp;short=r=0/w=0/d=0,&nbsp;drop=r=0/w=0/d=0</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;latency&nbsp;&nbsp;&nbsp;:&nbsp;target=0,&nbsp;window=0,&nbsp;percentile=100.00%,&nbsp;depth=1</li>
-<li></li>
-<li>Run&nbsp;status&nbsp;group&nbsp;0&nbsp;(all&nbsp;jobs):</li>
-<li>&nbsp;&nbsp;&nbsp;READ:&nbsp;io=808812KB,&nbsp;aggrb=1347KB/s,&nbsp;minb=1347KB/s,&nbsp;maxb=1347KB/s,&nbsp;mint=600036msec,&nbsp;maxt=600036msec</li>
-<li></li>
-<li>Disk&nbsp;stats&nbsp;(read/write):</li>
-<li>&nbsp;&nbsp;vda:&nbsp;ios=202207/72410,&nbsp;merge=0/242650,&nbsp;ticks=593643/32590785,&nbsp;in_queue=33263984,&nbsp;util=99.68%</li>
-</ul></div>	
-	
-	
+<p>下图为SSD云硬盘的测试性能截图：</p>
+<img src="../img/linux/disk2.png" alt="example" />	
+<img src="../img/linux/disk3.png" alt="example" />
+<img src="../img/linux/disk4.png" alt="example" />
+<br>
+<br>
 </div>
 </div>
 
