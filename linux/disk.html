@@ -49,6 +49,12 @@
 <li>fio&nbsp;--bs=4k&nbsp;--ioengine=libaio&nbsp;--iodepth=1&nbsp;--direct=1&nbsp;--rw=read&nbsp;--time_based&nbsp;--runtime=600&nbsp;&nbsp;--refill_buffers&nbsp;--norandommap&nbsp;--randrepeat=0&nbsp;--group_reporting&nbsp;--name=fio-read&nbsp;--size=100G&nbsp;--filename=/dev/sdb</li>
 </ul></div>
 <p>参数说明：</p>
+<p><font color="red">注：</font></p>
+<ul>
+<li>--filename=/dev/vda 不能指定系统盘，容易出现异常， 可以使用--filename=/tmp/test</li>
+<li>--size=10G 这个值小于当前磁盘空余空间。</li>
+<li>block=4k iodepth=32 能反映峰值IOPS性能。</li>
+</ul>
 <img src="../img/linux/disk1.jpg" alt="paramter define" />
 <p>常见用例如下：</p>
 <ul>
@@ -56,7 +62,7 @@
 <li>block=128K iodepth=32 能反映峰值吞吐性能 ;</li>
 <li>block=4k iodepth=32 能反映峰值IOPS性能。</li>
 </ul>
-awk 'BEGIN{print "<div class=\"mycontent\"><ul>"}{gsub(" ","\\&nbsp;");gsub(">","\\&gt;");print "<li>" $0 "</li>";}END{print "</ul></div>"}' test
+
 <div class="mycontent"><ul>
 <li>[f1-1-gz@192.168.8.8&nbsp;~]&nbsp;fio&nbsp;--bs=4k&nbsp;--ioengine=libaio&nbsp;--iodepth=1&nbsp;--direct=1&nbsp;--rw=read&nbsp;--time_based&nbsp;--runtime=600&nbsp;&nbsp;--refill_buffers&nbsp;--norandommap&nbsp;--randrepeat=0&nbsp;--group_reporting&nbsp;--name=fio-read&nbsp;--size=100G&nbsp;--filename=/dev/vda</li>
 <li>fio-read:&nbsp;(g=0):&nbsp;rw=read,&nbsp;bs=4K-4K/4K-4K/4K-4K,&nbsp;ioengine=libaio,&nbsp;iodepth=1</li>
