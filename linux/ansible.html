@@ -74,13 +74,13 @@
 <li>owner：目标文件属主</li>
 <li>src：源模板文件路径</li>
 <li>validate：在复制之前通过命令验证目标文件，如果验证通过则复制</li>
-</ul></div>
+</ul>
 <p>官方简单示例：</p>
 <ul>
 <li>-&nbsp;template:&nbsp;src=/mytemplates/foo.j2&nbsp;dest=/etc/file.conf&nbsp;owner=bin&nbsp;group=wheel&nbsp;mode=0644</li>
 <li>-&nbsp;template:&nbsp;src=/mytemplates/foo.j2&nbsp;dest=/etc/file.conf&nbsp;owner=bin&nbsp;group=wheel&nbsp;mode="u=rw,g=r,o=r"</li>
 <li>-&nbsp;template:&nbsp;src=/mine/sudoers&nbsp;dest=/etc/sudoers&nbsp;validate='visudo&nbsp;-cf&nbsp;%s'</li>
-</ul></div>
+</ul>
 
 
 <br>
