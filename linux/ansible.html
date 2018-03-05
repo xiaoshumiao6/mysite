@@ -10,7 +10,7 @@
 <div id="left_top"></div>
 <div id="middle_top">	
 <h1><div class="post-title">ansible 使用</div></h1>
-</h3>ansible 常用命令</h3>
+<h3>ansible 常用命令</h3>
 <ul>
 <li>ansible Host_group -a 'pwd"</li>
 <li>ansible host_group -m copy -a 'src=test dest=/usr/local/src'</li>
@@ -21,23 +21,47 @@
 
 <p>playbook 例：</p>
 <div class="mycontent"><ul>
-<li>cat&nbsp;web.yml</li>
-<li>-&nbsp;hosts:&nbsp;test&nbsp;&nbsp;\\主机组，在/etc/ansible/hosts定义</li>
-<li>&nbsp;&nbsp;remote_user:&nbsp;root&nbsp;&nbsp;\\远端执行任务的用户</li>
-<li>&nbsp;&nbsp;tasks:&nbsp;\\任务</li>
-<li>&nbsp;&nbsp;-&nbsp;name:&nbsp;install&nbsp;httpd&nbsp;&nbsp;\\任务描述</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;command:&nbsp;yum&nbsp;-y&nbsp;install&nbsp;httpd&nbsp;&nbsp;\\调用ansible的command模块安装httpd</li>
-<li>&nbsp;&nbsp;-&nbsp;name:&nbsp;provide&nbsp;httpd.conf&nbsp;\\任务描述</li>
-<li>copy:&nbsp;src="/root/httpd.conf"&nbsp;dest="/etc/httpd/conf/httpd.conf"&nbsp;\\调用ansible的copy模块，httpd安装完成后将事先准备好的httpd.conf文件复制到/etc/httpd/conf目录下</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;tags:&nbsp;conf&nbsp;&nbsp;\\给此任务打标记，可单独执行标记的任务，使用&nbsp;ansible-playbook&nbsp;-C&nbsp;命令执行</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;notify:&nbsp;&nbsp;\\文件内容变更通知</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;server&nbsp;restart&nbsp;&nbsp;\\通知到指定的任务</li>
-<li>&nbsp;&nbsp;-&nbsp;name:&nbsp;server&nbsp;start&nbsp;&nbsp;\\任务描述</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;service:&nbsp;name=httpd&nbsp;state=started&nbsp;enabled=true&nbsp;\\调用ansible的service模块的属性定义安装完成httpd以后httpd服务的管理</li>
-<li>&nbsp;&nbsp;handlers:&nbsp;\\定义接受关注的资源变化后执行的动作</li>
-<li>&nbsp;&nbsp;-&nbsp;name:&nbsp;server&nbsp;restart&nbsp;&nbsp;\\任务描述</li>
-<li>&nbsp;&nbsp;&nbsp;&nbsp;service:&nbsp;name=httpd&nbsp;state=restarted&nbsp;&nbsp;&nbsp;\\当关注的资源发生变化后调用service模块，采取的响应的动作</li>
+<li>-&nbsp;name:&nbsp;Configure&nbsp;MySQL</li>
+<li>&nbsp;&nbsp;hosts:&nbsp;mysqlservers</li>
+<li>&nbsp;&nbsp;tasks:&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name:&nbsp;install&nbsp;MySql</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yum:&nbsp;name=mysql-server&nbsp;state=installed</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name:&nbsp;Calculate&nbsp;InnoDB&nbsp;buffer&nbsp;pool&nbsp;size</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set_fact:&nbsp;innodb_buffer_pool_size_mb="{{&nbsp;ansible_memtotal_mb&nbsp;/&nbsp;2&nbsp;}}"</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name:&nbsp;Configure&nbsp;MySQL&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;template:&nbsp;src=templates/my.cnf&nbsp;dest=/etc/my.cnf&nbsp;owner=root&nbsp;group=root&nbsp;mode=0644&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;notify:&nbsp;restart&nbsp;mysql&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name:&nbsp;Start&nbsp;MySQL&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;service:&nbsp;name=mysqld&nbsp;state=started&nbsp;enabled=yes&nbsp;</li>
+<li>&nbsp;&nbsp;handlers:&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name:&nbsp;restart&nbsp;mysql&nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;service:&nbsp;name=mysqld&nbsp;state=restarted</li>
+<li>my.cnf的配置示例：</li>
+<li>#&nbsp;{{&nbsp;ansible_managed&nbsp;}}</li>
+<li>[mysqld]</li>
+<li>datadir=/var/lib/mysql</li>
+<li>socket=/var/lib/mysql/mysql.sock</li>
+<li>#&nbsp;Disabling&nbsp;symbolic-links&nbsp;is&nbsp;recommended&nbsp;to&nbsp;prevent&nbsp;assorted</li>
+<li>security&nbsp;risks</li>
+<li>symbolic-links=0</li>
+<li>#&nbsp;Configure&nbsp;the&nbsp;buffer&nbsp;pool</li>
+<li>innodb_buffer_pool_size&nbsp;=&nbsp;{{&nbsp;innodb_buffer_pool_size_mb|int&nbsp;}}M</li>
+<li>[mysqld_safe]</li>
+<li>log-error=/var/log/mysqld.log</li>
+<li>pid-file=/var/run/mysqld/mysqld.pid</li>
+<li>3、pause</li>
+<li>在playbook执行的过程中暂停一定时间或者提示用户进行某些操作</li>
+<li>常用参数：</li>
+<li>minutes：暂停多少分钟</li>
+<li>seconds：暂停多少秒</li>
+<li>prompt：打印一串信息提示用户操作</li>
+<li>示例：</li>
+<li>&nbsp;-&nbsp;name:&nbsp;wait&nbsp;on&nbsp;user&nbsp;input</li>
+<li>&nbsp;&nbsp;&nbsp;pause:&nbsp;prompt="Warning!&nbsp;Detected&nbsp;slight&nbsp;issue.&nbsp;ENTER&nbsp;to&nbsp;continue&nbsp;CTRL-C&nbsp;a&nbsp;to&nbsp;quit"&nbsp;</li>
+<li>-&nbsp;name:&nbsp;timed&nbsp;wait</li>
+<li>&nbsp;&nbsp;pause:&nbsp;seconds=30</li>
 </ul></div>
+<strong>template 使用</strong>
 <p>在实际应用中，我们的配置文件有些地方可能会根据远程主机的配置的不同而有稍许的不同，template可以使用变量来接收远程主机上setup收集到的facts信息，针对不同配置的主机，定制配置文件。用法大致与copy模块相同。</p>
 <p>常用参数：</p>
 <ul>
