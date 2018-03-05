@@ -1,0 +1,49 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../../css/style.css" />
+  
+</head>
+<body>
+	
+<div class="container_top">
+<div id="left_top"></div>
+<div id="middle_top">	
+<h1><div class="post-title">ansible 使用</div></h1>
+</h3>ansible 常用命令</h3>
+<ul>
+<li>ansible Host_group -a 'pwd"</li>
+<li>ansible host_group -m copy -a 'src=test dest=/usr/local/src'</li>
+</ul>
+
+<h3>ansible-playbook 的使用</h3>
+<p>ansible-playbook [options] playbook.yml [playbook2 ...]</p>
+
+<p>playbook 例：</p>
+<div class="mycontent"><ul>
+<li>cat&nbsp;web.yml</li>
+<li>-&nbsp;hosts:&nbsp;test&nbsp;&nbsp;\\主机组，在/etc/ansible/hosts定义</li>
+<li>&nbsp;&nbsp;remote_user:&nbsp;root&nbsp;&nbsp;\\远端执行任务的用户</li>
+<li>&nbsp;&nbsp;tasks:&nbsp;\\任务</li>
+<li>&nbsp;&nbsp;-&nbsp;name:&nbsp;install&nbsp;httpd&nbsp;&nbsp;\\任务描述</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;command:&nbsp;yum&nbsp;-y&nbsp;install&nbsp;httpd&nbsp;&nbsp;\\调用ansible的command模块安装httpd</li>
+<li>&nbsp;&nbsp;-&nbsp;name:&nbsp;provide&nbsp;httpd.conf&nbsp;\\任务描述</li>
+<li>copy:&nbsp;src="/root/httpd.conf"&nbsp;dest="/etc/httpd/conf/httpd.conf"&nbsp;\\调用ansible的copy模块，httpd安装完成后将事先准备好的httpd.conf文件复制到/etc/httpd/conf目录下</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;tags:&nbsp;conf&nbsp;&nbsp;\\给此任务打标记，可单独执行标记的任务，使用&nbsp;ansible-playbook&nbsp;-C&nbsp;命令执行</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;notify:&nbsp;&nbsp;\\文件内容变更通知</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;server&nbsp;restart&nbsp;&nbsp;\\通知到指定的任务</li>
+<li>&nbsp;&nbsp;-&nbsp;name:&nbsp;server&nbsp;start&nbsp;&nbsp;\\任务描述</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;service:&nbsp;name=httpd&nbsp;state=started&nbsp;enabled=true&nbsp;\\调用ansible的service模块的属性定义安装完成httpd以后httpd服务的管理</li>
+<li>&nbsp;&nbsp;handlers:&nbsp;\\定义接受关注的资源变化后执行的动作</li>
+<li>&nbsp;&nbsp;-&nbsp;name:&nbsp;server&nbsp;restart&nbsp;&nbsp;\\任务描述</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;service:&nbsp;name=httpd&nbsp;state=restarted&nbsp;&nbsp;&nbsp;\\当关注的资源发生变化后调用service模块，采取的响应的动作</li>
+</ul></div>
+
+
+<br>
+<br />
+</div>
+</div>
+
+</body>
+</html>
