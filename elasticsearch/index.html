@@ -71,7 +71,7 @@
 </ul></div>
 <p>grok 语法：</p>
 <div class="mycontent"><ul>
-<li>%{URIHOST:client_ip}&nbsp;-&nbsp;(%{USERNAME:user}|-)&nbsp;\[%{HTTPDATE:log_timestamp}\]&nbsp;(%{HOSTNAME:http_host}|-)&nbsp;\"(%{WORD:request_method}|-)&nbsp;%{NOTSPACE:request}&nbsp;(?:HTTP/%{NUMBER:httpversion})\"&nbsp;%{NUMBER:status}&nbsp;(%{NUMBER:body_bytes_sent}|-)&nbsp;(%{BASE16FLOAT:request_time}|-)&nbsp;\"(?:%{GREEDYDATA:http_referrer}|-)\"&nbsp;\"(%{GREEDYDATA:user_agent}|-)\"&nbsp;(?<http_user_agent&gt;((%{IPV4}:%{POSINT}[,&nbsp;]{0,2})+)|-)&nbsp;(?<upstream_status&gt;(([0-9]{3}[,&nbsp;]{0,2})+)|-)&nbsp;(?<upstream_response_time&gt;((%{BASE16FLOAT:}[,&nbsp;]{0,2})+)|-)&nbsp;\"(?<server_name&gt;\S+)\"</li>
+<li>%{URIHOST:client_ip}&nbsp;-&nbsp;(%{USERNAME:user}|-)&nbsp;\[%{HTTPDATE:log_timestamp}\]&nbsp;(%{HOSTNAME:http_host}|-)&nbsp;\"(%{WORD:request_method}|-)&nbsp;%{NOTSPACE:request}&nbsp;(?:HTTP/%{NUMBER:httpversion})\"&nbsp;%{NUMBER:status}&nbsp;(%{NUMBER:body_bytes_sent}|-)&nbsp;(%{BASE16FLOAT:request_time}|-)&nbsp;\"(?:%{GREEDYDATA:http_referrer}|-)\"&nbsp;\"(%{GREEDYDATA:user_agent}|-)\"&nbsp;(?&lt;http_user_agent&gt;((%{IPV4}:%{POSINT}[,&nbsp;]{0,2})+)|-)&nbsp;(?&lt;upstream_status&gt;(([0-9]{3}[,&nbsp;]{0,2})+)|-)&nbsp;(?&lt;upstream_response_time&gt;((%{BASE16FLOAT:}[,&nbsp;]{0,2})+)|-)&nbsp;\"(?&lt;server_name&gt;\S+)\"</li>
 </ul></div>
 <p>简单的ES crontab 脚本</p>
 <div class="mycontent"><ul>
