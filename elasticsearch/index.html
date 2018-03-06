@@ -1,34 +1,97 @@
 <html>
 <head>
-<title></title>
-<link rel="stylesheet" type="text/css" href="../css/style.css" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../css/style.css" />
+  
 </head>
-<div id="container">
-  <div id="header_top">
-  </div>
-<div id="header_top">
-<div id="header">
-  <ul>
-    <li>
-      <a href="elasticsearch/es_optimise.html">elasticsearch</a>&nbsp;&nbsp;
-    </li>
-    <li>
-      <a href="zabbix/zabbix_tunning.html">zabbix</a>
-    </li>
-  </ul>
+<body>
+	
+<div class="container_top">
+<div id="left_top"></div>
+<div id="middle_top">	
+<h1><div class="post-title">elasticsearch api 使用</div></h1>
+<h3>常用api</h3>
+<p>查看elasticsearch状态：</p>
+<div class="mycontent"><ul>
+<li>curl&nbsp;-XGET&nbsp;http://ES:9200/_cluster/health?pretty</li>
+<li>curl&nbsp;-XGET&nbsp;http://ES:9200/_cat/health</li>
+<li>curl&nbsp;-XGET&nbsp;http://ES:9200/_cat/shards</li>
+<li>curl&nbsp;-XGET&nbsp;http://ES:9200/_cluster/stats?pretty=true</li>
+<li>curl&nbsp;-XGET&nbsp;'http://ES:9200/_cat/nodes?v'</li>
+</ul></div>
+<h3>内存优化</h3>
+<div class="mycontent"><ul>
+<li>JAVA_OPTS="$JAVA_OPTS&nbsp;-Xmx4g&nbsp;-Xms4g&nbsp;-Xmn1g&nbsp;-Xss16m&nbsp;-XX:MetaspaceSize=512m&nbsp;-XX:MaxMetaspaceSize=1g"</li>
+<li>#Xmn&nbsp;Java&nbsp;Heap&nbsp;Young区大小，不熟悉最好保留默认值，年轻代大小，一般为整个堆空间的1/4到1/3；</li>
+<li>#&nbsp;-Xss16m每个线程的Stack大小，通常建议使用256K&nbsp;即可，但是ES单线程承载的数据量比较大</li>
+<li>#MetaspaceSize&nbsp;使用堆内存以外的直接系统内存,只受可用的本地内存限制</li>
+</ul></div>
+<p>更改index.refresh_interval</p>
+<div class="mycontent"><ul>
+<li>PUT&nbsp;/logstash-mil-access-10-20160905</li>
+<li>{</li>
+<li>&nbsp;&nbsp;"settings":&nbsp;{</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;"refresh_interval":&nbsp;"30s"&nbsp;</li>
+<li>&nbsp;&nbsp;}</li>
+<li>}</li>
+</ul></div>
+<p>若需要重启elasticsearch ， 为了避免重启期间shard 的重新分配导致大量的流量，首先关闭shard allocation ：</p>
+<div class="mycontent"><ul>
+<li>curl&nbsp;-XPUT&nbsp;http://127.0.0.1:9200/_cluster/settings&nbsp;-d'</li>
+<li>{</li>
+<li>"transient"&nbsp;:&nbsp;{</li>
+<li>"cluster.routing.allocation.enable"&nbsp;:&nbsp;"none"</li>
+<li>}</li>
+<li>}'</li>
+<li>然后对elasticsearch&nbsp;重启，&nbsp;重启完成后：</li>
+<li>&nbsp;&nbsp;</li>
+<li>curl&nbsp;-XPUT&nbsp;http://127.0.0.1:9200/_cluster/settings&nbsp;-d'</li>
+<li>{</li>
+<li>"transient"&nbsp;:&nbsp;{</li>
+<li>"cluster.routing.allocation.enable"&nbsp;:&nbsp;"all"</li>
+<li>}</li>
+<li>}'</li>
+</ul></div>
+<p>简单的ES crontab 脚本</p>
+<div class="mycontent"><ul>
+<li>#!/bin/sh</li>
+<li>&nbsp;</li>
+<li>TODAY=`date&nbsp;&nbsp;+%Y.%m.%d`&nbsp;&nbsp;&nbsp;</li>
+<li>TIME30=`date&nbsp;--date="-60&nbsp;days"&nbsp;+%Y.%m.%d`</li>
+<li>TIME35=`date&nbsp;--date="-60&nbsp;days"&nbsp;+%Y.%m.%d`</li>
+<li>TIME1=`date&nbsp;--date="-1&nbsp;days"&nbsp;+%Y.%m.%d`</li>
+<li>TIME8=`date&nbsp;--date="-7&nbsp;days"&nbsp;+%Y.%m.%d`</li>
+<li>/usr/bin/curl&nbsp;-XDELETE&nbsp;"http://es2.spark:9200/logstash-userlogs-$TIME30/"</li>
+<li>/usr/bin/curl&nbsp;-XDELETE&nbsp;"http://es2.spark:9200/packetbeat-http-$TIME35/"</li>
+<li>&nbsp;</li>
+<li>#number_of_replicas&nbsp;num</li>
+<li>curl&nbsp;-XPUT&nbsp;http://es2.spark:9200/logstash-userlogs-$TODAY/_settings&nbsp;-d&nbsp;'{&nbsp;"index":&nbsp;{&nbsp;"number_of_replicas"&nbsp;:&nbsp;1&nbsp;}}'&nbsp;&gt;/dev/null&nbsp;2&gt;&1</li>
+<li>&nbsp;</li>
+<li>sleep&nbsp;1</li>
+<li>&nbsp;</li>
+<li>#refresh_interval&nbsp;time</li>
+<li>curl&nbsp;-XPUT&nbsp;http://es2.spark:9200/logstash-userlogs-$TODAY/_settings&nbsp;-d&nbsp;'{&nbsp;"index":&nbsp;{&nbsp;"refresh_interval"&nbsp;:&nbsp;"30s"&nbsp;}}'&nbsp;&gt;/dev/null&nbsp;2&gt;&1</li>
+<li>&nbsp;</li>
+<li>sleep&nbsp;1</li>
+<li>&nbsp;</li>
+<li>#optimize&nbsp;yesterday&nbsp;index&nbsp;</li>
+<li>echo&nbsp;-e&nbsp;"curl&nbsp;-XPOST&nbsp;'http://es2.spark:9200/logstash-userlogs-$TIME1/_optimize'"&nbsp;&gt;/tmp/optimize_index.sh</li>
+<li>&nbsp;</li>
+<li>#close&nbsp;index</li>
+<li>echo&nbsp;-e&nbsp;"curl&nbsp;-XPOST&nbsp;'http://es2.spark:9200/logstash-userlogs-$TIME8/_close'"&nbsp;&gt;&nbsp;/tmp/close_index.sh</li>
+<li>&nbsp;</li>
+<li>#excute&nbsp;command</li>
+<li>/bin/sh&nbsp;/tmp/close_index.sh&nbsp;&gt;/dev/null&nbsp;2&gt;&1</li>
+<li>sleep&nbsp;1</li>
+<li>/bin/sh&nbsp;/tmp/optimize_index.sh&nbsp;&gt;/dev/null&nbsp;2&gt;&</li>
+</ul></div>
+
+
+
+<br>
+<br />
 </div>
 </div>
-<div id="content">
-  <div id="left">
-    <ul>
-	  <li><a href="elasticsearch/es_optimise.html" >elasticsearch_optimize</a></li>
-	  <li></li>
-	</ul>
-    
-  </div>
-  <div id="middle" name="content">
-    据介绍，如今超高清、大尺寸已成为行业发展趋势。IHS数据显示，未来5年，8K面板市场复合增长率达111%。在60英寸以上大尺寸面板市场中，8K渗透率将达到25%。在东京奥运会以及北京冬奥会即将采用8K进行转播的契机下，全球厂商积极布局8K，成为产业进一步爆发的触发点。 知识小链接：8K市场前景及应用
-  </div>
-</div>  
-</div>
+
+</body>
 </html>
