@@ -57,10 +57,15 @@
 <p>分析\聚合：</p>
 <div class="mycontent"><ul>
 <li>{"aggs":&nbsp;{"all_status":&nbsp;{"terms":&nbsp;{"field":&nbsp;"status"&nbsp;}}}}</li>
+<li>&nbsp;&nbsp;</li>
 <li>curl&nbsp;-XGET&nbsp;'http://172.16.100.8:9200/logstash-f1-hq-access-2017.12.07/f1-hq-access/_search?pretty'&nbsp;-d&nbsp;'{&nbsp;"query":&nbsp;{"term":&nbsp;{"status":"503"}},"aggs":&nbsp;{"all_host":&nbsp;{"terms":&nbsp;{"field":&nbsp;"http_host.keyword"&nbsp;}}}}'</li>
+<li>&nbsp;&nbsp;</li>
 <li>curl&nbsp;-XGET&nbsp;'http://127.0.0.1:9200/logstash-f1-hq-access-2017.11.30/_mapping/f1-hq-access/'&nbsp;-d&nbsp;'{"properties":&nbsp;{"status":&nbsp;{"type":&nbsp;"text",&nbsp;"fielddata":&nbsp;true}}}'</li>
+<li>&nbsp;&nbsp;</li>
 <li>curl&nbsp;-XGET&nbsp;'http://127.0.0.1:9200/logstash-f1-hq-access-2017.11.30/f1-hq-access/_search?pretty'&nbsp;-d&nbsp;'{"aggs":&nbsp;{"all_status":&nbsp;{"terms":&nbsp;{"field":&nbsp;"status"&nbsp;}}}}'</li>
+<li>&nbsp;&nbsp;</li>
 <li>curl&nbsp;-XGET&nbsp;'http://127.0.0.1:9200/logstash-f1-hq-access-2017.11.30/f1-hq-access/_search?pretty'&nbsp;-d&nbsp;'{"aggs":&nbsp;{"all_status":&nbsp;{"terms":&nbsp;{"field":&nbsp;"status.keyword"&nbsp;}}}}'</li>
+<li>&nbsp;&nbsp;</li>
 <li>curl&nbsp;-H&nbsp;"Content-Type:&nbsp;application/json"&nbsp;-XPOST&nbsp;'http://esuser:s3cr3t@172.16.100.7:8080/_sql?pretty'&nbsp;-d&nbsp;'SELECT&nbsp;count(*)&nbsp;FROM&nbsp;logstash-f1-hq-access-2017.11.30&nbsp;group&nbsp;by&nbsp;status.keyword'</li>
 </ul></div>
 
