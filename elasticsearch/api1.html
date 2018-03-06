@@ -1,0 +1,85 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../css/style.css" />
+  
+</head>
+<body>
+	
+<div class="container_top">
+<div id="left_top"></div>
+<div id="middle_top">	
+<h1><div class="post-title">elasticsearch api 使用</div></h1>
+<p>es权威指南中文版地址：<br>https://www.elastic.co/guide/cn/elasticsearch/guide/current/index.html</p>
+<h3>常用的查询api：</p>
+<p>计算集群中文档的数量:</p>
+<div class="mycontent"><ul>
+<li>/_count?pretty&nbsp;-d&nbsp;'{"query":{"match_all":&nbsp;{}}}'</li>
+</ul></div>
+<p>查看索引:</p>
+<div class="mycontent"><ul>
+<li>/_cat/indices?v</li>
+</ul></div>
+
+<p>返回文档的一部分</p>
+<div class="mycontent"><ul>
+<li>GET /website/blog/123?_source=title,text</li>
+</ul></div>
+<p>创建新文档：</p>
+<div class="mycontent"><ul>
+<li>POST /website/blog/</li>
+<li>PUT /website/blog/123?op_type=create</li>
+<li>PUT /website/blog/123/_create</li>
+</ul></div>
+<h3>搜索api </h3>
+<p>查询:</p>
+<div class="mycontent"><ul>
+<li>/logstash-f1-hq-access-2017.11.16/f1-hq-access/_search?q=client_ip:125.39.46.83</li>
+<li>/logstash-f1-hq-access-2017.11.16/f1-hq-access/_search -d '{"query": {"match": {"client_ip": "125.39.46.83"}}}'</li>
+</ul></div>
+<p>复杂条件查询：</p>
+<div class="mycontent"><ul>
+<li>curl&nbsp;-XGET&nbsp;'http://192.168.4.5:9200/us/tweet/_search?pretty'&nbsp;-d&nbsp;'{&nbsp;"query":&nbsp;{&nbsp;"match":&nbsp;{&nbsp;"date":&nbsp;"2014-09-24"&nbsp;}}}'</li>
+<li>{"query":&nbsp;{"bool":&nbsp;{"must":&nbsp;{"match":&nbsp;{"client_ip":&nbsp;"125.39.46.83"}},"filter":&nbsp;{"range":&nbsp;{"status":&nbsp;{"gt":&nbsp;300&nbsp;}}}}}}</li>
+</ul></div>
+<p>全文搜索：</p>
+<div class="mycontent"><ul>
+<li>{"query":&nbsp;{"match":&nbsp;{"about"&nbsp;:&nbsp;"rock&nbsp;climbing"}}}</li>
+</ul></div>
+<p>短语搜索：</p>
+<div class="mycontent"><ul>
+<li>{"query":&nbsp;{"match_phrase":&nbsp;{"about"&nbsp;:&nbsp;"rock&nbsp;climbing"}}}</li>
+</ul></div>
+<p>高亮搜索：</p>
+<div class="mycontent"><ul>
+<li>{"query":&nbsp;{"match":&nbsp;{"client_ip":&nbsp;"125.39.46.83"}},&nbsp;"highlight":&nbsp;{"fields"&nbsp;:&nbsp;{"client_ip":&nbsp;{}}}}</li>
+</ul></div>
+<p>分析\聚合：</p>
+<div class="mycontent"><ul>
+<li>{"aggs":&nbsp;{"all_status":&nbsp;{"terms":&nbsp;{"field":&nbsp;"status"&nbsp;}}}}</li>
+<li>curl&nbsp;-XGET&nbsp;'http://172.16.100.8:9200/logstash-f1-hq-access-2017.12.07/f1-hq-access/_search?pretty'&nbsp;-d&nbsp;'{&nbsp;"query":&nbsp;{"term":&nbsp;{"status":"503"}},"aggs":&nbsp;{"all_host":&nbsp;{"terms":&nbsp;{"field":&nbsp;"http_host.keyword"&nbsp;}}}}'</li>
+<li>curl&nbsp;-XGET&nbsp;'http://127.0.0.1:9200/logstash-f1-hq-access-2017.11.30/_mapping/f1-hq-access/'&nbsp;-d&nbsp;'{"properties":&nbsp;{"status":&nbsp;{"type":&nbsp;"text",&nbsp;"fielddata":&nbsp;true}}}'</li>
+<li>curl&nbsp;-XGET&nbsp;'http://127.0.0.1:9200/logstash-f1-hq-access-2017.11.30/f1-hq-access/_search?pretty'&nbsp;-d&nbsp;'{"aggs":&nbsp;{"all_status":&nbsp;{"terms":&nbsp;{"field":&nbsp;"status"&nbsp;}}}}'</li>
+<li>curl&nbsp;-XGET&nbsp;'http://127.0.0.1:9200/logstash-f1-hq-access-2017.11.30/f1-hq-access/_search?pretty'&nbsp;-d&nbsp;'{"aggs":&nbsp;{"all_status":&nbsp;{"terms":&nbsp;{"field":&nbsp;"status.keyword"&nbsp;}}}}'</li>
+<li>curl&nbsp;-H&nbsp;"Content-Type:&nbsp;application/json"&nbsp;-XPOST&nbsp;'http://esuser:s3cr3t@172.16.100.7:8080/_sql?pretty'&nbsp;-d&nbsp;'SELECT&nbsp;count(*)&nbsp;FROM&nbsp;logstash-f1-hq-access-2017.11.30&nbsp;group&nbsp;by&nbsp;status.keyword'</li>
+</ul></div>
+
+<p>轻量搜索：</p>
+<div class="mycontent"><ul>
+<li>GET&nbsp;/_all/tweet/_search?q=tweet:elasticsearch</li>
+<li>GET&nbsp;/_search?q=%2Bname%3Ajohn+%2Btweet%3Amary	+name:john&nbsp;+tweet:mary</li>
+<li>GET&nbsp;/_search?q=%2Bname%3A(mary+john)+%2Bdate%3A%3E2014-09-10+%2B(aggregations+geo)	+name:(mary&nbsp;john)&nbsp;+date:&gt;2014-09-10&nbsp;+(aggregations&nbsp;geo)</li>
+</ul></div>
+
+
+
+
+
+
+<br>
+<br />
+</div>
+</div>
+
+</body>
+</html>
