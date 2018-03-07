@@ -1,0 +1,120 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../css/style.css" />
+  
+</head>
+<body>
+	
+<div class="container_top">
+<div id="left_top"></div>
+<div id="middle_top">	
+<h1><div class="post-title">cisco交换机配置模板</div></h1>
+<h3>2960 配置模板</h3>
+<p>接入层设备2960配置模板，红色字体部分按实际情况配置。</p>
+
+<div class="mycontent"><ul>
+<li>接入层设备2960配置模板，红色字体部分按实际情况配置。</li>
+<li></li>
+<li>service&nbsp;timestamps&nbsp;debug&nbsp;datetime&nbsp;msec&nbsp;localtime&nbsp;show-timezone</li>
+<li>service&nbsp;timestamps&nbsp;log&nbsp;datetime&nbsp;msec&nbsp;localtime&nbsp;show-timezone</li>
+<li>service&nbsp;password-encryption</li>
+<li>!</li>
+<li>Hostname&nbsp;<font color="red">CN688-BDA-SW-7111F02</font></li>
+<li>!</li>
+<li>enable&nbsp;secret&nbsp;&nbsp;jackstone</li>
+<li>!</li>
+<li>Clock&nbsp;timezone&nbsp;BJT&nbsp;+8</li>
+<li>vtp&nbsp;domain&nbsp;<font color="red">bbac-mra</font></li>
+<li>vtp&nbsp;mode&nbsp;transparent</li>
+<li>!</li>
+<li>No&nbsp;ip&nbsp;domain-lookup</li>
+<li>!</li>
+<li>lldp&nbsp;run</li>
+<li>!&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+<li>errdisable&nbsp;recovery&nbsp;cause&nbsp;psecure-violation</li>
+<li>spanning-tree&nbsp;mode&nbsp;pvst</li>
+<li>spanning-tree&nbsp;portfast&nbsp;bpduguard&nbsp;default</li>
+<li>!</li>
+<li>Logging&nbsp;buffer&nbsp;40960</li>
+<li>Vlan&nbsp;<font color="red">499</font></li>
+<li>Name&nbsp;<font color="red">mra-office-fd1-n</font></li>
+<li>!</li>
+<li>Vlan&nbsp;<font color="red">353</font></li>
+<li>name&nbsp;<font color="red">mcg-wlan-management&nbsp;(生产交换机配置无线管理vlan)</font></li>
+<li>!</li>
+<li>int&nbsp;rang&nbsp;fa0/1-4&nbsp;<font color="red">(生产交换机前4口预留给AP使用)</font></li>
+<li>swi&nbsp;mo&nbsp;acc</li>
+<li>swi&nbsp;acc&nbsp;vlan&nbsp;<font color="red">353</font></li>
+<li>ip&nbsp;access-group&nbsp;100&nbsp;in</li>
+<li>spanning-tree&nbsp;portfast</li>
+<li>!</li>
+<li>int&nbsp;rang&nbsp;fa0/1-48</li>
+<li>switchport&nbsp;mode&nbsp;access</li>
+<li>switchport&nbsp;access&nbsp;vlan&nbsp;<font color="red">499&nbsp;</font></li>
+<li>switchport&nbsp;port-security</li>
+<li><font color="red">switchport&nbsp;port-security&nbsp;maximum&nbsp;3（办公及生产区办公是3、生产为1或不进行此项配置）</font></li>
+<li>switchport&nbsp;port-security&nbsp;aging&nbsp;time&nbsp;1</li>
+<li>switchport&nbsp;port-security&nbsp;aging&nbsp;type&nbsp;inactivity</li>
+<li>ip&nbsp;access-group&nbsp;100&nbsp;in</li>
+<li>storm-control&nbsp;broadcast&nbsp;level&nbsp;pps&nbsp;15&nbsp;10</li>
+<li>storm-control&nbsp;multicast&nbsp;level&nbsp;1.00</li>
+<li>spanning-tree&nbsp;portfast</li>
+<li>!</li>
+<li>exit</li>
+<li>!</li>
+<li>interface&nbsp;GigabitEthernet<font color="red">0/1</font></li>
+<li>description&nbsp;=<font color="red">CN688-BDA-SW-7021F01&nbsp;Gig2/18=</font></li>
+<li>switchport&nbsp;mode&nbsp;trunk</li>
+<li>！</li>
+<li>interface&nbsp;<font color="red">GigabitEthernet0/2</font></li>
+<li>description&nbsp;=<font color="red">CN688-BDA-SW-7011F01&nbsp;Gig2/18=</font></li>
+<li>switchport&nbsp;mode&nbsp;trunk</li>
+<li>!</li>
+<li>Interface&nbsp;Vlan&nbsp;<font color="red">499</font></li>
+<li><font color="red">ip&nbsp;address&nbsp;172.19.99.11&nbsp;255.255.255.0</font></li>
+<li>no&nbsp;shut</li>
+<li>!</li>
+<li>ip&nbsp;default-gateway&nbsp;<font color="red">172.19.99.1</font></li>
+<li>!</li>
+<li>access-list&nbsp;100&nbsp;deny&nbsp;udp&nbsp;any&nbsp;any&nbsp;eq&nbsp;bootpc</li>
+<li>access-list&nbsp;100&nbsp;permit&nbsp;ip&nbsp;any&nbsp;any</li>
+<li>!</li>
+<li>logging&nbsp;on</li>
+<li>logging&nbsp;trap&nbsp;3</li>
+<li>logging&nbsp;facility&nbsp;syslog&nbsp;</li>
+<li>logging&nbsp;172.16.18.196</li>
+<li>!</li>
+<li>snmp-server&nbsp;community&nbsp;private&nbsp;RW</li>
+<li>snmp-server&nbsp;trap-source&nbsp;Vlan&nbsp;<font color="red">499</font></li>
+<li>snmp-server&nbsp;location&nbsp;<font color="red">CN688-BDA-SW-7111F02</font></li>
+<li>snmp-server&nbsp;enable&nbsp;traps&nbsp;snmp&nbsp;authentication&nbsp;linkdown&nbsp;linkup&nbsp;coldstart&nbsp;warmstart</li>
+<li>snmp-server&nbsp;enable&nbsp;traps&nbsp;tty</li>
+<li>snmp-server&nbsp;enable&nbsp;traps&nbsp;syslog</li>
+<li>snmp-server&nbsp;host&nbsp;172.16.18.196&nbsp;version&nbsp;2c&nbsp;cisco&nbsp;</li>
+<li>!</li>
+<li>line&nbsp;con&nbsp;0</li>
+<li>password&nbsp;2960</li>
+<li>login</li>
+<li>line&nbsp;vty&nbsp;0&nbsp;4</li>
+<li>password&nbsp;2960</li>
+<li>login</li>
+<li>line&nbsp;vty&nbsp;5&nbsp;15</li>
+<li>no&nbsp;login</li>
+<li>!</li>
+<li>ntp&nbsp;source&nbsp;Vlan&nbsp;<font color="red">499</font></li>
+<li>ntp&nbsp;server&nbsp;172.16.1.1</li>
+<li>ntp&nbsp;server&nbsp;172.16.1.2</li>
+<li></li>
+</ul></div>
+
+
+
+
+<br>
+<br />
+</div>
+</div>
+
+</body>
+</html>
