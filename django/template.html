@@ -68,7 +68,99 @@ div <class="mycontent"><ul>
 <li>&nbsp;&nbsp;&nbsp;&nbsp;&lt;&frasl;ul&gt;</li>
 <li>{%&nbsp;endfor&nbsp;%}</li>
 </ul></div>
-	
+
+	<h3>ifequal/ifnotequal 标签</h3>
+<p>{% ifequal %} 标签比较两个值，当他们相等时，显示在 {% ifequal %} 和 {% endifequal %} 之中所有的值。
+
+下面的例子比较两个模板变量 user 和 currentuser :</p>
+<div class="mycontent"><ul>
+<li>{%&nbsp;ifequal&nbsp;user&nbsp;currentuser&nbsp;%}</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;Welcome!&lt;&frasl;h1&gt;</li>
+<li>{%&nbsp;endifequal&nbsp;%}</li>
+</ul></div>
+<p>和 {% if %} 类似， {% ifequal %} 支持可选的 {% else%} 标签：8</p>
+<div class="mycontent"><ul>
+<li>{%&nbsp;ifequal&nbsp;section&nbsp;'sitenews'&nbsp;%}</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;Site&nbsp;News&lt;&frasl;h1&gt;</li>
+<li>{%&nbsp;else&nbsp;%}</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;No&nbsp;News&nbsp;Here&lt;&frasl;h1&gt;</li>
+<li>{%&nbsp;endifequal&nbsp;%}</li>
+</ul></div>
+<h3>注释标签</h3>
+<p>Django 注释使用 {# #}。</p>
+<div class="mycontent"><ul>
+<li>{#&nbsp;这是一个注释&nbsp;#}</li>
+</ul></div>
+<h3>过滤器</h3>
+<p>模板过滤器可以在变量被显示前修改它，过滤器使用管道字符，如下所示：</p>
+<div class="mycontent"><ul>
+<li>{{&nbsp;name|lower&nbsp;}}</li>
+</ul></div>
+<p>{{ name }} 变量被过滤器 lower 处理后，文档大写转换文本为小写。<br />
+
+过滤管道可以被* 套接* ，既是说，一个过滤器管道的输出又可以作为下一个管道的输入：</p>
+<div class="mycontent"><ul>
+<li>{{&nbsp;my_list|first|upper&nbsp;}}</li>
+</ul></div>
+<p>以上实例将第一个元素并将其转化为大写。
+<br />
+有些过滤器有参数。 过滤器的参数跟随冒号之后并且总是以双引号包含。 例如：</p>
+<div class="mycontent"><ul>
+<li>{{&nbsp;bio|truncatewords:"30"&nbsp;}}</li>
+</ul></div>
+<p>这个将显示变量 bio 的前30个词。
+<br />
+其他过滤器：</p>
+<ul>
+<li>addslashes : 添加反斜杠到任何反斜杠、单引号或者双引号前面。</li>
+<li>date : 按指定的格式字符串参数格式化 date 或者 datetime 对象，实例：</li>
+<div class="mycontent"><ul>
+<li>{{&nbsp;bio|truncatewords:"30"&nbsp;}}</li>
+</ul></div>
+<li>length : 返回变量的长度。</li>
+</ul>
+<h3>include 标签</h3>
+<p>{% include %} 标签允许在模板中包含其它的模板的内容。
+
+下面这个例子都包含了 nav.html 模板：</p>
+<div class="mycontent"><ul>
+<li>{%&nbsp;include&nbsp;"nav.html"&nbsp;%}</li>
+</ul></div>
+<h3>模板继承</h3>
+<p>模板可以用继承的方式来实现复用。
+
+接下来我们先创建之前项目的 templates 目录中添加 base.html 文件，代码如下：</p>
+<p>HelloWorld/templates/base.html 文件代码：</p>
+<div class="mycontent"><ul>
+<li>&lt;!DOCTYPE&nbsp;html&gt;</li>
+<li>&lt;html&gt;</li>
+<li>&lt;head&gt;</li>
+<li>&lt;meta&nbsp;charset="utf-8"&gt;</li>
+<li>&lt;title&gt;菜鸟教程(runoob.com)&lt;&frasl;title&gt;</li>
+<li>&lt;&frasl;head&gt;</li>
+<li>&lt;body&gt;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;Hello&nbsp;World!&lt;&frasl;h1&gt;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;菜鸟教程&nbsp;Django&nbsp;测试。&lt;&frasl;p&gt;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;{%&nbsp;block&nbsp;mainbody&nbsp;%}</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;original&lt;&frasl;p&gt;</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;{%&nbsp;endblock&nbsp;%}</li>
+<li>&lt;&frasl;body&gt;</li>
+<li>&lt;&frasl;html&gt;</li>
+</ul></div>
+<p>以上代码中，名为 mainbody 的 block 标签是可以被继承者们替换掉的部分。
+
+所有的 {% block %} 标签告诉模板引擎，子模板可以重载这些部分。
+
+hello.html 中继承 base.html，并替换特定 block，hello.html 修改后的代码如下：<br />
+
+HelloWorld/templates/hello.html 文件代码：</p>
+
+<div class="mycontent"><ul>
+<li>{%&nbsp;extends&nbsp;"base.html"&nbsp;%}</li>
+<li>&nbsp;</li>
+<li>{%&nbsp;block&nbsp;mainbody&nbsp;%}&lt;p&gt;继承了&nbsp;base.html&nbsp;文件&lt;&frasl;p&gt;</li>
+<li>{%&nbsp;endblock&nbsp;%}</li>
+</ul></div>
 	
 
 
