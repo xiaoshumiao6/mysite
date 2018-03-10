@@ -1,0 +1,41 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="../css/style.css" />
+  
+</head>
+<body>
+	
+<div class="container_top">
+<div id="left_top"></div>
+<div id="middle_top">	
+<h1><div class="post-title">django 注意事项</div></h1>
+<ul>
+<li>启动django后，不能访问，报400错误。</li>
+<ul><li>原因：没有开启允许访问
+
+处理：编辑HelloWorld目录下setting.py ，把其中的
+
+ALLOWED_HOSTS=[]改成ALLOWED_HOSTS=['*'] ##* 表示任意地址。</li></ul>
+
+</ul>
+<h3>mysql 配置</h3>
+<div class="mycontent"><ul>
+<li>DATABASES&nbsp;=&nbsp;{</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;'default':&nbsp;{</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'ENGINE':&nbsp;'django.db.backends.mysql',&nbsp;&nbsp;#&nbsp;或者使用&nbsp;mysql.connector.django</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'NAME':&nbsp;'test',</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'USER':&nbsp;'test',</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'PASSWORD':&nbsp;'test123',</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'HOST':'localhost',</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'PORT':'3306',</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;}</li>
+<li>}</li>
+</ul></div>
+
+
+</div>
+</div>
+
+</body>
+</html>
