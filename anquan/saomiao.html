@@ -27,7 +27,46 @@
 <p>fierce是使用多种技术来扫描目标主机IP地址和主机名的一个DNS服务器枚举工具。运用递归的方式来工作。它的工作原理是先通过查询本地DNS服务器来查找目标DNS服务器，然后使用目标DNS服务器来查找子域名。fierce的主要特点就是可以用来地位独立IP空间对应域名和主机名。</p>
 <p>通过一个例子来演示：<br />#fierce  -dns baidu.com -threads 3</p>
 <img alt="dnsenum" src="../img/anquan/saomiao/saomiao1_2.jpg" />
+<h3>DMitry</h3>
+<p>DMitry（Deepmagic Information Gathering Tool）是一个一体化的信息收集工具。它可以用来收集以下信息：</p>
+<ul><li>1. 端口扫描</li>
+<li>2. whois主机IP和域名信息</li>
+<li>3. 从Netcraft.com获取主机信息</li>
+<li>4. 子域名</li>
+<li>5. 域名中包含的邮件地址</li></ul>
+<p>尽管这些信息可以在Kali中通过多种工具获取，但是使用DMitry可以将收集的信息保存在一个文件中，方便查看。
 
+使用DMitry可以使用如下命令：<br />
+这个演示是要获取 whois ，ip，主机信息，子域名，电子邮件。</p>
+<p>#dmitry -winse baidu.com</p>
+<img alt="dnsenum" src="../img/anquan/saomiao/saomiao1_3.jpg" />
+<p>再一个例子，通过dmitry 来扫描网站端口 <br />#dmitry -p baidu.com -f -b</p>
+<img alt="dnsenum" src="../img/anquan/saomiao/saomiao1_4.jpg" />
+<h3>Maltego</h3>
+<p>Maltego是一个开源的取证工具。它可以挖掘和收集信息。
+
+Maltego是一个图形界面。
+
+Maltego的基础网络特点：</p>
+<ul><li>1. 域名</li>
+<li>2. DNS</li>
+<li>3. Whois</li>
+<li>4. IP地址</li>
+<li>5. 网络块</li></ul>
+<p>也可以被用于收集相关人员的信息：</p>
+<ul>
+<li>1.&nbsp;公司、组织</li>
+<li>2.&nbsp;电子邮件</li>
+<li>3.&nbsp;社交网络关系</li>
+<li>4.&nbsp;电话号码</li>
+</ul>
+<p>通过一个例子演示：
+
+使用快捷键ctrl+T来创建新的项目。然后到Palette选项卡，选择基础设施（Infrastructure），选择域（Domain），如果成功建立会出现paterva.com。可以通过双击paterva.com这个图标进行更改</p>
+
+<img alt="dnsenum" src="../img/anquan/saomiao/saomiao1_5.jpg" />
+<img alt="dnsenum" src="../img/anquan/saomiao/saomiao1_6.jpg" />
+<img alt="dnsenum" src="../img/anquan/saomiao/saomiao1_7.jpg" />
 
 <br>
 <br />
